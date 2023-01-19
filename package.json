@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@babel/core": "^7.20.2",
+    "@codemirror/lang-json": "^6.0.1",
     "@preact/preset-vite": "^2.4.0",
     "@preact/signals": "^1.1.2",
     "@types/react": "^18.0.25",
+    "@uiw/react-codemirror": "^4.19.7",
     "autoprefixer": "*",
     "postcss": "*",
     "preact": "^10.11.3",
