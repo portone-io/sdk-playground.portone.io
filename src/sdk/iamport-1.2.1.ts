@@ -1,3 +1,5 @@
+import jQuery from "jquery";
+
 window.IMP || (function (window) {
   var api_server = "https://service.iamport.kr";
   var payportFrontDomain = "https://payport-front.iamport.co";
@@ -2954,7 +2956,7 @@ window.IMP || (function (window) {
           // 팝업 형식의 PG사 close
           var frames = frm.frames;
           for (var k in frames) {
-            var $ifr = $(frames[k].iframe);
+            var $ifr = jQuery(frames[k].iframe);
             if ($ifr.is(":visible")) {
               var classLists = $ifr[0].classList.value;
 
@@ -3096,7 +3098,7 @@ window.IMP || (function (window) {
           // 유효성 검사에 통과한 경우
           payportIframeWrapper.style.display = "block";
 
-          $(payportIframe).bind("load", function () {
+          jQuery(payportIframe).bind("load", function () {
             // payport로 postMessage 전송
             var payload = JSON.stringify({
               action: data.action,

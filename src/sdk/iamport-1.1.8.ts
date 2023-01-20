@@ -1,3 +1,5 @@
+import jQuery from "jquery";
+
 window.IMP || (function (window) {
   var api_server = "https://service.iamport.kr";
   var cssText = "body.imp-payment-progress {position: static}\n" +
@@ -2483,7 +2485,7 @@ window.IMP || (function (window) {
           // 팝업 형식의 PG사 close
           var frames = frm.frames;
           for (var k in frames) {
-            var $ifr = $(frames[k].iframe);
+            var $ifr = jQuery(frames[k].iframe);
             if ($ifr.is(":visible")) {
               var classLists = $ifr[0].classList.value;
 
