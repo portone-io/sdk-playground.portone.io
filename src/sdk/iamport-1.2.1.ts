@@ -1,7 +1,8 @@
 import jQuery from "jquery";
+import { InitSdkV1xFn } from "./sdk";
 
-window.IMP || (function (window) {
-  var api_server = "https://service.iamport.kr";
+const initSdk: InitSdkV1xFn = ({ window, api_server }) => {
+  // var api_server = "https://service.iamport.kr";
   var payportFrontDomain = "https://payport-front.iamport.co";
   var requestIdForPayport = "requestIdForPayport";
   var cssText = "body.imp-payment-progress {position: static}\n" +
@@ -41,7 +42,7 @@ window.IMP || (function (window) {
 
   head.appendChild(style);
 
-  var externalInterface = window.IMP = {};
+  var externalInterface: any = {};
 
   var Util = (function () {
     return {
@@ -3172,4 +3173,11 @@ window.IMP || (function (window) {
     data.pg = data.pg || "naverco"; //naverco를 2개 이상 쓰는 경우는 직접 파라메터로 지정하게끔
     XDM.request("zzim", data);
   };
-}).call({}, window);
+
+  return {
+    IMP: externalInterface,
+    cleanUp: () => {},
+  };
+};
+
+export default initSdk;
