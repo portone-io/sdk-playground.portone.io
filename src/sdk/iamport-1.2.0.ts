@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import jQuery from "jquery";
 import { InitSdkV1xFn } from "./sdk";
 
@@ -3040,7 +3042,7 @@ const initSdk: InitSdkV1xFn = ({ window, api_server }) => {
 
   return {
     IMP: externalInterface,
-    cleanUp: () => {},
+    cleanUp: () => jQuery(style).remove(),
   };
 };
 
