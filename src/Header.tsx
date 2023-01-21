@@ -9,7 +9,7 @@ const Header: React.FC = () => {
         <div className="flex-1 flex flex-col">
           <h1 className="inline-flex items-center">
             <Logo className="h-6" aria-label="포트원" />
-            <span className="ml-2">결제 테스트 페이지</span>
+            <span className="ml-2">결제 테스트</span>
           </h1>
           <label>
             JS SDK 버전

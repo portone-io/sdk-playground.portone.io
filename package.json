@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.20.2",
+    "@codemirror/lang-html": "^6.4.1",
+    "@codemirror/lang-javascript": "^6.1.2",
     "@codemirror/lang-json": "^6.0.1",
     "@preact/preset-vite": "^2.4.0",
     "@preact/signals": "^1.1.2",
