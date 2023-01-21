@@ -25,14 +25,24 @@ const Control: React.FC<ControlProps> = ({
   label,
   code,
   required,
+  enabled,
+  onToggle,
   ...props
 }) => {
   return (
     <div className={`flex flex-row ${className || ""}`} {...props}>
       <label className="basis-6 shrink-0 flex items-center justify-center">
-        {required ? <RequiredIndicator /> : <input type="checkbox" />}
+        {required ? <RequiredIndicator /> : (
+          <input
+            type="checkbox"
+            checked={enabled}
+            onClick={(e) => onToggle?.(!enabled)}
+          />
+        )}
       </label>
-      <label className="flex flex-col">
+      <label
+        className={`flex flex-col ${(required || enabled) ? "" : "opacity-50"}`}
+      >
         <span className="inline-flex flex-wrap">
           <span className="mr-2">{label}</span>
           <div className="inline-flex items-center h-6">

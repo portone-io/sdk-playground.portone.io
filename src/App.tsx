@@ -1,11 +1,17 @@
 import * as React from "react";
 import Header from "./Header";
 import { codePreviewSignal } from "./state/code-preview";
-import { userCodeSignal } from "./state/v1x";
+import {
+  enabledFieldsSignal,
+  pgSignal,
+  toggleEnableField,
+  userCodeSignal,
+} from "./state/v1x";
 import Control, { RequiredIndicator } from "./ui/Control";
 import HtmlEditor from "./ui/HtmlEditor";
 
 const App: React.FC = () => {
+  const enabledFields = enabledFieldsSignal.value;
   return (
     <div className="container px-4 my-4 m-auto flex flex-col">
       <Header />
@@ -28,6 +34,23 @@ const App: React.FC = () => {
               placeholder="imp00000000"
               value={userCodeSignal.value}
               onInput={(e) => userCodeSignal.value = e.currentTarget.value}
+            />
+          </Control>
+          <Control
+            className="mb-2"
+            label="지원 PG사"
+            code="pg"
+            enabled={enabledFields.has("pg")}
+            onToggle={() => toggleEnableField("pg")}
+          >
+            <input
+              className="border"
+              type="text"
+              placeholder="html5_inicis"
+              onChange={(e) => {
+                toggleEnableField("pg", true);
+                pgSignal.value = e.currentTarget.value;
+              }}
             />
           </Control>
         </div>
