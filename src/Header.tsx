@@ -1,5 +1,6 @@
 import * as React from "react";
-import { SdkVersion, sdkVersions, sdkVersionSignal } from "./state/app";
+import { SdkVersion, sdkVersions } from "./sdk/sdk";
+import { sdkVersionSignal } from "./state/app";
 
 const Header: React.FC = () => {
   return (

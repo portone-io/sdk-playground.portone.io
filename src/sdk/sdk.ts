@@ -1,3 +1,11 @@
+export type SdkVersion = (typeof sdkVersions)[number];
+export const sdkVersions = [
+  "1.1.7",
+  "1.1.8",
+  "1.2.0",
+  "1.2.1",
+] as const;
+
 export interface InitSdkV1xConfig {
   window: typeof globalThis;
   api_server: string;
