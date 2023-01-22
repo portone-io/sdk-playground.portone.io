@@ -75,6 +75,19 @@ const App: React.FC = () => {
                       }}
                     />
                   )
+                  : field.input.type === "integer"
+                  ? (
+                    <input
+                      className="border"
+                      type="number"
+                      value={valueSignal.value}
+                      min={0}
+                      onChange={(e) => {
+                        enabledSignal.value = true;
+                        valueSignal.value = Number(e.currentTarget.value);
+                      }}
+                    />
+                  )
                   : field.input.type === "toggle"
                   ? (
                     <Toggle
