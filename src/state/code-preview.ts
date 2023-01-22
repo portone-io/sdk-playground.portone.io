@@ -3,6 +3,7 @@ import { sdkVersionSignal } from "./app";
 import {
   enabledFieldsSignal,
   fieldSignalMapping,
+  jsonValueSignal,
   requiredFields,
   userCodeSignal,
 } from "./v1x";
@@ -10,7 +11,7 @@ import {
 export const codePreviewSignal = computed<string>(() => {
   const version = sdkVersionSignal.value;
   const userCode = userCodeSignal.value;
-  const configObject = getConfigObject();
+  const configObject = configObjectSignal.value;
   return [
     `<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>`,
     `<script src="https://cdn.iamport.kr/js/iamport.payment-${version}.js"></script>`,
@@ -28,17 +29,19 @@ export const codePreviewSignal = computed<string>(() => {
   ].join("\n");
 });
 
-function getConfigObject() {
+export const configObjectSignal = computed(() => {
   const result: any = {};
   const enabledFields = enabledFieldsSignal.value;
+  const jsonValue = jsonValueSignal.value;
   for (const [field, signal] of Object.entries(fieldSignalMapping)) {
     const value = signal.value;
     if (requiredFields.has(field) || enabledFields.has(field)) {
       result[field] = value;
     }
   }
+  Object.assign(result, jsonValue);
   return result;
-}
+});
 
 function toJs(object: object, indent = "  ", level = 0): string {
   const i = Array(level).fill(indent).join("");
@@ -47,14 +50,15 @@ function toJs(object: object, indent = "  ", level = 0): string {
   if (entries.length < 1) return "{}";
   return `{\n${
     entries.map(([key, value]) => {
+      const k = /^[_$a-z][_$a-z0-9]*$/i.test(key) ? key : JSON.stringify(key);
       if (
         (value != null) &&
         (typeof value === "object") &&
         (!Array.isArray(value))
       ) {
-        return `${ii}${key}: ${toJs(value, indent, level + 1)},\n`;
+        return `${ii}${k}: ${toJs(value, indent, level + 1)},\n`;
       } else {
-        return `${ii}${key}: ${JSON.stringify(value)},\n`;
+        return `${ii}${k}: ${JSON.stringify(value)},\n`;
       }
     }).join("")
   }${i}}`;

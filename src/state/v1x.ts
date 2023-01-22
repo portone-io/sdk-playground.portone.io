@@ -1,4 +1,4 @@
-import { signal } from "@preact/signals";
+import { computed, signal } from "@preact/signals";
 
 export const requiredFields = new Set([
   "pay_method",
@@ -16,6 +16,15 @@ export function toggleEnableField(field: string, value?: boolean): void {
 }
 
 export const userCodeSignal = signal("");
+export const jsonTextSignal = signal("{}");
+export const jsonValueSignal = computed(() => {
+  const jsonText = jsonTextSignal.value;
+  try {
+    return JSON.parse(jsonText);
+  } catch {
+    return undefined;
+  }
+});
 export const pgSignal = signal("");
 export const payMethodSignal = signal("");
 export const escrowSignal = signal(false);

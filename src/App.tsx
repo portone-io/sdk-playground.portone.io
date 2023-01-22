@@ -4,6 +4,8 @@ import { codePreviewSignal } from "./state/code-preview";
 import {
   enabledFieldsSignal,
   escrowSignal,
+  jsonTextSignal,
+  jsonValueSignal,
   payMethodSignal,
   pgSignal,
   toggleEnableField,
@@ -11,10 +13,12 @@ import {
 } from "./state/v1x";
 import Control, { RequiredIndicator } from "./ui/Control";
 import HtmlEditor from "./ui/HtmlEditor";
+import JsonEditor from "./ui/JsonEditor";
 import Toggle from "./ui/Toggle";
 
 const App: React.FC = () => {
   const enabledFields = enabledFieldsSignal.value;
+  const parseJsonFailed = jsonValueSignal.value == null;
   return (
     <div className="container px-4 my-4 m-auto flex flex-col">
       <Header />
@@ -25,6 +29,19 @@ const App: React.FC = () => {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 md:pb-80">
+          <details>
+            <summary
+              className={`text-xs ${
+                parseJsonFailed ? "text-red-700" : "text-slate-500"
+              } cursor-pointer`}
+            >
+              추가 파라미터 (JSON{parseJsonFailed && " 파싱 실패"})
+            </summary>
+            <JsonEditor
+              value="{}"
+              onChange={(json) => jsonTextSignal.value = json}
+            />
+          </details>
           <Control
             required
             label="가맹점 식별코드"
@@ -88,7 +105,7 @@ const App: React.FC = () => {
             className="md:sticky top-4 flex flex-col"
             style={{ height: "calc(100vh - 2rem)" }}
           >
-            <h2 className="text-sm">연동 코드 예시</h2>
+            <h2 className="text-xs text-slate-500">연동 코드 예시</h2>
             <div className="flex-1">
               <HtmlEditor
                 className="h-full"
