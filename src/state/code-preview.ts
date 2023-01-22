@@ -1,12 +1,6 @@
 import { computed } from "@preact/signals";
 import { sdkVersionSignal } from "./app";
-import {
-  enabledFieldsSignal,
-  fieldSignalMapping,
-  jsonValueSignal,
-  requiredFields,
-  userCodeSignal,
-} from "./v1x";
+import { fields, fieldSignals, jsonValueSignal, userCodeSignal } from "./v1x";
 
 export const codePreviewSignal = computed<string>(() => {
   const version = sdkVersionSignal.value;
@@ -31,12 +25,13 @@ export const codePreviewSignal = computed<string>(() => {
 
 export const configObjectSignal = computed(() => {
   const result: any = {};
-  const enabledFields = enabledFieldsSignal.value;
   const jsonValue = jsonValueSignal.value;
-  for (const [field, signal] of Object.entries(fieldSignalMapping)) {
-    const value = signal.value;
-    if (requiredFields.has(field) || enabledFields.has(field)) {
-      result[field] = value;
+  for (const [key, field] of Object.entries(fields)) {
+    const fieldSignal = fieldSignals[key];
+    const value = fieldSignal.valueSignal.value;
+    const enabled = fieldSignal.enabledSignal.value;
+    if (field.required || enabled) {
+      result[key] = value;
     }
   }
   Object.assign(result, jsonValue);

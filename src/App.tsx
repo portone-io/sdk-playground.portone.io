@@ -2,13 +2,10 @@ import * as React from "react";
 import Header from "./Header";
 import { codePreviewSignal } from "./state/code-preview";
 import {
-  enabledFieldsSignal,
-  escrowSignal,
+  fields,
+  fieldSignals,
   jsonTextSignal,
   jsonValueSignal,
-  payMethodSignal,
-  pgSignal,
-  toggleEnableField,
   userCodeSignal,
 } from "./state/v1x";
 import Control, { RequiredIndicator } from "./ui/Control";
@@ -17,7 +14,6 @@ import JsonEditor from "./ui/JsonEditor";
 import Toggle from "./ui/Toggle";
 
 const App: React.FC = () => {
-  const enabledFields = enabledFieldsSignal.value;
   const parseJsonFailed = jsonValueSignal.value == null;
   return (
     <div className="container px-4 my-4 m-auto flex flex-col">
@@ -55,50 +51,44 @@ const App: React.FC = () => {
               onInput={(e) => userCodeSignal.value = e.currentTarget.value}
             />
           </Control>
-          <Control
-            label="지원 PG사"
-            code="pg"
-            enabled={enabledFields.has("pg")}
-            onToggle={() => toggleEnableField("pg")}
-          >
-            <input
-              className="border"
-              type="text"
-              placeholder="html5_inicis"
-              value={pgSignal.value}
-              onChange={(e) => {
-                toggleEnableField("pg", true);
-                pgSignal.value = e.currentTarget.value;
-              }}
-            />
-          </Control>
-          <Control
-            required
-            label="결제 수단"
-            code="pay_method"
-          >
-            <input
-              className="border"
-              type="text"
-              placeholder="card"
-              value={payMethodSignal.value}
-              onChange={(e) => payMethodSignal.value = e.currentTarget.value}
-            />
-          </Control>
-          <Control
-            label="에스크로 여부"
-            code="escrow"
-            enabled={enabledFields.has("escrow")}
-            onToggle={() => toggleEnableField("escrow")}
-          >
-            <Toggle
-              value={escrowSignal.value}
-              onToggle={(value) => {
-                toggleEnableField("escrow", true);
-                escrowSignal.value = value;
-              }}
-            />
-          </Control>
+          {Object.entries(fields).map(([key, field]) => {
+            const { enabledSignal, valueSignal } = fieldSignals[key];
+            return (
+              <Control
+                key={key}
+                label={field.label}
+                code={key}
+                required={field.required}
+                enabled={enabledSignal.value}
+                onToggle={(value) => enabledSignal.value = value}
+              >
+                {field.input.type === "text"
+                  ? (
+                    <input
+                      className="border"
+                      type="text"
+                      placeholder={field.input.placeholder}
+                      value={valueSignal.value}
+                      onChange={(e) => {
+                        enabledSignal.value = true;
+                        valueSignal.value = e.currentTarget.value;
+                      }}
+                    />
+                  )
+                  : field.input.type === "toggle"
+                  ? (
+                    <Toggle
+                      value={valueSignal.value}
+                      onToggle={(value) => {
+                        enabledSignal.value = true;
+                        valueSignal.value = value;
+                      }}
+                    />
+                  )
+                  : null}
+              </Control>
+            );
+          })}
         </div>
         <div>
           <div
