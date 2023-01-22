@@ -1,5 +1,8 @@
 import { signal } from "@preact/signals";
 
+export const requiredFields = new Set([
+  "pay_method",
+]);
 export const enabledFieldsSignal = signal(new Set<string>());
 export function toggleEnableField(field: string, value?: boolean): void {
   const enabledFields = enabledFieldsSignal.value;
@@ -14,7 +17,11 @@ export function toggleEnableField(field: string, value?: boolean): void {
 
 export const userCodeSignal = signal("");
 export const pgSignal = signal("");
+export const payMethodSignal = signal("");
+export const escrowSignal = signal(false);
 
 export const fieldSignalMapping = {
   pg: pgSignal,
+  pay_method: payMethodSignal,
+  escrow: escrowSignal,
 } as const;

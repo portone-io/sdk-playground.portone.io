@@ -3,12 +3,15 @@ import Header from "./Header";
 import { codePreviewSignal } from "./state/code-preview";
 import {
   enabledFieldsSignal,
+  escrowSignal,
+  payMethodSignal,
   pgSignal,
   toggleEnableField,
   userCodeSignal,
 } from "./state/v1x";
 import Control, { RequiredIndicator } from "./ui/Control";
 import HtmlEditor from "./ui/HtmlEditor";
+import Toggle from "./ui/Toggle";
 
 const App: React.FC = () => {
   const enabledFields = enabledFieldsSignal.value;
@@ -21,9 +24,8 @@ const App: React.FC = () => {
         "<RequiredIndicator />" 표시는 필수입력 항목을 의미합니다.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="md:pb-80">
+        <div className="flex flex-col gap-2 md:pb-80">
           <Control
-            className="mb-2"
             required
             label="가맹점 식별코드"
             code="userCode"
@@ -37,7 +39,6 @@ const App: React.FC = () => {
             />
           </Control>
           <Control
-            className="mb-2"
             label="지원 PG사"
             code="pg"
             enabled={enabledFields.has("pg")}
@@ -47,9 +48,37 @@ const App: React.FC = () => {
               className="border"
               type="text"
               placeholder="html5_inicis"
+              value={pgSignal.value}
               onChange={(e) => {
                 toggleEnableField("pg", true);
                 pgSignal.value = e.currentTarget.value;
+              }}
+            />
+          </Control>
+          <Control
+            required
+            label="결제 수단"
+            code="pay_method"
+          >
+            <input
+              className="border"
+              type="text"
+              placeholder="card"
+              value={payMethodSignal.value}
+              onChange={(e) => payMethodSignal.value = e.currentTarget.value}
+            />
+          </Control>
+          <Control
+            label="에스크로 여부"
+            code="escrow"
+            enabled={enabledFields.has("escrow")}
+            onToggle={() => toggleEnableField("escrow")}
+          >
+            <Toggle
+              value={escrowSignal.value}
+              onToggle={(value) => {
+                toggleEnableField("escrow", true);
+                escrowSignal.value = value;
               }}
             />
           </Control>

@@ -1,6 +1,11 @@
 import { computed } from "@preact/signals";
 import { sdkVersionSignal } from "./app";
-import { enabledFieldsSignal, fieldSignalMapping, userCodeSignal } from "./v1x";
+import {
+  enabledFieldsSignal,
+  fieldSignalMapping,
+  requiredFields,
+  userCodeSignal,
+} from "./v1x";
 
 export const codePreviewSignal = computed<string>(() => {
   const version = sdkVersionSignal.value;
@@ -28,7 +33,9 @@ function getConfigObject() {
   const enabledFields = enabledFieldsSignal.value;
   for (const [field, signal] of Object.entries(fieldSignalMapping)) {
     const value = signal.value;
-    if (enabledFields.has(field)) result[field] = value;
+    if (requiredFields.has(field) || enabledFields.has(field)) {
+      result[field] = value;
+    }
   }
   return result;
 }
@@ -49,6 +56,6 @@ function toJs(object: object, indent = "  ", level = 0): string {
       } else {
         return `${ii}${key}: ${JSON.stringify(value)},\n`;
       }
-    })
+    }).join("")
   }${i}}`;
 }
