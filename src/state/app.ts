@@ -3,7 +3,7 @@ import { SdkV1x, SdkVersion } from "../sdk/sdk";
 
 export const apiServerSignal = signal("https://service.iamport.kr");
 
-export const sdkVersionSignal = signal<SdkVersion>("1.1.7");
+export const sdkVersionSignal = signal<SdkVersion>("1.2.1");
 export const sdkV1xSignal = signal<SdkV1x | undefined>(undefined);
 
 effect(async () => {
@@ -19,20 +19,20 @@ async function loadSdkV1x(
   apiServer: string,
 ): Promise<SdkV1x> {
   switch (version) {
-    case "1.1.7": {
-      const { default: initSdk } = await import("../sdk/iamport-1.1.7");
-      return initSdk({ window: globalThis, api_server: apiServer });
-    }
-    case "1.1.8": {
-      const { default: initSdk } = await import("../sdk/iamport-1.1.8");
+    case "1.2.1": {
+      const { default: initSdk } = await import("../sdk/iamport-1.2.1");
       return initSdk({ window: globalThis, api_server: apiServer });
     }
     case "1.2.0": {
       const { default: initSdk } = await import("../sdk/iamport-1.2.0");
       return initSdk({ window: globalThis, api_server: apiServer });
     }
-    case "1.2.1": {
-      const { default: initSdk } = await import("../sdk/iamport-1.2.1");
+    case "1.1.8": {
+      const { default: initSdk } = await import("../sdk/iamport-1.1.8");
+      return initSdk({ window: globalThis, api_server: apiServer });
+    }
+    case "1.1.7": {
+      const { default: initSdk } = await import("../sdk/iamport-1.1.7");
       return initSdk({ window: globalThis, api_server: apiServer });
     }
   }
