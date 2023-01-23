@@ -1,6 +1,6 @@
 import { computed } from "@preact/signals";
 import { sdkVersionSignal } from "./app";
-import { fields, fieldSignals, jsonValueSignal, userCodeSignal } from "./v1x";
+import { configObjectSignal, userCodeSignal } from "./v1x";
 
 export const codePreviewSignal = computed<string>(() => {
   const version = sdkVersionSignal.value;
@@ -21,21 +21,6 @@ export const codePreviewSignal = computed<string>(() => {
     `}`,
     `</script>`,
   ].join("\n");
-});
-
-export const configObjectSignal = computed(() => {
-  const result: any = {};
-  const jsonValue = jsonValueSignal.value;
-  for (const [key, field] of Object.entries(fields)) {
-    const fieldSignal = fieldSignals[key];
-    const value = fieldSignal.valueSignal.value;
-    const enabled = fieldSignal.enabledSignal.value;
-    if (field.required || enabled) {
-      result[key] = value;
-    }
-  }
-  Object.assign(result, jsonValue);
-  return result;
 });
 
 function toJs(object: object, indent = "  ", level = 0): string {

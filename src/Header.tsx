@@ -1,6 +1,6 @@
 import * as React from "react";
 import { SdkVersion, sdkVersions } from "./sdk/sdk";
-import { sdkVersionSignal } from "./state/app";
+import { playFnSignal, sdkVersionSignal } from "./state/app";
 
 const Header: React.FC = () => {
   return (
@@ -32,16 +32,24 @@ const Header: React.FC = () => {
             </select>
           </label>
         </div>
-        <button className="mt-4 sm:mt-0 p-2 px-8 rounded-lg bg-orange-700 text-white font-bold">
-          실행
-        </button>
+        <PlayButton />
       </header>
       <hr className="my-4" />
     </>
   );
 };
-
 export default Header;
+
+const PlayButton: React.FC = () => {
+  return (
+    <button
+      className="mt-4 sm:mt-0 p-2 px-8 rounded-lg bg-orange-700 text-white font-bold"
+      onClick={playFnSignal.value}
+    >
+      실행
+    </button>
+  );
+};
 
 interface LogoProps extends React.HTMLAttributes<SVGElement> {}
 const Logo: React.FC<LogoProps> = (props) => {

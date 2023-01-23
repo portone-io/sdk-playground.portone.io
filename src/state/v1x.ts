@@ -1,4 +1,33 @@
 import { computed, Signal, signal } from "@preact/signals";
+import { sdkV1xSignal } from "./app";
+
+export const requestPayFnSignal = computed(() => {
+  const sdkV1x = sdkV1xSignal.value;
+  const userCode = userCodeSignal.value;
+  const configObject = configObjectSignal.value;
+  return function requestPay() {
+    if (!sdkV1x) return Promise.reject(new Error("sdk not loaded"));
+    return new Promise((resolve) => {
+      sdkV1x.IMP.init(userCode);
+      sdkV1x.IMP.request_pay(configObject, resolve);
+    });
+  };
+});
+
+export const configObjectSignal = computed(() => {
+  const result: any = {};
+  const jsonValue = jsonValueSignal.value;
+  for (const [key, field] of Object.entries(fields)) {
+    const fieldSignal = fieldSignals[key];
+    const value = fieldSignal.valueSignal.value;
+    const enabled = fieldSignal.enabledSignal.value;
+    if (field.required || enabled) {
+      result[key] = value;
+    }
+  }
+  Object.assign(result, jsonValue);
+  return result;
+});
 
 export const userCodeSignal = signal("");
 export const jsonTextSignal = signal("{}");
@@ -101,7 +130,7 @@ export const fields = {
     },
   },
   buyer_tel: {
-    required: false,
+    required: true,
     label: "주문자 연락처",
     input: {
       type: "text",

@@ -1,10 +1,16 @@
-import { effect, signal } from "@preact/signals";
+import { computed, effect, signal } from "@preact/signals";
 import { SdkV1x, SdkVersion } from "../sdk/sdk";
+import { requestPayFnSignal } from "./v1x";
 
 export const apiServerSignal = signal("https://service.iamport.kr");
 
 export const sdkVersionSignal = signal<SdkVersion>("1.2.1");
 export const sdkV1xSignal = signal<SdkV1x | undefined>(undefined);
+export const currentSdkSignal = computed(() => {
+  const version = sdkVersionSignal.value;
+  const sdkV1x = sdkV1xSignal.value;
+  if (version.startsWith("1.")) return sdkV1x;
+});
 
 effect(async () => {
   const version = sdkVersionSignal.value;
@@ -12,6 +18,21 @@ effect(async () => {
   const sdk = await loadSdkV1x(version, apiServer);
   sdkV1xSignal.value?.cleanUp();
   sdkV1xSignal.value = sdk;
+});
+
+export const waitingSignal = signal(false);
+export type PlayFn = () => Promise<any>;
+export const playFnSignal = computed(() => {
+  const requestPayFn = requestPayFnSignal.value;
+  return async function play() {
+    try {
+      waitingSignal.value = true;
+      const result = await requestPayFn();
+      console.log(result);
+    } finally {
+      waitingSignal.value = false;
+    }
+  };
 });
 
 async function loadSdkV1x(
