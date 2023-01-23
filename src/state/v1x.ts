@@ -45,6 +45,7 @@ export const fields = {
       type: "text",
       default: "",
       placeholder: "",
+      generate: () => `test_${Date.now().toString(36)}`,
     },
   },
   name: {
@@ -180,35 +181,36 @@ export const fields = {
     },
   },
 } satisfies Fields;
-interface Fields {
+export interface Fields {
   [key: string]: Field;
 }
-interface Field {
+export interface Field {
   required: boolean;
   label: string;
   input: Input;
 }
-type Input = TextInput | IntegerInput | ToggleInput;
+export type Input = TextInput | IntegerInput | ToggleInput;
 interface InputBase<TType extends string, TDefault> {
   type: TType;
   default: TDefault;
 }
-interface TextInput extends InputBase<"text", string> {
+export interface TextInput extends InputBase<"text", string> {
   placeholder: string;
+  generate?: () => string;
 }
-interface IntegerInput extends InputBase<"integer", number> {}
-interface ToggleInput extends InputBase<"toggle", boolean> {}
+export interface IntegerInput extends InputBase<"integer", number> {}
+export interface ToggleInput extends InputBase<"toggle", boolean> {}
 
 export const fieldSignals = createFieldSignals(fields);
 
-interface FieldSignals {
+export interface FieldSignals {
   [key: string]: FieldSignal;
 }
-interface FieldSignal {
+export interface FieldSignal {
   enabledSignal: Signal<boolean>;
   valueSignal: Signal<any>;
 }
-function createFieldSignals(fields: Fields): FieldSignals {
+export function createFieldSignals(fields: Fields): FieldSignals {
   return Object.fromEntries(
     Object.entries(fields).map(([key, field]) => [key, {
       enabledSignal: signal(false),

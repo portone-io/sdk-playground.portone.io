@@ -2,10 +2,16 @@ import * as React from "react";
 import Header from "./Header";
 import { codePreviewSignal } from "./state/code-preview";
 import {
+  Field,
   fields,
+  FieldSignal,
   fieldSignals,
+  Input,
+  IntegerInput,
   jsonTextSignal,
   jsonValueSignal,
+  TextInput,
+  ToggleInput,
   userCodeSignal,
 } from "./state/v1x";
 import Control, { RequiredIndicator } from "./ui/Control";
@@ -51,57 +57,14 @@ const App: React.FC = () => {
               onInput={(e) => userCodeSignal.value = e.currentTarget.value}
             />
           </Control>
-          {Object.entries(fields).map(([key, field]) => {
-            const { enabledSignal, valueSignal } = fieldSignals[key];
-            return (
-              <Control
-                key={key}
-                label={field.label}
-                code={key}
-                required={field.required}
-                enabled={enabledSignal.value}
-                onToggle={(value) => enabledSignal.value = value}
-              >
-                {field.input.type === "text"
-                  ? (
-                    <input
-                      className="border"
-                      type="text"
-                      placeholder={field.input.placeholder}
-                      value={valueSignal.value}
-                      onChange={(e) => {
-                        enabledSignal.value = true;
-                        valueSignal.value = e.currentTarget.value;
-                      }}
-                    />
-                  )
-                  : field.input.type === "integer"
-                  ? (
-                    <input
-                      className="border"
-                      type="number"
-                      value={valueSignal.value}
-                      min={0}
-                      onChange={(e) => {
-                        enabledSignal.value = true;
-                        valueSignal.value = Number(e.currentTarget.value);
-                      }}
-                    />
-                  )
-                  : field.input.type === "toggle"
-                  ? (
-                    <Toggle
-                      value={valueSignal.value}
-                      onToggle={(value) => {
-                        enabledSignal.value = true;
-                        valueSignal.value = value;
-                      }}
-                    />
-                  )
-                  : null}
-              </Control>
-            );
-          })}
+          {Object.entries(fields).map(([key, field]) => (
+            <FieldControl
+              key={key}
+              code={key}
+              field={field}
+              fieldSignal={fieldSignals[key]}
+            />
+          ))}
         </div>
         <div>
           <div
@@ -122,5 +85,102 @@ const App: React.FC = () => {
     </div>
   );
 };
-
 export default App;
+
+interface FieldControlProps {
+  code: string;
+  field: Field;
+  fieldSignal: FieldSignal;
+}
+const FieldControl: React.FC<FieldControlProps> = (
+  { code, field, fieldSignal },
+) => {
+  const { enabledSignal } = fieldSignal;
+  const FieldInput = fieldInputComponents[field.input.type];
+  return (
+    <Control
+      label={field.label}
+      code={code}
+      required={field.required}
+      enabled={enabledSignal.value}
+      onToggle={(value) => enabledSignal.value = value}
+    >
+      <FieldInput fieldInput={field.input} fieldSignal={fieldSignal} />
+    </Control>
+  );
+};
+
+interface FieldInputProps<TInput extends Input> {
+  fieldInput: TInput;
+  fieldSignal: FieldSignal;
+}
+const FieldInputText: React.FC<FieldInputProps<TextInput>> = ({
+  fieldInput,
+  fieldSignal,
+}) => {
+  const { enabledSignal, valueSignal } = fieldSignal;
+  const { generate } = fieldInput;
+  return (
+    <>
+      <input
+        className="border"
+        type="text"
+        placeholder={fieldInput.placeholder}
+        value={valueSignal.value}
+        onChange={(e) => {
+          enabledSignal.value = true;
+          valueSignal.value = e.currentTarget.value;
+        }}
+      />
+      {generate && (
+        <button
+          title="자동 생성"
+          onClick={() => valueSignal.value = generate()}
+        >
+          🎲
+        </button>
+      )}
+    </>
+  );
+};
+
+const FieldInputInteger: React.FC<FieldInputProps<IntegerInput>> = ({
+  fieldSignal,
+}) => {
+  const { enabledSignal, valueSignal } = fieldSignal;
+  return (
+    <input
+      className="border"
+      type="number"
+      value={valueSignal.value}
+      min={0}
+      onChange={(e) => {
+        enabledSignal.value = true;
+        valueSignal.value = Number(e.currentTarget.value);
+      }}
+    />
+  );
+};
+
+const FieldInputToggle: React.FC<FieldInputProps<ToggleInput>> = ({
+  fieldSignal,
+}) => {
+  const { enabledSignal, valueSignal } = fieldSignal;
+  return (
+    <Toggle
+      value={valueSignal.value}
+      onToggle={(value) => {
+        enabledSignal.value = true;
+        valueSignal.value = value;
+      }}
+    />
+  );
+};
+
+const fieldInputComponents: {
+  [key in Input["type"]]: React.FC<FieldInputProps<any>>;
+} = {
+  text: FieldInputText,
+  integer: FieldInputInteger,
+  toggle: FieldInputToggle,
+};
