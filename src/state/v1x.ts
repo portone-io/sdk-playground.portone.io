@@ -7,7 +7,8 @@ export const requestPayFnSignal = computed(() => {
   const configObject = configObjectSignal.value;
   return function requestPay() {
     if (!sdkV1x) return Promise.reject(new Error("sdk not loaded"));
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+      if (!userCode) reject(new Error("userCode is empty"));
       sdkV1x.IMP.init(userCode);
       sdkV1x.IMP.request_pay(configObject, resolve);
     });

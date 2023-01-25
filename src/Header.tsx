@@ -1,6 +1,6 @@
 import * as React from "react";
 import { SdkVersion, sdkVersions } from "./sdk/sdk";
-import { playFnSignal, sdkVersionSignal } from "./state/app";
+import { playFnSignal, sdkVersionSignal, waitingSignal } from "./state/app";
 
 const Header: React.FC = () => {
   return (
@@ -41,12 +41,33 @@ const Header: React.FC = () => {
 export default Header;
 
 const PlayButton: React.FC = () => {
+  const waiting = waitingSignal.value;
+  const play = playFnSignal.value;
   return (
     <button
-      className="mt-4 sm:mt-0 p-2 px-8 rounded-lg bg-orange-700 text-white font-bold"
-      onClick={playFnSignal.value}
+      className="mt-4 sm:mt-0 inline-flex items-center justify-center w-24 h-12 rounded-lg bg-orange-700 text-white font-bold"
+      onClick={waiting ? undefined : play}
     >
-      실행
+      {waiting
+        ? (
+          <svg
+            className="waiting"
+            width="1rem"
+            height="1rem"
+            viewBox="0 0 30 30"
+          >
+            <circle
+              cx="15"
+              cy="15"
+              r="12"
+              stroke="white"
+              strokeWidth="6"
+              strokeLinecap="round"
+              fill="transparent"
+            />
+          </svg>
+        )
+        : "실행"}
     </button>
   );
 };
