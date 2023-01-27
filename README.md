@@ -1,4 +1,4 @@
-# portone-pay-test
+# portone-sdk-playground
 
 ```sh
 pnpm install
