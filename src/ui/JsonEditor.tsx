@@ -3,11 +3,13 @@ import CodeMirror, { ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
 
 interface JsonEditorProps extends ReactCodeMirrorProps {}
-const JsonEditor: React.FC<JsonEditorProps> = (props) => {
+const JsonEditor: React.FC<JsonEditorProps> = (
+  { extensions = [], ...props },
+) => {
   return (
     <CodeMirror
       height="100%"
-      extensions={[json()]}
+      extensions={[json(), ...extensions]}
       {...props}
     />
   );

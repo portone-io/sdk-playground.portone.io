@@ -1,11 +1,19 @@
 import * as React from "react";
+import { EditorView } from "@codemirror/view";
 import { SdkVersion, sdkVersions } from "./sdk/sdk";
-import { playFnSignal, sdkVersionSignal, waitingSignal } from "./state/app";
+import {
+  playFnSignal,
+  playResultSignal,
+  sdkVersionSignal,
+  waitingSignal,
+} from "./state/app";
+import JsonEditor from "./ui/JsonEditor";
 
 const Header: React.FC = () => {
+  const playResult = playResultSignal.value;
   return (
     <>
-      <header className="flex flex-col sm:flex-row">
+      <header className="relative flex flex-col sm:flex-row">
         <div className="flex-1 flex flex-col">
           <h1 className="inline-flex items-center">
             <Logo className="h-6" aria-label="포트원" />
@@ -33,6 +41,29 @@ const Header: React.FC = () => {
           </label>
         </div>
         <PlayButton />
+        {playResult && (
+          <div className="z-10 absolute -bottom-4 right-0 w-full md:w-1/2 text-white">
+            <div className="absolute top-0 right-0 w-full h-full px-2">
+              <div className="absolute -top-2 right-1/2 sm:right-12 w-0 h-0 border-[0.25rem] border-transparent border-r-black border-b-black" />
+              <div className="sm:hidden absolute -top-2 left-1/2 sm:right-12 w-0 h-0 border-[0.25rem] border-transparent border-l-black border-b-black" />
+              <div className="relative p-2 bg-black">
+                <button
+                  className="absolute right-2"
+                  onClick={() => playResultSignal.value = undefined}
+                >
+                  close
+                </button>
+                {playResult.success ? "실행 성공" : "실행 실패"}
+                <JsonEditor
+                  className="text-black"
+                  value={JSON.stringify(playResult.response, null, 2)}
+                  extensions={[EditorView.lineWrapping]}
+                  readOnly
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </header>
       <hr className="my-4" />
     </>
@@ -45,7 +76,7 @@ const PlayButton: React.FC = () => {
   const play = playFnSignal.value;
   return (
     <button
-      className="mt-4 sm:mt-0 inline-flex items-center justify-center w-24 h-12 rounded-lg bg-orange-700 text-white font-bold"
+      className="mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold"
       onClick={waiting ? undefined : play}
     >
       {waiting

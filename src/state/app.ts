@@ -26,14 +26,20 @@ export const playFnSignal = computed(() => {
   const requestPayFn = requestPayFnSignal.value;
   return async function play() {
     try {
+      playResultSignal.value = undefined;
       waitingSignal.value = true;
-      const result = await requestPayFn();
-      console.log(result);
+      const response: any = await requestPayFn();
+      playResultSignal.value = { success: response.success, response };
     } finally {
       waitingSignal.value = false;
     }
   };
 });
+export interface PlayResult {
+  success: boolean;
+  response: object;
+}
+export const playResultSignal = signal<PlayResult | undefined>(undefined);
 
 async function loadSdkV1x(
   version: SdkVersion,
