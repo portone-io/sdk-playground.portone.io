@@ -121,6 +121,14 @@ export const fields = {
       placeholder: "ko | en",
     },
   },
+  popup: {
+    required: false,
+    label: "결제창 팝업여부",
+    input: {
+      type: "toggle",
+      default: false,
+    },
+  },
   buyer_name: {
     required: false,
     label: "주문자명",
@@ -198,7 +206,7 @@ export const fields = {
     input: {
       type: "text",
       default: "",
-      placeholder: "",
+      placeholder: "iamport://",
     },
   },
   biz_num: {

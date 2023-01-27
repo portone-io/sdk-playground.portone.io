@@ -135,6 +135,7 @@ const FieldInputText: React.FC<FieldInputProps<TextInput>> = ({
       />
       {generate && (
         <button
+          className="ml-1"
           title="자동 생성"
           onClick={() => valueSignal.value = generate()}
         >
