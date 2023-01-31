@@ -14,7 +14,7 @@ export const currentSdkSignal = computed(() => {
 
 effect(async () => {
   const version = sdkVersionSignal.value;
-  const apiServer = apiServerSignal.value;
+  const apiServer = apiServerSignal.value.trim();
   const sdk = await loadSdkV1x(version, apiServer);
   sdkV1xSignal.value?.cleanUp();
   sdkV1xSignal.value = sdk;
