@@ -1,16 +1,20 @@
 import * as React from "react";
 import { EditorView } from "@codemirror/view";
-import { SdkVersion, sdkVersions } from "./sdk/sdk";
+import { SdkVersion, sdkVersions } from "./sdk";
 import {
+  appModeSignal,
+  changeSdkVersion,
+  modes,
   playFnSignal,
   playResultSignal,
-  sdkVersionSignal,
   waitingSignal,
 } from "./state/app";
 import JsonEditor from "./ui/JsonEditor";
 
 const Header: React.FC = () => {
   const playResult = playResultSignal.value;
+  const mode = appModeSignal.value;
+  const { sdkVersion } = mode;
   return (
     <>
       <header className="relative flex flex-col sm:flex-row">
@@ -19,26 +23,37 @@ const Header: React.FC = () => {
             <Logo className="h-6" aria-label="포트원" />
             <span className="ml-2">SDK 놀이터</span>
           </h1>
-          <label>
-            JS SDK 버전
+          <div>
+            <span>
+              SDK 버전
+            </span>
             <select
               className="ml-2"
               onChange={(e) => {
-                const sdkVersion = e.target.value as SdkVersion;
-                sdkVersionSignal.value = sdkVersion;
+                changeSdkVersion(e.target.value as SdkVersion);
               }}
             >
               {sdkVersions.map((v) => (
-                <option
-                  key={v}
-                  value={v}
-                  selected={v === sdkVersionSignal.value}
-                >
+                <option key={v} value={v} selected={v === sdkVersion}>
                   {v}
                 </option>
               ))}
             </select>
-          </label>
+            <select
+              onChange={(e) => {
+                appModeSignal.value = {
+                  ...appModeSignal.value,
+                  function: e.target.value as any,
+                };
+              }}
+            >
+              {Object.entries(modes.v1).map(([v, { label }]) => (
+                <option key={v} value={v} selected={v === mode.function}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <PlayButton />
         {playResult && (

@@ -1,44 +1,47 @@
-import { computed, Signal, signal } from "@preact/signals";
-import { sdkV1xSignal } from "./app";
+import { computed } from "@preact/signals";
+import { sdkVersionSignal } from "./app";
+import { toJs } from "./code";
+import {
+  createConfigObjectSignal,
+  createFieldSignals,
+  createJsonSignals,
+  Fields,
+} from "./fields";
+import { sdkV1Signal, userCodeSignal } from "./v1";
 
-export const requestPayFnSignal = computed(() => {
-  const sdkV1x = sdkV1xSignal.value;
+export const playFnSignal = computed(() => {
+  const sdkV1 = sdkV1Signal.value;
   const userCode = userCodeSignal.value;
   const configObject = configObjectSignal.value;
   return function requestPay() {
-    if (!sdkV1x) return Promise.reject(new Error("sdk not loaded"));
+    if (!sdkV1) return Promise.reject(new Error("sdk not loaded"));
     return new Promise((resolve, reject) => {
       if (!userCode) reject(new Error("userCode is empty"));
-      sdkV1x.IMP.init(userCode);
-      sdkV1x.IMP.request_pay(configObject, resolve);
+      sdkV1.IMP.init(userCode);
+      sdkV1.IMP.request_pay(configObject, resolve);
     });
   };
 });
 
-export const configObjectSignal = computed(() => {
-  const result: any = {};
-  const jsonValue = jsonValueSignal.value;
-  for (const [key, field] of Object.entries(fields)) {
-    const fieldSignal = fieldSignals[key];
-    const value = fieldSignal.valueSignal.value;
-    const enabled = fieldSignal.enabledSignal.value;
-    if (field.required || enabled) {
-      result[key] = value;
-    }
-  }
-  Object.assign(result, jsonValue);
-  return result;
-});
-
-export const userCodeSignal = signal("");
-export const jsonTextSignal = signal("{}");
-export const jsonValueSignal = computed(() => {
-  const jsonText = jsonTextSignal.value;
-  try {
-    return JSON.parse(jsonText);
-  } catch {
-    return undefined;
-  }
+export const codePreviewSignal = computed<string>(() => {
+  const version = sdkVersionSignal.value;
+  const userCode = userCodeSignal.value;
+  const configObject = configObjectSignal.value;
+  return [
+    `<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>`,
+    `<script src="https://cdn.iamport.kr/js/iamport.payment-${version}.js"></script>`,
+    ``,
+    `<button onclick="requestPay()">결제하기</button>`,
+    ``,
+    `<script>`,
+    `const userCode = ${JSON.stringify(userCode)};`,
+    `IMP.init(userCode);`,
+    ``,
+    `function requestPay() {`,
+    `  IMP.request_pay(${toJs(configObject, "  ", 1)});`,
+    `}`,
+    `</script>`,
+  ].join("\n");
 });
 
 export const fields = {
@@ -219,40 +222,11 @@ export const fields = {
     },
   },
 } satisfies Fields;
-export interface Fields {
-  [key: string]: Field;
-}
-export interface Field {
-  required: boolean;
-  label: string;
-  input: Input;
-}
-export type Input = TextInput | IntegerInput | ToggleInput;
-interface InputBase<TType extends string, TDefault> {
-  type: TType;
-  default: TDefault;
-}
-export interface TextInput extends InputBase<"text", string> {
-  placeholder: string;
-  generate?: () => string;
-}
-export interface IntegerInput extends InputBase<"integer", number> {}
-export interface ToggleInput extends InputBase<"toggle", boolean> {}
 
 export const fieldSignals = createFieldSignals(fields);
-
-export interface FieldSignals {
-  [key: string]: FieldSignal;
-}
-export interface FieldSignal {
-  enabledSignal: Signal<boolean>;
-  valueSignal: Signal<any>;
-}
-export function createFieldSignals(fields: Fields): FieldSignals {
-  return Object.fromEntries(
-    Object.entries(fields).map(([key, field]) => [key, {
-      enabledSignal: signal(false),
-      valueSignal: signal(field.input.default),
-    }]),
-  );
-}
+export const { jsonTextSignal, jsonValueSignal } = createJsonSignals();
+export const configObjectSignal = createConfigObjectSignal({
+  fields,
+  fieldSignals,
+  jsonValueSignal,
+});

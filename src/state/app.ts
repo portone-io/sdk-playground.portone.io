@@ -1,34 +1,73 @@
-import { computed, effect, signal } from "@preact/signals";
-import { SdkV1x, SdkVersion } from "../sdk/sdk";
-import { requestPayFnSignal } from "./v1x";
+import { computed, Signal, signal } from "@preact/signals";
+import { MajorVersion, SdkV1Versions, SdkVersion } from "../sdk";
 
-export const apiServerSignal = signal("https://service.iamport.kr");
-
-export const sdkVersionSignal = signal<SdkVersion>("1.2.1");
-export const sdkV1xSignal = signal<SdkV1x | undefined>(undefined);
-export const currentSdkSignal = computed(() => {
-  const version = sdkVersionSignal.value;
-  const sdkV1x = sdkV1xSignal.value;
-  if (version.startsWith("1.")) return sdkV1x;
+interface AppModeBase<
+  TSdkVersion extends SdkVersion,
+  TFunction extends string,
+> {
+  sdkVersion: TSdkVersion;
+  function: TFunction;
+}
+interface AppModeV1 extends AppModeBase<SdkV1Versions, "pay" | "cert"> {}
+export type AppMode = AppModeV1;
+export const appModeSignal = signal<AppMode>({
+  sdkVersion: "1.2.1",
+  function: "pay",
 });
 
-effect(async () => {
-  const version = sdkVersionSignal.value;
-  const apiServer = apiServerSignal.value.trim();
-  const sdk = await loadSdkV1x(version, apiServer);
-  sdkV1xSignal.value?.cleanUp();
-  sdkV1xSignal.value = sdk;
+export function isV1Mode(appMode: AppMode): appMode is AppModeV1 {
+  return getMajorVersion(appMode.sdkVersion) === "v1";
+}
+
+export function getMajorVersion(sdkVersion: SdkVersion): MajorVersion {
+  if (sdkVersion.split(".").shift()! === "1") return "v1";
+  throw new Error();
+}
+
+type Modes<TMode extends AppModeBase<any, any>> = {
+  [key in TMode["function"]]: {
+    label: string;
+    stateModule: () => Promise<StateModule>;
+  };
+};
+export const modes = {
+  "v1": {
+    pay: { label: "결제", stateModule: () => import("./v1-pay") },
+    cert: { label: "본인인증", stateModule: () => import("./v1-cert") },
+  } satisfies Modes<AppModeV1>,
+} satisfies { [key in MajorVersion]: Modes<any> };
+
+export interface StateModule {
+  playFnSignal: Signal<PlayFn>;
+}
+export const stateModulePromiseSignal = computed<Promise<StateModule>>(() => {
+  const appMode = appModeSignal.value;
+  if (isV1Mode(appMode)) return modes.v1[appMode.function].stateModule();
+  throw new Error();
 });
+
+export const sdkVersionSignal = computed(() => appModeSignal.value.sdkVersion);
+export function changeSdkVersion(sdkVersion: SdkVersion) {
+  const beforeMajor = getMajorVersion(appModeSignal.value.sdkVersion);
+  const afterMajor = getMajorVersion(sdkVersion);
+  if (beforeMajor === afterMajor) {
+    appModeSignal.value = { ...appModeSignal.value, sdkVersion };
+  } else {
+    throw new Error();
+  }
+}
 
 export const waitingSignal = signal(false);
 export type PlayFn = () => Promise<any>;
 export const playFnSignal = computed(() => {
-  const requestPayFn = requestPayFnSignal.value;
+  const stateModulePromise = stateModulePromiseSignal.value;
   return async function play() {
     try {
       playResultSignal.value = undefined;
       waitingSignal.value = true;
-      const response: any = await requestPayFn();
+      const stateModule = await stateModulePromise;
+      const playFn = stateModule.playFnSignal.value;
+      const response: any = await playFn();
       playResultSignal.value = { success: response.success, response };
     } finally {
       waitingSignal.value = false;
@@ -40,27 +79,3 @@ export interface PlayResult {
   response: object;
 }
 export const playResultSignal = signal<PlayResult | undefined>(undefined);
-
-async function loadSdkV1x(
-  version: SdkVersion,
-  apiServer: string,
-): Promise<SdkV1x> {
-  switch (version) {
-    case "1.2.1": {
-      const { default: initSdk } = await import("../sdk/iamport-1.2.1");
-      return initSdk({ window: globalThis, api_server: apiServer });
-    }
-    case "1.2.0": {
-      const { default: initSdk } = await import("../sdk/iamport-1.2.0");
-      return initSdk({ window: globalThis, api_server: apiServer });
-    }
-    case "1.1.8": {
-      const { default: initSdk } = await import("../sdk/iamport-1.1.8");
-      return initSdk({ window: globalThis, api_server: apiServer });
-    }
-    case "1.1.7": {
-      const { default: initSdk } = await import("../sdk/iamport-1.1.7");
-      return initSdk({ window: globalThis, api_server: apiServer });
-    }
-  }
-}
