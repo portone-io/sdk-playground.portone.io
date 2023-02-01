@@ -1,7 +1,8 @@
 import * as React from "react";
 import { EditorView } from "@codemirror/view";
-import { SdkVersion, sdkVersions } from "./sdk/sdk";
+import { SdkVersion, sdkVersions } from "./sdk";
 import {
+  changeSdkVersion,
   playFnSignal,
   playResultSignal,
   sdkVersionSignal,
@@ -24,8 +25,7 @@ const Header: React.FC = () => {
             <select
               className="ml-2"
               onChange={(e) => {
-                const sdkVersion = e.target.value as SdkVersion;
-                sdkVersionSignal.value = sdkVersion;
+                changeSdkVersion(e.target.value as SdkVersion);
               }}
             >
               {sdkVersions.map((v) => (

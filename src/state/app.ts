@@ -1,34 +1,69 @@
-import { computed, effect, signal } from "@preact/signals";
-import { SdkV1x, SdkVersion } from "../sdk/sdk";
-import { requestPayFnSignal } from "./v1x";
+import { computed, effect, Signal, signal } from "@preact/signals";
+import { SdkV1, SdkV1Versions, sdkV1Versions, SdkVersion } from "../sdk";
+import { apiServerSignal } from "./v1";
 
-export const apiServerSignal = signal("https://service.iamport.kr");
+interface AppModeBase<TSdkVersion extends SdkVersion> {
+  sdkVersion: TSdkVersion;
+}
+interface AppModeV1 extends AppModeBase<SdkV1Versions> {
+  type: "pay" | "cert";
+}
+export type AppMode = AppModeV1;
+export const appModeSignal = signal<AppMode>({
+  sdkVersion: "1.2.1",
+  type: "pay",
+});
+export interface StateModule {
+  playFnSignal: Signal<PlayFn>;
+}
+export const stateModulePromiseSignal = computed<Promise<StateModule>>(() => {
+  type M = Promise<StateModule>;
+  const appMode = appModeSignal.value;
+  if (sdkV1Versions.includes(appMode.sdkVersion)) {
+    if (appMode.type === "pay") return import("./v1-pay") as M;
+    if (appMode.type === "cert") return import("./v1-cert") as M;
+    throw new Error();
+  }
+  throw new Error();
+});
 
-export const sdkVersionSignal = signal<SdkVersion>("1.2.1");
-export const sdkV1xSignal = signal<SdkV1x | undefined>(undefined);
+export const sdkVersionSignal = computed(() => appModeSignal.value.sdkVersion);
+export function changeSdkVersion(sdkVersion: SdkVersion) {
+  if (sdkV1Versions.includes(sdkVersion)) {
+    appModeSignal.value = {
+      ...appModeSignal.value,
+      sdkVersion,
+    };
+  } else {
+    throw new Error();
+  }
+}
+export const sdkV1Signal = signal<SdkV1 | undefined>(undefined);
 export const currentSdkSignal = computed(() => {
   const version = sdkVersionSignal.value;
-  const sdkV1x = sdkV1xSignal.value;
-  if (version.startsWith("1.")) return sdkV1x;
+  const sdkV1 = sdkV1Signal.value;
+  if (version.startsWith("1.")) return sdkV1;
 });
 
 effect(async () => {
   const version = sdkVersionSignal.value;
   const apiServer = apiServerSignal.value.trim();
-  const sdk = await loadSdkV1x(version, apiServer);
-  sdkV1xSignal.value?.cleanUp();
-  sdkV1xSignal.value = sdk;
+  const sdk = await loadSdkV1(version, apiServer);
+  sdkV1Signal.value?.cleanUp();
+  sdkV1Signal.value = sdk;
 });
 
 export const waitingSignal = signal(false);
 export type PlayFn = () => Promise<any>;
 export const playFnSignal = computed(() => {
-  const requestPayFn = requestPayFnSignal.value;
+  const stateModulePromise = stateModulePromiseSignal.value;
   return async function play() {
     try {
       playResultSignal.value = undefined;
       waitingSignal.value = true;
-      const response: any = await requestPayFn();
+      const stateModule = await stateModulePromise;
+      const playFn = stateModule.playFnSignal.value;
+      const response: any = await playFn();
       playResultSignal.value = { success: response.success, response };
     } finally {
       waitingSignal.value = false;
@@ -41,10 +76,10 @@ export interface PlayResult {
 }
 export const playResultSignal = signal<PlayResult | undefined>(undefined);
 
-async function loadSdkV1x(
+async function loadSdkV1(
   version: SdkVersion,
   apiServer: string,
-): Promise<SdkV1x> {
+): Promise<SdkV1> {
   switch (version) {
     case "1.2.1": {
       const { default: initSdk } = await import("../sdk/iamport-1.2.1");

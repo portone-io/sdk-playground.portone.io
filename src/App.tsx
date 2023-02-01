@@ -1,20 +1,21 @@
 import * as React from "react";
 import Header from "./Header";
-import { apiServerSignal } from "./state/app";
-import { codePreviewSignal } from "./state/code-preview";
 import {
   Field,
-  fields,
   FieldSignal,
-  fieldSignals,
   Input,
   IntegerInput,
-  jsonTextSignal,
-  jsonValueSignal,
   TextInput,
   ToggleInput,
-  userCodeSignal,
-} from "./state/v1x";
+} from "./state/fields";
+import { apiServerSignal, userCodeSignal } from "./state/v1";
+import {
+  codePreviewSignal,
+  fields,
+  fieldSignals,
+  jsonTextSignal,
+  jsonValueSignal,
+} from "./state/v1-pay";
 import Control, { RequiredIndicator } from "./ui/Control";
 import HtmlEditor from "./ui/HtmlEditor";
 import JsonEditor from "./ui/JsonEditor";
