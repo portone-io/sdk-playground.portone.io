@@ -1,5 +1,5 @@
 import { computed } from "@preact/signals";
-import { sdkV1Signal, sdkVersionSignal } from "./app";
+import { sdkVersionSignal } from "./app";
 import { toJs } from "./code";
 import {
   createConfigObjectSignal,
@@ -7,7 +7,7 @@ import {
   createJsonSignals,
   Fields,
 } from "./fields";
-import { userCodeSignal } from "./v1";
+import { sdkV1Signal, userCodeSignal } from "./v1";
 
 export const playFnSignal = computed(() => {
   const sdkV1 = sdkV1Signal.value;

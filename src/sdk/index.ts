@@ -11,6 +11,9 @@ export const sdkVersions = [
   ...sdkV1Versions,
 ] as const;
 
+export type MajorVersion = (typeof majorVersions)[number];
+export const majorVersions = ["v1"] as const;
+
 export interface InitSdkV1Config {
   window: typeof globalThis;
   api_server: string;
