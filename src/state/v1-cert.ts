@@ -28,8 +28,16 @@ export const codePreviewSignal = computed<string>(() => {
   const userCode = userCodeSignal.value;
   const configObject = configObjectSignal.value;
   return [
-    `<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>`,
-    `<script src="https://cdn.iamport.kr/js/iamport.payment-${version}.js"></script>`,
+    ...(
+      version === "1.3.0"
+        ? [
+          `<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`,
+        ]
+        : [
+          `<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>`,
+          `<script src="https://cdn.iamport.kr/js/iamport.payment-${version}.js"></script>`,
+        ]
+    ),
     ``,
     `<button onclick="requestCert()">인증하기</button>`,
     ``,

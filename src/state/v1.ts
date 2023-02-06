@@ -31,6 +31,14 @@ async function loadSdkV1(
   apiServer: string,
 ): Promise<SdkV1> {
   switch (version) {
+    case "1.3.0": {
+      const { default: IMP, slots } = await import(
+        "../sdk/iamport-1.3.0.esm.js"
+      );
+      const cleanUp = IMP.deinit;
+      slots.CORE_SERVER = apiServer;
+      return { IMP, cleanUp };
+    }
     case "1.2.1": {
       const { default: initSdk } = await import("../sdk/iamport-1.2.1");
       return initSdk({ window: globalThis, api_server: apiServer });
