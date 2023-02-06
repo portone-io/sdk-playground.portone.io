@@ -7,7 +7,7 @@ specifiers:
   '@codemirror/lang-json': ^6.0.1
   '@codemirror/view': ^6.7.3
   '@preact/preset-vite': ^2.4.0
-  '@preact/signals': ^1.1.2
+  '@preact/signals': ^1.1.3
   '@types/jquery': ^3.5.16
   '@types/react': ^18.0.25
   '@uiw/react-codemirror': ^4.19.7
@@ -26,7 +26,7 @@ dependencies:
   '@codemirror/lang-json': 6.0.1
   '@codemirror/view': 6.7.3
   '@preact/preset-vite': 2.4.0_o5ri7jvyayjinaf4erf5rjuy2y
-  '@preact/signals': 1.1.2_preact@10.11.3
+  '@preact/signals': 1.1.3_preact@10.11.3
   '@types/jquery': 3.5.16
   '@types/react': 18.0.25
   '@uiw/react-codemirror': 4.19.7_@codemirror+view@6.7.3
@@ -549,16 +549,16 @@ packages:
       - supports-color
     dev: false
 
-  /@preact/signals-core/1.2.2:
-    resolution: {integrity: sha512-z3/bCj7rRA21RJb4FeJ4guCrD1CQbaURHkCTunUWQpxUMAFOPXCD8tSFqERyGrrcSb4T3Hrmdc1OAl0LXBHwiw==}
+  /@preact/signals-core/1.2.3:
+    resolution: {integrity: sha512-Kui4p7PMcEQevBgsTO0JBo3gyQ88Q3qzEvsVCuSp11t0JcN4DmGCTJcGRVSCq7Bn7lGxJBO+57jNSzDoDJ+QmA==}
     dev: false
 
-  /@preact/signals/1.1.2_preact@10.11.3:
-    resolution: {integrity: sha512-MLNNrICSllHBhpXBvXbl7K5L1HmIjuTzgBw+zdODqjM/cLGPXdYiAWt4lqXlrxNavYdoU4eljb+TLE+DRL+6yw==}
+  /@preact/signals/1.1.3_preact@10.11.3:
+    resolution: {integrity: sha512-N09DuAVvc90bBZVRwD+aFhtGyHAmJLhS3IFoawO/bYJRcil4k83nBOchpCEoS0s5+BXBpahgp0Mjf+IOqP57Og==}
     peerDependencies:
       preact: 10.x
     dependencies:
-      '@preact/signals-core': 1.2.2
+      '@preact/signals-core': 1.2.3
       preact: 10.11.3
     dev: false
 
