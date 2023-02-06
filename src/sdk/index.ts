@@ -1,5 +1,6 @@
 export type SdkV1Versions = (typeof sdkV1Versions)[number];
 export const sdkV1Versions = [
+  "1.3.0",
   "1.2.1",
   "1.2.0",
   "1.1.8",

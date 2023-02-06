@@ -11,7 +11,7 @@ interface AppModeBase<
 interface AppModeV1 extends AppModeBase<SdkV1Versions, "pay" | "cert"> {}
 export type AppMode = AppModeV1;
 export const appModeSignal = signal<AppMode>({
-  sdkVersion: "1.2.1",
+  sdkVersion: "1.3.0",
   function: "pay",
 });
 
