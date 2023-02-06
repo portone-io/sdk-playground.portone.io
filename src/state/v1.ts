@@ -7,15 +7,23 @@ export const userCodeSignal = signal("");
 
 export const sdkV1Signal = signal<SdkV1 | undefined>(undefined);
 
-effect(async () => {
+effect(() => {
   const version = sdkVersionSignal.value;
   const apiServer = apiServerSignal.value.trim();
-  sdkV1Signal.value?.cleanUp();
-  if (getMajorVersion(version) === "v1") {
-    sdkV1Signal.value = await loadSdkV1(version, apiServer);
-  } else {
-    sdkV1Signal.value = undefined;
-  }
+  let cleaned = false;
+  (async () => {
+    if (getMajorVersion(version) === "v1") {
+      const sdk = await loadSdkV1(version, apiServer);
+      if (cleaned) return;
+      sdkV1Signal.value = sdk;
+    } else {
+      sdkV1Signal.value = undefined;
+    }
+  })();
+  return () => {
+    cleaned = true;
+    sdkV1Signal.value?.cleanUp();
+  };
 });
 
 async function loadSdkV1(
