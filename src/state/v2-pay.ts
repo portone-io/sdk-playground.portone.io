@@ -20,7 +20,7 @@ export const playFnSignal = computed(() => {
 export const codePreviewSignal = computed<string>(() => {
   const configObject = configObjectSignal.value;
   return [
-    `<script src="https://cdn.portone.io/sdk/v2"></script>`,
+    `<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>`,
     ``,
     `<button onclick="requestPay()">결제하기</button>`,
     ``,
@@ -42,13 +42,69 @@ export const fields = {
       default: "",
     },
   },
-  // paymentId
-  // orderName
-  // totalAmount
-  // payMethod
-  // currency
-  // channelName
-  // pgProvider
+  paymentId: {
+    required: true,
+    label: "결제 ID",
+    input: {
+      type: "text",
+      default: "",
+      placeholder: "",
+      generate: () => `test_${Date.now().toString(36)}`,
+    },
+  },
+  orderName: {
+    required: true,
+    label: "주문명",
+    input: {
+      type: "text",
+      placeholder: "짜장면 1개 단무지 추가",
+      default: "",
+    },
+  },
+  totalAmount: {
+    required: true,
+    label: "금액",
+    input: {
+      type: "integer",
+      default: 0,
+    },
+  },
+  payMethod: {
+    required: true,
+    label: "결제 수단",
+    input: {
+      type: "text",
+      placeholder: "CARD",
+      default: "",
+    },
+  },
+  currency: {
+    required: true,
+    label: "결제 통화",
+    input: {
+      type: "text",
+      placeholder: "KRW | USD | EUR | JPY",
+      default: "",
+    },
+  },
+  channelName: {
+    required: false,
+    label: "채널 이름",
+    input: {
+      type: "text",
+      placeholder: "",
+      default: "",
+    },
+  },
+  pgProvider: {
+    required: false,
+    label: "PG사 구분코드",
+    input: {
+      type: "text",
+      placeholder: "PG_PROVIDER_TOSSPAYMENTS",
+      default: "",
+    },
+  },
 } satisfies Fields;
 
 export const fieldSignals = createFieldSignals(fields);
