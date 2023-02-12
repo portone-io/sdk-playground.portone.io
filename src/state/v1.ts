@@ -1,9 +1,18 @@
 import { effect, signal } from "@preact/signals";
-import { SdkV1, SdkVersion } from "../sdk";
+import { SdkV1, SdkV1Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
+import persisted, { prefix } from "./persisted";
 
-export const apiServerSignal = signal("https://service.iamport.kr");
-export const userCodeSignal = signal("");
+export const apiServerSignal = persisted(
+  localStorage,
+  `${prefix}.v1.apiServer`,
+  "https://service.iamport.kr",
+);
+export const userCodeSignal = persisted(
+  localStorage,
+  `${prefix}.v1.userCode`,
+  "",
+);
 
 export const sdkV1Signal = signal<SdkV1 | undefined>(undefined);
 
@@ -13,7 +22,7 @@ effect(() => {
   let cleaned = false;
   (async () => {
     if (getMajorVersion(version) === "v1") {
-      const sdk = await loadSdkV1(version, apiServer);
+      const sdk = await loadSdkV1(version as SdkV1Version, apiServer);
       if (cleaned) return;
       sdkV1Signal.value = sdk;
     } else {
@@ -27,7 +36,7 @@ effect(() => {
 });
 
 async function loadSdkV1(
-  version: SdkVersion,
+  version: SdkV1Version,
   apiServer: string,
 ): Promise<SdkV1> {
   switch (version) {

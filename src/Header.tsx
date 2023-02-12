@@ -1,9 +1,11 @@
 import * as React from "react";
+import CodeMirror from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import { SdkVersion, sdkVersions } from "./sdk";
 import {
   appModeSignal,
   changeSdkVersion,
+  getMajorVersion,
   modes,
   playFnSignal,
   playResultSignal,
@@ -14,6 +16,7 @@ import JsonEditor from "./ui/JsonEditor";
 const Header: React.FC = () => {
   const playResult = playResultSignal.value;
   const mode = appModeSignal.value;
+  const majorVersion = getMajorVersion(mode.sdkVersion);
   const { sdkVersion } = mode;
   return (
     <>
@@ -47,7 +50,7 @@ const Header: React.FC = () => {
                 };
               }}
             >
-              {Object.entries(modes.v1).map(([v, { label }]) => (
+              {Object.entries(modes[majorVersion]).map(([v, { label }]) => (
                 <option key={v} value={v} selected={v === mode.function}>
                   {label}
                 </option>
@@ -69,12 +72,21 @@ const Header: React.FC = () => {
                   close
                 </button>
                 {playResult.success ? "실행 성공" : "실행 실패"}
-                <JsonEditor
-                  className="text-black"
-                  value={JSON.stringify(playResult.response, null, 2)}
-                  extensions={[EditorView.lineWrapping]}
-                  readOnly
-                />
+                {(playResult.response != null) && (
+                  <JsonEditor
+                    className="text-black"
+                    value={JSON.stringify(playResult.response, null, 2)}
+                    extensions={[EditorView.lineWrapping]}
+                    readOnly
+                  />
+                )}
+                {(playResult.errorStack != null) && (
+                  <CodeMirror
+                    className="text-black"
+                    value={playResult.errorStack}
+                    readOnly
+                  />
+                )}
               </div>
             </div>
           </div>

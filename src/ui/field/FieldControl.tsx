@@ -1,6 +1,7 @@
 import { Field, FieldSignal, Input } from "../../state/fields";
 import Control from "../Control";
 import FieldInputInteger from "./FieldInputInteger";
+import FieldInputObject from "./FieldInputObject";
 import FieldInputText from "./FieldInputText";
 import FieldInputToggle from "./FieldInputToggle";
 import { FieldInputProps } from "./input";
@@ -32,6 +33,7 @@ export default FieldControl;
 const fieldInputComponents: {
   [key in Input["type"]]: React.FC<FieldInputProps<any>>;
 } = {
+  object: FieldInputObject,
   text: FieldInputText,
   integer: FieldInputInteger,
   toggle: FieldInputToggle,

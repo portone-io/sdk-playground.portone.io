@@ -1,4 +1,5 @@
 import { computed, Signal, signal } from "@preact/signals";
+import persisted from "./persisted";
 
 export interface Fields {
   [key: string]: Field;
@@ -8,17 +9,24 @@ export interface Field {
   label: string;
   input: Input;
 }
-export type Input = TextInput | IntegerInput | ToggleInput;
-interface InputBase<TType extends string, TDefault> {
+export type Input = ObjectInput | TextInput | IntegerInput | ToggleInput;
+interface InputBase<TType extends string> {
   type: TType;
-  default: TDefault;
 }
-export interface TextInput extends InputBase<"text", string> {
+export interface ObjectInput extends InputBase<"object"> {
+  fields: Fields;
+}
+export interface TextInput extends InputBase<"text"> {
+  default: string;
   placeholder: string;
   generate?: () => string;
 }
-export interface IntegerInput extends InputBase<"integer", number> {}
-export interface ToggleInput extends InputBase<"toggle", boolean> {}
+export interface IntegerInput extends InputBase<"integer"> {
+  default: number;
+}
+export interface ToggleInput extends InputBase<"toggle"> {
+  default: boolean;
+}
 
 export interface FieldSignals {
   [key: string]: FieldSignal;
@@ -27,12 +35,22 @@ export interface FieldSignal {
   enabledSignal: Signal<boolean>;
   valueSignal: Signal<any>;
 }
-export function createFieldSignals(fields: Fields): FieldSignals {
+export function createFieldSignals(
+  storage: Storage,
+  keyPrefix: string,
+  fields: Fields,
+): FieldSignals {
   return Object.fromEntries(
-    Object.entries(fields).map(([key, field]) => [key, {
-      enabledSignal: signal(false),
-      valueSignal: signal(field.input.default),
-    }]),
+    Object.entries(fields).map(([key, field]) => {
+      const enabledSignal = signal(false);
+      const pKey = `${keyPrefix}.${key}`;
+      const valueSignal = (
+        field.input.type === "object"
+          ? signal(createFieldSignals(storage, pKey, field.input.fields))
+          : persisted(storage, pKey, field.input.default)
+      );
+      return [key, { enabledSignal, valueSignal }];
+    }),
   );
 }
 
@@ -40,8 +58,12 @@ export interface JsonSignals {
   jsonTextSignal: Signal<string>;
   jsonValueSignal: Signal<any>;
 }
-export function createJsonSignals(initialJsonText: string = "{}"): JsonSignals {
-  const jsonTextSignal = signal(initialJsonText);
+export function createJsonSignals(
+  storage: Storage,
+  key: string,
+  initialJsonText: string = "{}",
+): JsonSignals {
+  const jsonTextSignal = persisted(storage, key, initialJsonText);
   const jsonValueSignal = computed(() => {
     const jsonText = jsonTextSignal.value;
     try {
@@ -63,19 +85,24 @@ export function createConfigObjectSignal({
   fieldSignals,
   jsonValueSignal,
 }: CreateConfigObjectSignalConfig) {
-  const configObjectSignal = computed(() => {
+  return computed(() => ({
+    ...getObject(fields, fieldSignals),
+    ...jsonValueSignal.value,
+  }));
+  function getObject(fields: Fields, fieldSignals: FieldSignals): any {
     const result: any = {};
-    const jsonValue = jsonValueSignal.value;
     for (const [key, field] of Object.entries(fields)) {
       const fieldSignal = fieldSignals[key];
-      const value = fieldSignal.valueSignal.value;
+      const value = (
+        field.input.type === "object"
+          ? getObject(field.input.fields, fieldSignal.valueSignal.value)
+          : fieldSignal.valueSignal.value
+      );
       const enabled = fieldSignal.enabledSignal.value;
       if (field.required || enabled) {
         result[key] = value;
       }
     }
-    Object.assign(result, jsonValue);
     return result;
-  });
-  return configObjectSignal;
+  }
 }
