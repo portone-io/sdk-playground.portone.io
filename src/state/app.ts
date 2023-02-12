@@ -1,5 +1,6 @@
 import { computed, Signal, signal } from "@preact/signals";
 import { MajorVersion, SdkV1Version, SdkV2Version, SdkVersion } from "../sdk";
+import persisted, { prefix } from "./persisted";
 
 interface AppModeBase<
   TSdkVersion extends SdkVersion,
@@ -11,10 +12,11 @@ interface AppModeBase<
 interface AppModeV1 extends AppModeBase<SdkV1Version, "pay" | "cert"> {}
 interface AppModeV2 extends AppModeBase<SdkV2Version, "pay"> {}
 export type AppMode = AppModeV1 | AppModeV2;
-export const appModeSignal = signal<AppMode>({
-  sdkVersion: "1.3.0",
-  function: "pay",
-});
+export const appModeSignal = persisted<AppMode>(
+  localStorage,
+  `${prefix}.appMode`,
+  { sdkVersion: "1.3.0", function: "pay" },
+);
 
 export function isV1Mode(appMode: AppMode): appMode is AppModeV1 {
   return getMajorVersion(appMode.sdkVersion) === "v1";

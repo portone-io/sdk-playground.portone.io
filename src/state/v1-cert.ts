@@ -7,6 +7,7 @@ import {
   createJsonSignals,
   Fields,
 } from "./fields";
+import { prefix } from "./persisted";
 import { sdkV1Signal, userCodeSignal } from "./v1";
 
 export const playFnSignal = computed(() => {
@@ -135,8 +136,15 @@ export const fields = {
   },
 } satisfies Fields;
 
-export const fieldSignals = createFieldSignals(fields);
-export const { jsonTextSignal, jsonValueSignal } = createJsonSignals();
+export const fieldSignals = createFieldSignals(
+  localStorage,
+  `${prefix}.v1-cert.fields`,
+  fields,
+);
+export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+  localStorage,
+  `${prefix}.v1-cert.json`,
+);
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,

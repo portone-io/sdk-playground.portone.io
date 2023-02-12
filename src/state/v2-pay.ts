@@ -6,6 +6,7 @@ import {
   createJsonSignals,
   Fields,
 } from "./fields";
+import { prefix } from "./persisted";
 import { sdkV2Signal } from "./v2";
 
 export const playFnSignal = computed(() => {
@@ -171,8 +172,8 @@ export const fields = {
           label: "주소",
           input: {
             type: "text",
-            placeholder: "",
-            default: "시군구읍면동",
+            placeholder: "시군구읍면동",
+            default: "",
           },
         },
         zipcode: {
@@ -207,8 +208,15 @@ export const fields = {
   },
 } satisfies Fields;
 
-export const fieldSignals = createFieldSignals(fields);
-export const { jsonTextSignal, jsonValueSignal } = createJsonSignals();
+export const fieldSignals = createFieldSignals(
+  localStorage,
+  `${prefix}.v2-pay.fields`,
+  fields,
+);
+export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+  localStorage,
+  `${prefix}.v2-pay.json`,
+);
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,

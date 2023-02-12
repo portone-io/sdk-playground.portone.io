@@ -1,11 +1,16 @@
 import { effect, signal } from "@preact/signals";
 import { SdkV2, SdkV2Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
+import persisted, { prefix } from "./persisted";
 
-export const coreServerSignal = signal(
+export const coreServerSignal = persisted(
+  localStorage,
+  `${prefix}.v2.coreServer`,
   "https://service.iamport.kr",
 );
-export const checkoutServerSignal = signal(
+export const checkoutServerSignal = persisted(
+  localStorage,
+  `${prefix}.v2.checkoutServer`,
   "https://checkout-service.prod.iamport.co",
 );
 

@@ -1,4 +1,5 @@
 import { computed, Signal, signal } from "@preact/signals";
+import persisted from "./persisted";
 
 export interface Fields {
   [key: string]: Field;
@@ -34,14 +35,19 @@ export interface FieldSignal {
   enabledSignal: Signal<boolean>;
   valueSignal: Signal<any>;
 }
-export function createFieldSignals(fields: Fields): FieldSignals {
+export function createFieldSignals(
+  storage: Storage,
+  keyPrefix: string,
+  fields: Fields,
+): FieldSignals {
   return Object.fromEntries(
     Object.entries(fields).map(([key, field]) => {
       const enabledSignal = signal(false);
+      const pKey = `${keyPrefix}.${key}`;
       const valueSignal = (
         field.input.type === "object"
-          ? signal(createFieldSignals(field.input.fields))
-          : signal(field.input.default)
+          ? signal(createFieldSignals(storage, pKey, field.input.fields))
+          : persisted(storage, pKey, field.input.default)
       );
       return [key, { enabledSignal, valueSignal }];
     }),
@@ -52,8 +58,12 @@ export interface JsonSignals {
   jsonTextSignal: Signal<string>;
   jsonValueSignal: Signal<any>;
 }
-export function createJsonSignals(initialJsonText: string = "{}"): JsonSignals {
-  const jsonTextSignal = signal(initialJsonText);
+export function createJsonSignals(
+  storage: Storage,
+  key: string,
+  initialJsonText: string = "{}",
+): JsonSignals {
+  const jsonTextSignal = persisted(storage, key, initialJsonText);
   const jsonValueSignal = computed(() => {
     const jsonText = jsonTextSignal.value;
     try {
