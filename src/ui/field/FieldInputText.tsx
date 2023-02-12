@@ -24,7 +24,10 @@ const FieldInputText: React.FC<FieldInputProps<TextInput>> = ({
         <button
           className="ml-1"
           title="자동 생성"
-          onClick={() => valueSignal.value = generate()}
+          onClick={() => {
+            enabledSignal.value = true;
+            valueSignal.value = generate();
+          }}
         >
           🎲
         </button>

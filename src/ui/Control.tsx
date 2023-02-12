@@ -30,18 +30,22 @@ const Control: React.FC<ControlProps> = ({
   ...props
 }) => {
   return (
-    <div className={`flex flex-row ${className || ""}`} {...props}>
-      <label className="basis-6 shrink-0 flex items-center justify-center">
-        {required ? <RequiredIndicator /> : (
-          <input
-            type="checkbox"
-            checked={enabled}
-            onClick={(e) => onToggle?.(!enabled)}
-          />
-        )}
+    <div className={`flex flex-row ${className || ""} gap-1`} {...props}>
+      <label className="basis-4 shrink-0 flex items-center justify-center">
+        <div className="w-full h-full py-1 flex flex-col items-center justify-start bg-orange-50 rounded">
+          {required ? <RequiredIndicator /> : (
+            <input
+              type="checkbox"
+              checked={enabled}
+              onClick={() => onToggle?.(!enabled)}
+            />
+          )}
+        </div>
       </label>
       <label
-        className={`flex flex-col ${(required || enabled) ? "" : "opacity-50"}`}
+        className={`flex-1 flex flex-col ${
+          (required || enabled) ? "" : "opacity-50"
+        }`}
       >
         <span className="inline-flex flex-wrap">
           <span className="mr-2">{label}</span>

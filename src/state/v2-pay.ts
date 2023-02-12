@@ -105,6 +105,106 @@ export const fields = {
       default: "",
     },
   },
+  customer: {
+    required: false,
+    label: "고객 정보",
+    input: {
+      type: "object",
+      fields: {
+        customerId: {
+          required: false,
+          label: "주문자 ID",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: "",
+            generate: () => `user_${Date.now().toString(36)}`,
+          },
+        },
+        fullName: {
+          required: false,
+          label: "전체 이름",
+          input: {
+            type: "text",
+            placeholder: "포트원",
+            default: "",
+          },
+        },
+        firstName: {
+          required: false,
+          label: "(성이 아닌) 이름",
+          input: {
+            type: "text",
+            placeholder: "트원",
+            default: "",
+          },
+        },
+        lastName: {
+          required: false,
+          label: "성(姓)",
+          input: {
+            type: "text",
+            placeholder: "포",
+            default: "",
+          },
+        },
+        phoneNumber: {
+          required: false,
+          label: "휴대폰 번호",
+          input: {
+            type: "text",
+            placeholder: "010-1234-5678",
+            default: "",
+          },
+        },
+        email: {
+          required: false,
+          label: "이메일 주소",
+          input: {
+            type: "text",
+            placeholder: "buyer@example.com",
+            default: "",
+          },
+        },
+        address: {
+          required: false,
+          label: "주소",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: "시군구읍면동",
+          },
+        },
+        zipcode: {
+          required: false,
+          label: "우편번호",
+          input: {
+            type: "text",
+            placeholder: "01234",
+            default: "",
+          },
+        },
+        gender: {
+          required: false,
+          label: "구매자 성별",
+          input: {
+            type: "text",
+            placeholder: "GENDER_OTHER",
+            default: "",
+          },
+        },
+        birthYear: {
+          required: false,
+          label: "출생년도",
+          input: {
+            type: "text",
+            placeholder: "1234",
+            default: "",
+          },
+        },
+      },
+    },
+  },
 } satisfies Fields;
 
 export const fieldSignals = createFieldSignals(fields);
