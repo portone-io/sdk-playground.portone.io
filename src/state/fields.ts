@@ -42,13 +42,11 @@ export function createFieldSignals(
 ): FieldSignals {
   return Object.fromEntries(
     Object.entries(fields).map(([key, field]) => {
-      const enabledSignal = signal(false);
       const pKey = `${keyPrefix}.${key}`;
-      const valueSignal = (
-        field.input.type === "object"
-          ? signal(createFieldSignals(storage, pKey, field.input.fields))
-          : persisted(storage, pKey, field.input.default)
-      );
+      const enabledSignal = persisted(storage, `${pKey}.enabled`, false);
+      const valueSignal = field.input.type === "object"
+        ? signal(createFieldSignals(storage, pKey, field.input.fields))
+        : persisted(storage, pKey, field.input.default);
       return [key, { enabledSignal, valueSignal }];
     }),
   );
@@ -93,11 +91,9 @@ export function createConfigObjectSignal({
     const result: any = {};
     for (const [key, field] of Object.entries(fields)) {
       const fieldSignal = fieldSignals[key];
-      const value = (
-        field.input.type === "object"
-          ? getObject(field.input.fields, fieldSignal.valueSignal.value)
-          : fieldSignal.valueSignal.value
-      );
+      const value = field.input.type === "object"
+        ? getObject(field.input.fields, fieldSignal.valueSignal.value)
+        : fieldSignal.valueSignal.value;
       const enabled = fieldSignal.enabledSignal.value;
       if (field.required || enabled) {
         result[key] = value;
