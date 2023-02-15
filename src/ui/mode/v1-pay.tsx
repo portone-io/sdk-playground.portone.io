@@ -1,5 +1,5 @@
 import * as React from "react";
-import { apiServerSignal, userCodeSignal } from "../../state/v1";
+import { userCodeSignal } from "../../state/v1";
 import {
   codePreviewSignal,
   fields,
@@ -11,6 +11,7 @@ import Control, { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
 import JsonEditor from "../../ui/JsonEditor";
 import FieldControl from "../field/FieldControl";
+import { ForQa } from "./v1";
 
 const View: React.FC = () => {
   const parseJsonFailed = jsonValueSignal.value == null;
@@ -40,21 +41,7 @@ const View: React.FC = () => {
               <summary className="text-xs text-slate-500 cursor-pointer">
                 포트원 내부 QA 전용 설정
               </summary>
-              <label>
-                <div>Core API URL</div>
-                <input
-                  type="text"
-                  className="border w-full"
-                  value={apiServerSignal.value}
-                  onChange={(e) => {
-                    apiServerSignal.value = e.currentTarget.value;
-                  }}
-                />
-                <p className="text-xs text-red-700">
-                  ⚠️ 올바르지 않은 주소를 입력하고 실행할 시 조용하게 실패합니다.
-                  이 때는 페이지를 새로고침 해주세요.
-                </p>
-              </label>
+              <ForQa />
             </details>
           </details>
           <Control

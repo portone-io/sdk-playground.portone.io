@@ -1,5 +1,5 @@
 import * as React from "react";
-import { appModeSignal, getMajorVersion, isV1Mode } from "../../state/app";
+import { appModeSignal, getMajorVersion } from "../../state/app";
 import V1Cert from "./v1-cert";
 import V1Pay from "./v1-pay";
 import V2Pay from "./v2-pay";
