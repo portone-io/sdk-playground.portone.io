@@ -2,17 +2,20 @@ import { effect, signal } from "@preact/signals";
 import { SdkV1, SdkV1Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
+import { createUrlSignal } from "./url";
 
 export const coreServerSignal = persisted(
   localStorage,
   `${prefix}.v2.coreServer`,
   "https://service.iamport.kr",
 );
+export const coreServerUrlSignal = createUrlSignal(coreServerSignal);
 export const checkoutServerSignal = persisted(
   localStorage,
   `${prefix}.v2.checkoutServer`,
   "https://checkout-service.prod.iamport.co",
 );
+export const checkoutServerUrlSignal = createUrlSignal(checkoutServerSignal);
 export const userCodeSignal = persisted(
   localStorage,
   `${prefix}.v1.userCode`,
@@ -23,15 +26,19 @@ export const sdkV1Signal = signal<SdkV1 | undefined>(undefined);
 
 effect(() => {
   const version = sdkVersionSignal.value;
-  const coreServer = coreServerSignal.value.trim();
-  const checkoutServer = checkoutServerSignal.value.trim();
+  const coreServerUrl = coreServerUrlSignal.value;
+  const checkoutServerUrl = checkoutServerUrlSignal.value;
+  if (!(coreServerUrl && checkoutServerUrl)) {
+    sdkV1Signal.value = undefined;
+    return;
+  }
   let cleaned = false;
   (async () => {
     if (getMajorVersion(version) === "v1") {
       const sdk = await loadSdkV1(
         version as SdkV1Version,
-        coreServer,
-        checkoutServer,
+        coreServerUrl.origin,
+        checkoutServerUrl.origin,
       );
       if (cleaned) return;
       sdkV1Signal.value = sdk;
