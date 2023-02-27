@@ -4,16 +4,24 @@ import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
 
+export function reset() {
+  coreServerSignal.value = defaultCoreServer;
+  checkoutServerSignal.value = defaultCheckoutServer;
+}
+
+const defaultCoreServer = "https://service.iamport.kr";
 export const coreServerSignal = persisted(
   localStorage,
   `${prefix}.v2.coreServer`,
-  "https://service.iamport.kr",
+  defaultCoreServer,
 );
 export const coreServerUrlSignal = createUrlSignal(coreServerSignal);
+
+const defaultCheckoutServer = "https://checkout-service.prod.iamport.co";
 export const checkoutServerSignal = persisted(
   localStorage,
   `${prefix}.v2.checkoutServer`,
-  "https://checkout-service.prod.iamport.co",
+  defaultCheckoutServer,
 );
 export const checkoutServerUrlSignal = createUrlSignal(checkoutServerSignal);
 

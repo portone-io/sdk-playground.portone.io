@@ -1,11 +1,12 @@
 import * as React from "react";
-import { userCodeSignal } from "../../state/v1";
 import {
   codePreviewSignal,
   fields,
   fieldSignals,
   jsonTextSignal,
   jsonValueSignal,
+  reset,
+  userCodeSignal,
 } from "../../state/v1-pay";
 import Control, { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
@@ -44,6 +45,7 @@ const View: React.FC = () => {
               <ForQa />
             </details>
           </details>
+          <Reset resetFn={reset} />
           <Control
             required
             label="가맹점 식별코드"
@@ -87,3 +89,33 @@ const View: React.FC = () => {
 };
 
 export default View;
+
+interface ResetProps {
+  resetFn: () => void;
+}
+const Reset: React.FC<ResetProps> = ({ resetFn }) => {
+  const [checkPhase, setCheckPhase] = React.useState(false);
+  const gotoCheckPhase = () => setCheckPhase(true);
+  const gotoInitialPhase = () => setCheckPhase(false);
+  const doReset = () => (resetFn(), gotoInitialPhase());
+  return (
+    <div className="flex gap-2 text-sm">
+      {checkPhase
+        ? (
+          <>
+            <span className="text-red-600">입력된 내용을 전부 지울까요?</span>
+            <button onClick={doReset}>✅</button>
+            <button onClick={gotoInitialPhase}>❌</button>
+          </>
+        )
+        : (
+          <button
+            className="px-2 rounded font-bold text-red-100 bg-red-600"
+            onClick={gotoCheckPhase}
+          >
+            초기화
+          </button>
+        )}
+    </div>
+  );
+};

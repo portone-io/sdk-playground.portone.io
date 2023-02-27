@@ -1,11 +1,11 @@
 import * as React from "react";
-import { userCodeSignal } from "../../state/v1";
 import {
   codePreviewSignal,
   fields,
   fieldSignals,
   jsonTextSignal,
   jsonValueSignal,
+  userCodeSignal,
 } from "../../state/v1-cert";
 import Control, { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
