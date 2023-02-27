@@ -1,4 +1,6 @@
+import { signal } from "@preact/signals";
 import * as React from "react";
+import { reset as resetV1 } from "../../state/v1";
 import {
   codePreviewSignal,
   fields,
@@ -12,7 +14,15 @@ import Control, { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
 import JsonEditor from "../../ui/JsonEditor";
 import FieldControl from "../field/FieldControl";
+import Reset from "./Reset";
 import { ForQa } from "./v1";
+
+const resetCountSignal = signal(0);
+const resetFn = () => {
+  resetV1();
+  reset();
+  ++resetCountSignal.value;
+};
 
 const View: React.FC = () => {
   const parseJsonFailed = jsonValueSignal.value == null;
@@ -26,6 +36,7 @@ const View: React.FC = () => {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 md:pb-80">
+          <Reset resetFn={resetFn} />
           <details>
             <summary
               className={`text-xs ${
@@ -35,6 +46,7 @@ const View: React.FC = () => {
               추가 파라미터 (JSON{parseJsonFailed && " 파싱 실패"})
             </summary>
             <JsonEditor
+              key={resetCountSignal.value}
               value={jsonTextSignal.value}
               onChange={(json) => jsonTextSignal.value = json}
             />
@@ -45,7 +57,6 @@ const View: React.FC = () => {
               <ForQa />
             </details>
           </details>
-          <Reset resetFn={reset} />
           <Control
             required
             label="가맹점 식별코드"
@@ -89,33 +100,3 @@ const View: React.FC = () => {
 };
 
 export default View;
-
-interface ResetProps {
-  resetFn: () => void;
-}
-const Reset: React.FC<ResetProps> = ({ resetFn }) => {
-  const [checkPhase, setCheckPhase] = React.useState(false);
-  const gotoCheckPhase = () => setCheckPhase(true);
-  const gotoInitialPhase = () => setCheckPhase(false);
-  const doReset = () => (resetFn(), gotoInitialPhase());
-  return (
-    <div className="flex gap-2 text-sm">
-      {checkPhase
-        ? (
-          <>
-            <span className="text-red-600">입력된 내용을 전부 지울까요?</span>
-            <button onClick={doReset}>✅</button>
-            <button onClick={gotoInitialPhase}>❌</button>
-          </>
-        )
-        : (
-          <button
-            className="px-2 rounded font-bold text-red-100 bg-red-600"
-            onClick={gotoCheckPhase}
-          >
-            초기화
-          </button>
-        )}
-    </div>
-  );
-};
