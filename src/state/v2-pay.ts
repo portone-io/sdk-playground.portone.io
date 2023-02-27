@@ -5,9 +5,15 @@ import {
   createFieldSignals,
   createJsonSignals,
   Fields,
+  resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
 import { sdkV2Signal } from "./v2";
+
+export function reset() {
+  resetFieldSignals(fields, fieldSignals);
+  jsonTextSignal.value = "{}";
+}
 
 export const playFnSignal = computed(() => {
   const sdkV2 = sdkV2Signal.value;

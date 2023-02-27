@@ -1,4 +1,4 @@
-import { computed, Signal, signal } from "@preact/signals";
+import { computed, ReadonlySignal, Signal, signal } from "@preact/signals";
 import persisted from "./persisted";
 
 export interface Fields {
@@ -51,10 +51,22 @@ export function createFieldSignals(
     }),
   );
 }
+export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
+  for (const [key, fieldSignal] of Object.entries(fieldSignals)) {
+    const field = fields[key as keyof typeof fields];
+    const { enabledSignal, valueSignal } = fieldSignal;
+    enabledSignal.value = false;
+    if (field.input.type === "object") {
+      resetFieldSignals(field.input.fields, valueSignal.value);
+    } else {
+      valueSignal.value = field.input.default;
+    }
+  }
+}
 
 export interface JsonSignals {
   jsonTextSignal: Signal<string>;
-  jsonValueSignal: Signal<any>;
+  jsonValueSignal: ReadonlySignal<any>;
 }
 export function createJsonSignals(
   storage: Storage,

@@ -6,9 +6,23 @@ import {
   createFieldSignals,
   createJsonSignals,
   Fields,
+  resetFieldSignals,
 } from "./fields";
-import { prefix } from "./persisted";
-import { sdkV1Signal, userCodeSignal } from "./v1";
+import persisted, { prefix } from "./persisted";
+import { sdkV1Signal } from "./v1";
+
+export function reset() {
+  resetFieldSignals(fields, fieldSignals);
+  userCodeSignal.value = defaultUserCode;
+  jsonTextSignal.value = "{}";
+}
+
+const defaultUserCode = "";
+export const userCodeSignal = persisted(
+  localStorage,
+  `${prefix}.v1.userCode`,
+  defaultUserCode,
+);
 
 export const playFnSignal = computed(() => {
   const sdkV1 = sdkV1Signal.value;

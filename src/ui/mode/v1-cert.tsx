@@ -1,17 +1,28 @@
+import { signal } from "@preact/signals";
 import * as React from "react";
-import { userCodeSignal } from "../../state/v1";
+import { reset as resetV1 } from "../../state/v1";
 import {
   codePreviewSignal,
   fields,
   fieldSignals,
   jsonTextSignal,
   jsonValueSignal,
+  reset,
+  userCodeSignal,
 } from "../../state/v1-cert";
 import Control, { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
 import JsonEditor from "../../ui/JsonEditor";
 import FieldControl from "../field/FieldControl";
+import Reset from "./Reset";
 import { ForQa } from "./v1";
+
+const resetCountSignal = signal(0);
+const resetFn = () => {
+  resetV1();
+  reset();
+  ++resetCountSignal.value;
+};
 
 const View: React.FC = () => {
   const parseJsonFailed = jsonValueSignal.value == null;
@@ -23,6 +34,7 @@ const View: React.FC = () => {
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 md:pb-80">
+          <Reset resetFn={resetFn} />
           <details>
             <summary
               className={`text-xs ${
@@ -32,6 +44,7 @@ const View: React.FC = () => {
               추가 파라미터 (JSON{parseJsonFailed && " 파싱 실패"})
             </summary>
             <JsonEditor
+              key={resetCountSignal.value}
               value={jsonTextSignal.value}
               onChange={(json) => jsonTextSignal.value = json}
             />
