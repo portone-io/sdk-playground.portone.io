@@ -12,6 +12,7 @@ import {
   waitingSignal,
 } from "./state/app";
 import JsonEditor from "./ui/JsonEditor";
+import TrialModal from "./ui/TrialModal";
 
 const Header: React.FC = () => {
   const playResult = playResultSignal.value;
@@ -59,6 +60,7 @@ const Header: React.FC = () => {
           </div>
         </div>
         <PlayButton />
+        <TrialModal />
         {playResult && (
           <div className="z-10 absolute -bottom-4 right-0 w-full md:w-1/2 text-white">
             <div className="absolute top-0 right-0 w-full h-full px-2">
@@ -106,27 +108,29 @@ const PlayButton: React.FC = () => {
       className="mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold"
       onClick={waiting ? undefined : play}
     >
-      {waiting
-        ? (
-          <svg
-            className="waiting"
-            width="1rem"
-            height="1rem"
-            viewBox="0 0 30 30"
-          >
-            <circle
-              cx="15"
-              cy="15"
-              r="12"
-              stroke="white"
-              strokeWidth="6"
-              strokeLinecap="round"
-              fill="transparent"
-            />
-          </svg>
-        )
-        : "실행"}
+      {waiting ? <WaitingIndicator /> : "실행"}
     </button>
+  );
+};
+
+const WaitingIndicator: React.FC = () => {
+  return (
+    <svg
+      className="waiting"
+      width="1rem"
+      height="1rem"
+      viewBox="0 0 30 30"
+    >
+      <circle
+        cx="15"
+        cy="15"
+        r="12"
+        stroke="white"
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="transparent"
+      />
+    </svg>
   );
 };
 
