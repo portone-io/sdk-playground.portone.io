@@ -5,6 +5,9 @@
 :root {
   font-size: 20px;
 }
+:root.modal {
+  overflow: hidden;
+}
 @media (min-width: 640px) {
   :root {
     font-size: 16px;
