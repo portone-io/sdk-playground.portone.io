@@ -9,9 +9,10 @@ const TrialModal: React.FC = () => {
     <Modal
       open={open}
       title="체험하기"
+      description="원하는 항목을 선택하면 입력칸이 자동으로 채워집니다"
       onClose={() => trialModalOpenSignal.value = false}
     >
-      <div className="px-4 h-full flex flex-col gap-2 overflow-y-scroll">
+      <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
         <Group>본인인증</Group>
         <div className="grid sm:grid-cols-2 gap-2">
           <PresetButton pg="inicis">이니시스</PresetButton>
@@ -102,11 +103,15 @@ const PresetButton: React.FC<PresetButtonProps> = (
   { pg, children },
 ) => {
   return (
-    <div className="px-2 py-4 flex gap-2 items-center text-sm break-all rounded bg-slate-200">
-      <img className="mx-2 h-8" src={`/pg/${pg}.png`} />
-      <p className="text-lg">
+    <div className="p-4 flex gap-2 items-center text-sm break-all rounded bg-slate-100">
+      <img className="h-8" src={`/pg/${pg}.png`} />
+      <span className="flex-1 text-lg">
         {children}
-      </p>
+      </span>
+      <button className="basis-1/2 flex gap-2 text-slate-800 text-[1.05rem] px-4 py-2 rounded bg-white shadow hover:translate-x-0.5 transition-transform cursor-pointer">
+        <span>👤</span>
+        <span>본인인증</span>
+      </button>
     </div>
   );
 };
@@ -144,23 +149,21 @@ const PresetList: React.FC<PresetListProps> = (
   { pg, methods },
 ) => {
   return (
-    <div className="px-2 py-4 flex flex-col gap-2 items-stretch text-sm break-all rounded bg-slate-200">
+    <div className="px-4 py-4 flex flex-col gap-4 items-stretch text-sm break-all rounded bg-slate-100">
       <div className="flex gap-2">
-        <img className="mx-2 h-8" src={`/pg/${pg}.png`} />
-        <p className="text-lg">{pgNames[pg]}</p>
+        <img className="h-8" src={`/pg/${pg}.png`} />
+        <span className="text-lg">{pgNames[pg]}</span>
       </div>
-      <div className="px-2">
-        <div className="my-2 flex flex-col items-stretch gap-1.5">
-          {methods.map((method) => (
-            <button
-              key={method}
-              className="flex gap-2 text-slate-800 text-[1.05rem] px-4 py-2 rounded bg-white shadow hover:translate-x-0.5 transition-transform cursor-pointer"
-            >
-              <span>{payMethodEmojis[method]}</span>
-              <span>{payMethodNames[method]}</span>
-            </button>
-          ))}
-        </div>
+      <div className="flex flex-col items-stretch gap-1.5">
+        {methods.map((method) => (
+          <button
+            key={method}
+            className="flex gap-2 text-slate-800 text-[1.05rem] px-4 py-2 rounded bg-white shadow hover:translate-x-0.5 transition-transform cursor-pointer"
+          >
+            <span>{payMethodEmojis[method]}</span>
+            <span>{payMethodNames[method]}</span>
+          </button>
+        ))}
       </div>
     </div>
   );
