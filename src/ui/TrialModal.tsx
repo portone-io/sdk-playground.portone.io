@@ -29,9 +29,6 @@ const TrialModal: React.FC = () => {
           <CertPreset icon="inicis" handler={fillInicisCert}>
             이니시스
           </CertPreset>
-          <CertPreset icon="danal" handler={fillDanalCert}>
-            다날
-          </CertPreset>
         </div>
         <Group>결제</Group>
         <div className="grid sm:grid-cols-2 gap-2">
@@ -62,15 +59,6 @@ function fillInicisCert() {
   v1CertUserCodeSignal.value = "imp29272276";
   v1CertFieldSignals.pg.enabledSignal.value = true;
   v1CertFieldSignals.pg.valueSignal.value = "inicis_unified";
-  fillMerchantUid("v1-cert");
-}
-
-function fillDanalCert() {
-  trialModalOpenSignal.value = false;
-  appModeSignal.value = { sdkVersion: "1.3.0", function: "cert" };
-  v1CertUserCodeSignal.value = "imp29272276";
-  v1CertFieldSignals.pg.enabledSignal.value = true;
-  v1CertFieldSignals.pg.valueSignal.value = "danal";
   fillMerchantUid("v1-cert");
 }
 
