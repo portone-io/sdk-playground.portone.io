@@ -124,10 +124,11 @@ const PlayButton: React.FC = () => {
   const play = playFnSignal.value;
   const showTrial = showTrialSignal.value;
   const openTrialModal = () => trialModalOpenSignal.value = true;
+  const doBounce = showTrial && !trialModalOpenSignal.value;
   return (
     <button
       className={`mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold ${
-        showTrial ? "bounce" : ""
+        doBounce ? "bounce" : ""
       }`}
       onClick={waiting ? undefined : showTrial ? openTrialModal : play}
     >

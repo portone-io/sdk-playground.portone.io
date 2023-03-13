@@ -35,8 +35,8 @@ const TrialModal: React.FC = () => {
         </div>
         <Group>결제</Group>
         <div className="grid sm:grid-cols-2 gap-2">
-          {payPresets.map((preset) => (
-            <PayPreset key={preset.icon} {...preset} />
+          {payPresets.map((preset, index) => (
+            <PayPreset key={index} {...preset} />
           ))}
         </div>
       </div>
