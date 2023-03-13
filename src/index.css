@@ -62,3 +62,16 @@
     stroke-dasharray: 75.4 75.4 75.4 75.4 999;
   }
 }
+
+.bounce {
+  animation: bounce .3s ease infinite alternate;
+}
+
+@keyframes bounce {
+  from {
+    transform: none;
+  }
+  to {
+    transform: scale(1.05);
+  }
+}

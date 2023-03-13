@@ -126,7 +126,9 @@ const PlayButton: React.FC = () => {
   const openTrialModal = () => trialModalOpenSignal.value = true;
   return (
     <button
-      className="mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold"
+      className={`mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold ${
+        showTrial ? "bounce" : ""
+      }`}
       onClick={waiting ? undefined : showTrial ? openTrialModal : play}
     >
       {waiting ? <WaitingIndicator /> : showTrial ? "체험하기" : "실행"}

@@ -13,7 +13,7 @@ import {
   userCodeSignal as v1PayUserCodeSignal,
 } from "../state/v1-pay";
 
-export const trialModalOpenSignal = signal(true);
+export const trialModalOpenSignal = signal(false);
 const TrialModal: React.FC = () => {
   const open = trialModalOpenSignal.value;
   return (
@@ -245,10 +245,8 @@ const payPresets = [
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
       v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
+      v1PayFieldSignals.buyer_name.enabledSignal.value = true;
+      v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
     },
   },
   {
@@ -390,7 +388,7 @@ const payPresets = [
       v1PayFieldSignals.pay_method.valueSignal.value = method;
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
+      v1PayFieldSignals.amount.valueSignal.value = 1000;
       v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
       v1PayFieldSignals.buyer_email.enabledSignal.value = true;
       v1PayFieldSignals.buyer_email.valueSignal.value = "buyer@example.com";
