@@ -5,6 +5,9 @@
 :root {
   font-size: 20px;
 }
+:root.modal {
+  overflow: hidden;
+}
 @media (min-width: 640px) {
   :root {
     font-size: 16px;
@@ -57,5 +60,18 @@
   100% {
     transform: rotate(2turn);
     stroke-dasharray: 75.4 75.4 75.4 75.4 999;
+  }
+}
+
+.bounce {
+  animation: bounce .3s ease infinite alternate;
+}
+
+@keyframes bounce {
+  from {
+    transform: none;
+  }
+  to {
+    transform: scale(1.05);
   }
 }

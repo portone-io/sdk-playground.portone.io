@@ -1,3 +1,4 @@
+import { computed } from "@preact/signals";
 import * as React from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
@@ -6,12 +7,31 @@ import {
   appModeSignal,
   changeSdkVersion,
   getMajorVersion,
+  isV1Mode,
+  isV2Mode,
   modes,
   playFnSignal,
   playResultSignal,
   waitingSignal,
 } from "./state/app";
 import JsonEditor from "./ui/JsonEditor";
+import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
+import { userCodeSignal as v1PayUserCodeSignal } from "./state/v1-pay";
+import { userCodeSignal as v1CertUserCodeSignal } from "./state/v1-cert";
+import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
+
+export const showTrialSignal = computed(() => {
+  const appMode = appModeSignal.value;
+  const v1PayUserCode = v1PayUserCodeSignal.value;
+  const v1CertUserCode = v1CertUserCodeSignal.value;
+  const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal;
+  if (isV1Mode(appMode)) {
+    if (appMode.function === "pay") return !v1PayUserCode;
+    if (appMode.function === "cert") return !v1CertUserCode;
+  }
+  if (isV2Mode(appMode)) return !v2PayStoreId;
+  throw new Error();
+});
 
 const Header: React.FC = () => {
   const playResult = playResultSignal.value;
@@ -59,6 +79,7 @@ const Header: React.FC = () => {
           </div>
         </div>
         <PlayButton />
+        <TrialModal />
         {playResult && (
           <div className="z-10 absolute -bottom-4 right-0 w-full md:w-1/2 text-white">
             <div className="absolute top-0 right-0 w-full h-full px-2">
@@ -101,32 +122,39 @@ export default Header;
 const PlayButton: React.FC = () => {
   const waiting = waitingSignal.value;
   const play = playFnSignal.value;
+  const showTrial = showTrialSignal.value;
+  const openTrialModal = () => trialModalOpenSignal.value = true;
+  const doBounce = showTrial && !trialModalOpenSignal.value;
   return (
     <button
-      className="mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold"
-      onClick={waiting ? undefined : play}
+      className={`mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold ${
+        doBounce ? "bounce" : ""
+      }`}
+      onClick={waiting ? undefined : showTrial ? openTrialModal : play}
     >
-      {waiting
-        ? (
-          <svg
-            className="waiting"
-            width="1rem"
-            height="1rem"
-            viewBox="0 0 30 30"
-          >
-            <circle
-              cx="15"
-              cy="15"
-              r="12"
-              stroke="white"
-              strokeWidth="6"
-              strokeLinecap="round"
-              fill="transparent"
-            />
-          </svg>
-        )
-        : "실행"}
+      {waiting ? <WaitingIndicator /> : showTrial ? "체험하기" : "실행"}
     </button>
+  );
+};
+
+const WaitingIndicator: React.FC = () => {
+  return (
+    <svg
+      className="waiting"
+      width="1rem"
+      height="1rem"
+      viewBox="0 0 30 30"
+    >
+      <circle
+        cx="15"
+        cy="15"
+        r="12"
+        stroke="white"
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="transparent"
+      />
+    </svg>
   );
 };
 

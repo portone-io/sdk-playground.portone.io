@@ -73,7 +73,7 @@ export const fields = {
     label: "지원 PG사",
     input: {
       type: "text",
-      placeholder: "html5_inicis",
+      placeholder: "inicis_unified",
       default: "",
     },
   },
