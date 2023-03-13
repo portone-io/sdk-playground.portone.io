@@ -24,7 +24,7 @@ export const showTrialSignal = computed(() => {
   const appMode = appModeSignal.value;
   const v1PayUserCode = v1PayUserCodeSignal.value;
   const v1CertUserCode = v1CertUserCodeSignal.value;
-  const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal;
+  const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
   if (isV1Mode(appMode)) {
     if (appMode.function === "pay") return !v1PayUserCode;
     if (appMode.function === "cert") return !v1CertUserCode;
