@@ -264,10 +264,8 @@ const payPresets = [
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
       v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
+      v1PayFieldSignals.buyer_name.enabledSignal.value = true;
+      v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
     },
   },
   {
