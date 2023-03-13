@@ -104,6 +104,15 @@ export const fields = {
       generate: () => `test_${Date.now().toString(36)}`,
     },
   },
+  customer_uid: {
+    required: false,
+    label: "사용자 결제수단별 고유 ID",
+    input: {
+      type: "text",
+      default: "",
+      placeholder: "",
+    },
+  },
   name: {
     required: false,
     label: "주문명",
@@ -226,6 +235,15 @@ export const fields = {
       placeholder: "https://example.com",
     },
   },
+  notice_url: {
+    required: false,
+    label: "웹훅 URL",
+    input: {
+      type: "text",
+      default: "",
+      placeholder: "https://example.com",
+    },
+  },
   app_scheme: {
     required: false,
     label: "앱 복귀를 위한 URL",
@@ -233,6 +251,33 @@ export const fields = {
       type: "text",
       default: "",
       placeholder: "iamport://",
+    },
+  },
+  period: {
+    required: false,
+    label: "제공 기간",
+    input: {
+      type: "object",
+      fields: {
+        from: {
+          required: true,
+          label: "시작일자",
+          input: {
+            type: "text",
+            placeholder: "YYYYMMDD",
+            default: "",
+          },
+        },
+        to: {
+          required: true,
+          label: "종료일자",
+          input: {
+            type: "text",
+            placeholder: "YYYYMMDD",
+            default: "",
+          },
+        },
+      },
     },
   },
   biz_num: {
