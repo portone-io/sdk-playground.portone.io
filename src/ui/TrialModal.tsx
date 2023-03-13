@@ -80,6 +80,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "html5_inicis";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -103,6 +104,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "kcp";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -124,6 +126,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "nice";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -145,6 +148,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "kicc";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -170,6 +174,7 @@ const payPresets = [
         v1PayFieldSignals.pg.valueSignal.value = "danal";
       }
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -187,6 +192,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "settle";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -208,6 +214,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "smartro";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -229,6 +236,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "bluewalnut";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -248,6 +256,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "ksnet";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -267,6 +276,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "tosspayments";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -292,6 +302,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "uplus";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -317,6 +328,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "daou";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -338,6 +350,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "mobilians";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -355,6 +368,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "eximbay";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -372,6 +386,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "paymentwall";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 1000;
@@ -391,6 +406,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "kakaopay";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -408,6 +424,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "tosspay";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -425,6 +442,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "payco";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
@@ -442,6 +460,7 @@ const payPresets = [
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "smilepay";
       v1PayFieldSignals.pay_method.valueSignal.value = method;
+      fillMerchantUid("v1-pay");
       v1PayFieldSignals.name.enabledSignal.value = true;
       v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
       v1PayFieldSignals.amount.valueSignal.value = 100;
