@@ -20,6 +20,7 @@ import { userCodeSignal as v1PayUserCodeSignal } from "./state/v1-pay";
 import { userCodeSignal as v1CertUserCodeSignal } from "./state/v1-cert";
 import { userCodeSignal as v1LoadUiUserCodeSignal } from "./state/v1-load-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
+import { save } from "./state/saveHistory";
 
 export const showTrialSignal = computed(() => {
   const modeFn = modeFnSignal.value;
@@ -133,12 +134,17 @@ const PlayButton: React.FC = () => {
   const showTrial = showTrialSignal.value;
   const openTrialModal = () => trialModalOpenSignal.value = true;
   const doBounce = showTrial && !trialModalOpenSignal.value;
+
+  const onClickPlay = () => {
+    save();
+    play();
+  };
   return (
     <button
       className={`mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold ${
         doBounce ? "bounce" : ""
       }`}
-      onClick={waiting ? undefined : showTrial ? openTrialModal : play}
+      onClick={waiting ? undefined : showTrial ? openTrialModal : onClickPlay}
     >
       {waiting ? <WaitingIndicator /> : showTrial ? "체험하기" : "실행"}
     </button>
