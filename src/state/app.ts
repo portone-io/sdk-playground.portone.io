@@ -55,13 +55,12 @@ export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
 export interface StateModule {
   playFnSignal: Signal<PlayFn>;
 }
-export const stateModulePromiseSignal = computed<Promise<StateModule>>(() => {
-  const appMode = appModeSignal.value;
-  return modeFns[appMode.fn].stateModule();
-});
+export const stateModulePromiseSignal = computed<Promise<StateModule>>(
+  () => modeFns[modeFnSignal.value].stateModule(),
+);
 
 export const sdkVersionSignal = computed(() => appModeSignal.value.sdkVersion);
-export const sdkFunctionSignal = computed(sanitizeModeFn);
+export const modeFnSignal = computed(sanitizeModeFn);
 function sanitizeModeFn(
   sdkVersion: SdkVersion = appModeSignal.value.sdkVersion,
   modeFn: ModeFnKey = appModeSignal.value.fn,
