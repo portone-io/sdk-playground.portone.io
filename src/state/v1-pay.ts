@@ -69,7 +69,7 @@ export const codePreviewSignal = computed<string>(() => {
 
 export const fields = {
   pg: {
-    required: false,
+    required: true,
     label: "지원 PG사",
     input: {
       type: "text",

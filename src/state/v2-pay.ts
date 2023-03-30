@@ -104,7 +104,7 @@ export const fields = {
     },
   },
   pgProvider: {
-    required: false,
+    required: true,
     label: "PG사 구분코드",
     input: {
       type: "text",
