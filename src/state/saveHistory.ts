@@ -18,7 +18,7 @@ const LOCAL_STORAGE_HISTORY = "history";
 export type SaveMode = "v1-pay" | "v1-cert" | "v2-pay";
 
 export type HistoryField = {
-  [key in string]?: { enable: boolean; value: string | boolean | object };
+  [key in string]: { enable: boolean; value: string | boolean | object };
 };
 
 export interface HistoryItem {
@@ -107,17 +107,9 @@ const getFieldsSignalValue = (
       const fieldSignals = targetFieldSignals[key].valueSignal
         .value as FieldSignals;
 
-      const innerObject: HistoryField = {};
-
-      Object.entries(field.input.fields).map(([innerKey, field]) => {
-        innerObject[innerKey] = {
-          enable: fieldSignals[innerKey].enabledSignal.value,
-          value: fieldSignals[innerKey].valueSignal.value,
-        };
-      });
       result[key] = {
         enable: targetFieldSignals[key].enabledSignal.value,
-        value: innerObject,
+        value: getFieldsSignalValue(field.input.fields, fieldSignals),
       };
     } else {
       result[key] = {
