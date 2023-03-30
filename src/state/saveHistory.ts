@@ -13,18 +13,20 @@ import {
   fieldSignals as v2PayFieldSignals,
 } from "./v2-pay";
 
-type SaveMode = "v1-pay" | "v1-cert" | "v2-pay";
+const LOCAL_STORAGE_HISTORY = "history";
 
-type HistoryField = {
+export type SaveMode = "v1-pay" | "v1-cert" | "v2-pay";
+
+export type HistoryField = {
   [key in string]?: { enable: boolean; value: string | boolean | object };
 };
 
-interface HistoryItem {
+export interface HistoryItem {
   mode: SaveMode;
   name: string;
   fields: HistoryField;
   createAt: number;
-  sdkVersion: string;
+  sdkVersion: "1.3.0" | "1.2.1" | "1.2.0" | "1.1.8" | "1.1.7" | "2.0.0";
 }
 
 const v1PgObject = {
@@ -157,15 +159,15 @@ export const save = () => {
     sdkVersion: appModeSignal.value.sdkVersion,
   };
 
-  const prevHistories = localStorage.getItem("history");
+  const prevHistories = localStorage.getItem(LOCAL_STORAGE_HISTORY);
   if (prevHistories) {
     localStorage.setItem(
-      "history",
+      LOCAL_STORAGE_HISTORY,
       JSON.stringify([historyItem, ...JSON.parse(prevHistories)]),
     );
 
     return;
   }
 
-  localStorage.setItem("history", JSON.stringify([historyItem]));
+  localStorage.setItem(LOCAL_STORAGE_HISTORY, JSON.stringify([historyItem]));
 };
