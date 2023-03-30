@@ -45,27 +45,25 @@ function apply(
   historyField: HistoryField,
 ) {
   Object.entries(fields).forEach(([key, field]) => {
-    if (field.input.type === "object") {
-      // const fieldSignals = targetFieldSignals[key].valueSignal
-      //   .value as FieldSignals;
+    if (
+      field.input.type === "object" && typeof historyField[key]
+          .value === "object"
+    ) {
+      const fieldSignals = targetFieldSignals[key].valueSignal
+        .value as FieldSignals;
 
-      // const innerObject: HistoryField = {};
+      const innerHistoryField: HistoryField = historyField[key]
+        .value as HistoryField;
 
-      // Object.entries(field.input.fields).map(([innerKey, field]) => {
-      //   innerObject[innerKey] = {
-      //     enable: fieldSignals[innerKey].enabledSignal.value,
-      //     value: fieldSignals[innerKey].valueSignal.value,
-      //   };
-      // });
-      // result[key] = {
-      //   enable: targetFieldSignals[key].enabledSignal.value,
-      //   value: innerObject,
-      // };
+      targetFieldSignals[key].enabledSignal.value = historyField[key].enable;
+      apply(field.input.fields, fieldSignals, innerHistoryField);
     } else {
       targetFieldSignals[key].enabledSignal.value = historyField[key]?.enable ||
         false;
       targetFieldSignals[key].valueSignal.value = historyField[key]?.value;
     }
+
+    return;
   });
 }
 
@@ -105,7 +103,6 @@ const HistoryModal: React.FC = () => {
       e.stopPropagation();
       const historyItem = historyList[index];
       fillInputs(historyItem);
-      console.log("aplly");
     };
   };
 
