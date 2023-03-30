@@ -55,7 +55,7 @@ function fillMerchantUid(mode: "v1-cert" | "v1-pay") {
 
 function fillInicisCert() {
   trialModalOpenSignal.value = false;
-  appModeSignal.value = { sdkVersion: "1.3.0", function: "cert" };
+  appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-cert" };
   v1CertUserCodeSignal.value = "imp29272276";
   v1CertFieldSignals.pg.enabledSignal.value = true;
   v1CertFieldSignals.pg.valueSignal.value = "inicis_unified";
@@ -75,7 +75,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone", "cultureland"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "html5_inicis";
@@ -99,7 +99,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone", "cultureland"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "kcp";
@@ -121,7 +121,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "nice";
@@ -143,7 +143,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "kicc";
@@ -165,7 +165,7 @@ const payPresets = [
     methods: ["card", "phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       if (method === "card") {
@@ -187,7 +187,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "settle";
@@ -209,7 +209,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "smartro";
@@ -231,7 +231,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "bluewalnut";
@@ -251,7 +251,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "ksnet";
@@ -271,7 +271,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "tosspayments";
@@ -297,7 +297,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank", "phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "uplus";
@@ -323,7 +323,7 @@ const payPresets = [
     methods: ["card", "trans", "vbank"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "daou";
@@ -345,7 +345,7 @@ const payPresets = [
     methods: ["phone"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "mobilians";
@@ -363,7 +363,7 @@ const payPresets = [
     methods: ["card"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "eximbay";
@@ -381,7 +381,7 @@ const payPresets = [
     methods: ["card"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "paymentwall";
@@ -401,7 +401,7 @@ const payPresets = [
     methods: ["card"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "kakaopay";
@@ -419,7 +419,7 @@ const payPresets = [
     methods: ["card"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "tosspay";
@@ -437,7 +437,7 @@ const payPresets = [
     methods: ["card"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "payco";
@@ -455,7 +455,7 @@ const payPresets = [
     methods: ["card"],
     handler(method) {
       trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", function: "pay" };
+      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
       v1PayUserCodeSignal.value = "imp14397622";
       v1PayFieldSignals.pg.enabledSignal.value = true;
       v1PayFieldSignals.pg.valueSignal.value = "smilepay";
