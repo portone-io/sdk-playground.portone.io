@@ -21,15 +21,31 @@ export function getMajorVersion(sdkVersion: SdkVersion): MajorVersion {
 
 export type ModeFnKey = keyof typeof modeFns;
 export const modeFns = {
-  "v1-pay": { label: "결제", stateModule: () => import("./v1-pay") },
-  "v1-cert": { label: "본인인증", stateModule: () => import("./v1-cert") },
-  "v2-pay": { label: "결제", stateModule: () => import("./v2-pay") },
+  "v1-pay": {
+    label: "결제",
+    stateModule: () => import("./v1-pay"),
+  },
+  "v1-cert": {
+    label: "본인인증",
+    stateModule: () => import("./v1-cert"),
+  },
+  "v1-load-ui": {
+    label: "PG 제공 UI",
+    stateModule: () => import("./v1-load-ui"),
+  },
+  "v2-pay": {
+    label: "결제",
+    stateModule: () => import("./v2-pay"),
+  },
 } satisfies {
-  [key: string]: { label: string; stateModule: () => Promise<StateModule> };
+  [key: string]: {
+    label: string;
+    stateModule: () => Promise<StateModule>;
+  };
 };
 export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
   "2.0.0": ["v2-pay"],
-  "1.3.0": ["v1-pay", "v1-cert"],
+  "1.3.0": ["v1-pay", "v1-cert", "v1-load-ui"],
   "1.2.1": ["v1-pay", "v1-cert"],
   "1.2.0": ["v1-pay", "v1-cert"],
   "1.1.8": ["v1-pay", "v1-cert"],

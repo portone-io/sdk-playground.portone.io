@@ -20,7 +20,7 @@ export function reset() {
 const defaultUserCode = "";
 export const userCodeSignal = persisted(
   localStorage,
-  `${prefix}.v1.userCode`,
+  `${prefix}.v1-cert.userCode`,
   defaultUserCode,
 );
 
