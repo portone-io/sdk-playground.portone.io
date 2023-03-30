@@ -17,18 +17,22 @@ import JsonEditor from "./ui/JsonEditor";
 import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
 import { userCodeSignal as v1PayUserCodeSignal } from "./state/v1-pay";
 import { userCodeSignal as v1CertUserCodeSignal } from "./state/v1-cert";
+import { userCodeSignal as v1LoadUiUserCodeSignal } from "./state/v1-load-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
 
 export const showTrialSignal = computed(() => {
   const appMode = appModeSignal.value;
   const v1PayUserCode = v1PayUserCodeSignal.value;
   const v1CertUserCode = v1CertUserCodeSignal.value;
+  const v1LoadUiUserCode = v1LoadUiUserCodeSignal.value;
   const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
   switch (appMode.fn) {
     case "v1-pay":
       return !v1PayUserCode;
     case "v1-cert":
       return !v1CertUserCode;
+    case "v1-load-ui":
+      return !v1LoadUiUserCode;
     case "v2-pay":
       return !v2PayStoreId;
   }

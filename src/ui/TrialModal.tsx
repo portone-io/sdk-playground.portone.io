@@ -12,6 +12,12 @@ import {
   fieldSignals as v1PayFieldSignals,
   userCodeSignal as v1PayUserCodeSignal,
 } from "../state/v1-pay";
+import {
+  fields as v1LoadUiFields,
+  fieldSignals as v1LoadUiFieldSignals,
+  uiTypeSignal as v1LoadUiUiTypeSignal,
+  userCodeSignal as v1LoadUiUserCodeSignal,
+} from "../state/v1-load-ui";
 
 export const trialModalOpenSignal = signal(false);
 const TrialModal: React.FC = () => {
@@ -30,6 +36,12 @@ const TrialModal: React.FC = () => {
             이니시스
           </CertPreset>
         </div>
+        <Group>PG 제공 UI</Group>
+        <div className="grid sm:grid-cols-2 gap-2">
+          <LoadUiPreset icon="paypal" handler={fillPaypalLoadUi}>
+            페이팔 SPB
+          </LoadUiPreset>
+        </div>
         <Group>결제</Group>
         <div className="grid sm:grid-cols-2 gap-2">
           {payPresets.map((preset, index) => (
@@ -43,12 +55,15 @@ const TrialModal: React.FC = () => {
 
 export default TrialModal;
 
-function fillMerchantUid(mode: "v1-cert" | "v1-pay") {
+function fillMerchantUid(mode: "v1-cert" | "v1-pay" | "v1-load-ui") {
   if (mode === "v1-cert") {
     v1CertFieldSignals.merchant_uid.valueSignal.value = v1CertFields
       .merchant_uid.input.generate();
   } else if (mode === "v1-pay") {
     v1PayFieldSignals.merchant_uid.valueSignal.value = v1PayFields
+      .merchant_uid.input.generate();
+  } else if (mode === "v1-load-ui") {
+    v1LoadUiFieldSignals.merchant_uid.valueSignal.value = v1LoadUiFields
       .merchant_uid.input.generate();
   }
 }
@@ -60,6 +75,21 @@ function fillInicisCert() {
   v1CertFieldSignals.pg.enabledSignal.value = true;
   v1CertFieldSignals.pg.valueSignal.value = "inicis_unified";
   fillMerchantUid("v1-cert");
+}
+
+function fillPaypalLoadUi() {
+  trialModalOpenSignal.value = false;
+  appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-load-ui" };
+  v1LoadUiUserCodeSignal.value = "imp14397622";
+  v1LoadUiUiTypeSignal.value = "paypal-spb";
+  v1LoadUiFieldSignals.pg.enabledSignal.value = true;
+  v1LoadUiFieldSignals.pg.valueSignal.value = "paypal_v2";
+  v1LoadUiFieldSignals.pay_method.valueSignal.value = "paypal";
+  v1LoadUiFieldSignals.name.enabledSignal.value = true;
+  v1LoadUiFieldSignals.name.valueSignal.value = "테스트 결제";
+  v1LoadUiFieldSignals.amount.valueSignal.value = 1;
+  v1LoadUiFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
+  fillMerchantUid("v1-load-ui");
 }
 
 interface PayPreset {
@@ -476,13 +506,14 @@ const Group: React.FC<GrpupProps> = ({ children }) => {
   return <div className="sticky top-0 bg-white">{children}</div>;
 };
 
-interface CertPresetProps {
+interface SingularPresetProps {
   icon: string;
   children: React.ReactNode;
+  buttonChildren: React.ReactNode;
   handler: () => void;
 }
-const CertPreset: React.FC<CertPresetProps> = (
-  { icon, children, handler },
+const SingularPreset: React.FC<SingularPresetProps> = (
+  { icon, children, buttonChildren, handler },
 ) => {
   return (
     <div className="p-4 flex gap-2 items-center text-sm break-all rounded bg-slate-100">
@@ -494,10 +525,57 @@ const CertPreset: React.FC<CertPresetProps> = (
         className="basis-1/2 flex gap-2 text-slate-800 text-[1.05rem] px-4 py-2 rounded bg-white shadow hover:translate-x-0.5 transition-transform cursor-pointer"
         onClick={handler}
       >
-        <span>👤</span>
-        <span>본인인증</span>
+        {buttonChildren}
       </button>
     </div>
+  );
+};
+
+interface CertPresetProps {
+  icon: string;
+  children: React.ReactNode;
+  handler: () => void;
+}
+const CertPreset: React.FC<CertPresetProps> = (
+  { icon, children, handler },
+) => {
+  return (
+    <SingularPreset
+      icon={icon}
+      buttonChildren={
+        <>
+          <span>👤</span>
+          <span>본인인증</span>
+        </>
+      }
+      handler={handler}
+    >
+      {children}
+    </SingularPreset>
+  );
+};
+
+interface LoadUiPresetProps {
+  icon: string;
+  children: React.ReactNode;
+  handler: () => void;
+}
+const LoadUiPreset: React.FC<LoadUiPresetProps> = (
+  { icon, children, handler },
+) => {
+  return (
+    <SingularPreset
+      icon={icon}
+      buttonChildren={
+        <>
+          <span>⬇️</span>
+          <span>UI 불러오기</span>
+        </>
+      }
+      handler={handler}
+    >
+      {children}
+    </SingularPreset>
   );
 };
 

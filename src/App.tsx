@@ -22,7 +22,7 @@ const PgUiModal = () => {
     <Modal
       open={open}
       title="PG UI 영역"
-      description="PG사 전용 버튼이 여기에 그려집니다."
+      description="PG사 전용 UI가 여기에 그려집니다."
       onClose={() => {
         waitingSignal.value = false;
         pgUiModalOpenSignal.value = false;
