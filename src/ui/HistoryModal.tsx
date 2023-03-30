@@ -6,10 +6,12 @@ import { AppMode, appModeSignal } from "../state/app";
 import {
   fields as v1CertFields,
   fieldSignals as v1CertFieldSignals,
+  userCodeSignal as v1CertUserCodeSignal,
 } from "../state/v1-cert";
 import {
   fields as v1PayFields,
   fieldSignals as v1PayFieldSignals,
+  userCodeSignal as v1PayUserCodeSignal,
 } from "../state/v1-pay";
 import {
   fields as v2PayFields,
@@ -74,7 +76,9 @@ function fillInputs(historyItem: HistoryItem) {
       sdkVersion: historyItem.sdkVersion,
       function: "pay",
     };
+    v1PayUserCodeSignal.value = historyItem.userCode || "";
     apply(v1PayFields, v1PayFieldSignals, historyItem.fields);
+    return;
   }
 
   if (mode === "v1-cert") {
@@ -82,7 +86,9 @@ function fillInputs(historyItem: HistoryItem) {
       sdkVersion: historyItem.sdkVersion,
       function: "cert",
     } as AppMode;
+    v1CertUserCodeSignal.value = historyItem.userCode || "";
     apply(v1CertFields, v1CertFieldSignals, historyItem.fields);
+    return;
   }
 
   appModeSignal.value = {

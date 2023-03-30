@@ -3,10 +3,12 @@ import { Fields, FieldSignals } from "./fields";
 import {
   fields as v1CertFields,
   fieldSignals as v1CertFieldSignals,
+  userCodeSignal as v1CertUserCodeSignal,
 } from "./v1-cert";
 import {
   fields as v1PayFields,
   fieldSignals as v1PayFieldSignals,
+  userCodeSignal as v1PayUserCodeSignal,
 } from "./v1-pay";
 import {
   fields as v2PayFields,
@@ -26,6 +28,7 @@ export interface HistoryItem {
   name: string;
   fields: HistoryField;
   createAt: number;
+  userCode: string | null;
   sdkVersion: "1.3.0" | "1.2.1" | "1.2.0" | "1.1.8" | "1.1.7" | "2.0.0";
 }
 
@@ -87,13 +90,9 @@ const makeHistoryName = (mode: SaveMode) => {
     return hasName ? `${pg}` : "v1_본인인증";
   }
 
-  if (mode === "v2-pay") {
-    const payMethod = v2PayFieldSignals.payMethod.valueSignal.value;
-    const hasName = (payMethod.length) > 0;
-    return hasName ? `v2_${payMethod}` : "v2_pay";
-  }
-
-  return "v1_pay";
+  const payMethod = v2PayFieldSignals.payMethod.valueSignal.value;
+  const hasName = (payMethod.length) > 0;
+  return hasName ? `v2_${payMethod}` : "v2_pay";
 };
 
 const getFieldsSignalValue = (
@@ -131,12 +130,19 @@ const getFieldsValue = (mode: SaveMode) => {
     return getFieldsSignalValue(v1CertFields, v1CertFieldSignals);
   }
 
-  if (mode === "v2-pay") {
-    return getFieldsSignalValue(v2PayFields, v2PayFieldSignals);
+  return getFieldsSignalValue(v2PayFields, v2PayFieldSignals);
+};
+
+function getUserCode(mode: SaveMode) {
+  if (mode === "v1-pay") {
+    return v1PayUserCodeSignal.value;
   }
 
-  return {};
-};
+  if (mode === "v1-cert") {
+    return v1CertUserCodeSignal.value;
+  }
+  return null;
+}
 
 export const save = () => {
   const mode = getMode();
@@ -147,6 +153,7 @@ export const save = () => {
     mode,
     name,
     fields,
+    userCode: getUserCode(mode),
     createAt: Date.now(),
     sdkVersion: appModeSignal.value.sdkVersion,
   };
