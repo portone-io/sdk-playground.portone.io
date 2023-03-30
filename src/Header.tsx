@@ -7,9 +7,8 @@ import {
   appModeSignal,
   changeSdkVersion,
   getMajorVersion,
-  isV1Mode,
-  isV2Mode,
-  modes,
+  modeFnKeysPerVersion,
+  modeFns,
   playFnSignal,
   playResultSignal,
   waitingSignal,
@@ -18,19 +17,25 @@ import JsonEditor from "./ui/JsonEditor";
 import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
 import { userCodeSignal as v1PayUserCodeSignal } from "./state/v1-pay";
 import { userCodeSignal as v1CertUserCodeSignal } from "./state/v1-cert";
+import { userCodeSignal as v1LoadUiUserCodeSignal } from "./state/v1-load-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
 
 export const showTrialSignal = computed(() => {
   const appMode = appModeSignal.value;
   const v1PayUserCode = v1PayUserCodeSignal.value;
   const v1CertUserCode = v1CertUserCodeSignal.value;
+  const v1LoadUiUserCode = v1LoadUiUserCodeSignal.value;
   const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
-  if (isV1Mode(appMode)) {
-    if (appMode.function === "pay") return !v1PayUserCode;
-    if (appMode.function === "cert") return !v1CertUserCode;
+  switch (appMode.fn) {
+    case "v1-pay":
+      return !v1PayUserCode;
+    case "v1-cert":
+      return !v1CertUserCode;
+    case "v1-load-ui":
+      return !v1LoadUiUserCode;
+    case "v2-pay":
+      return !v2PayStoreId;
   }
-  if (isV2Mode(appMode)) return !v2PayStoreId;
-  throw new Error();
 });
 
 const Header: React.FC = () => {
@@ -66,15 +71,18 @@ const Header: React.FC = () => {
               onChange={(e) => {
                 appModeSignal.value = {
                   ...appModeSignal.value,
-                  function: e.target.value as any,
+                  fn: e.target.value as any,
                 };
               }}
             >
-              {Object.entries(modes[majorVersion]).map(([v, { label }]) => (
-                <option key={v} value={v} selected={v === mode.function}>
-                  {label}
-                </option>
-              ))}
+              {modeFnKeysPerVersion[sdkVersion].map((v) => {
+                const { label } = modeFns[v];
+                return (
+                  <option key={v} value={v} selected={v === mode.fn}>
+                    {label}
+                  </option>
+                );
+              })}
             </select>
           </div>
         </div>

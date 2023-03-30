@@ -1,29 +1,16 @@
 import { computed, Signal, signal } from "@preact/signals";
-import { MajorVersion, SdkV1Version, SdkV2Version, SdkVersion } from "../sdk";
+import { MajorVersion, SdkVersion } from "../sdk";
 import persisted, { prefix } from "./persisted";
 
-interface AppModeBase<
-  TSdkVersion extends SdkVersion,
-  TFunction extends string,
-> {
-  sdkVersion: TSdkVersion;
-  function: TFunction;
+export interface AppMode {
+  sdkVersion: SdkVersion;
+  fn: ModeFnKey;
 }
-interface AppModeV1 extends AppModeBase<SdkV1Version, "pay" | "cert"> {}
-interface AppModeV2 extends AppModeBase<SdkV2Version, "pay"> {}
-export type AppMode = AppModeV1 | AppModeV2;
 export const appModeSignal = persisted<AppMode>(
   localStorage,
   `${prefix}.appMode`,
-  { sdkVersion: "1.3.0", function: "pay" },
+  { sdkVersion: "1.3.0", fn: "v1-pay" },
 );
-
-export function isV1Mode(appMode: AppMode): appMode is AppModeV1 {
-  return getMajorVersion(appMode.sdkVersion) === "v1";
-}
-export function isV2Mode(appMode: AppMode): appMode is AppModeV2 {
-  return getMajorVersion(appMode.sdkVersion) === "v2";
-}
 
 export function getMajorVersion(sdkVersion: SdkVersion): MajorVersion {
   const major = sdkVersion.split(".").shift()!;
@@ -32,51 +19,61 @@ export function getMajorVersion(sdkVersion: SdkVersion): MajorVersion {
   throw new Error();
 }
 
-type Modes<TMode extends AppModeBase<any, any>> = {
-  [key in TMode["function"]]: {
+export type ModeFnKey = keyof typeof modeFns;
+export const modeFns = {
+  "v1-pay": {
+    label: "결제",
+    stateModule: () => import("./v1-pay"),
+  },
+  "v1-cert": {
+    label: "본인인증",
+    stateModule: () => import("./v1-cert"),
+  },
+  "v1-load-ui": {
+    label: "PG 제공 UI",
+    stateModule: () => import("./v1-load-ui"),
+  },
+  "v2-pay": {
+    label: "결제",
+    stateModule: () => import("./v2-pay"),
+  },
+} satisfies {
+  [key: string]: {
     label: string;
     stateModule: () => Promise<StateModule>;
   };
 };
-export const modes = {
-  "v1": {
-    pay: { label: "결제", stateModule: () => import("./v1-pay") },
-    cert: { label: "본인인증", stateModule: () => import("./v1-cert") },
-  } satisfies Modes<AppModeV1>,
-  "v2": {
-    pay: { label: "결제", stateModule: () => import("./v2-pay") },
-  } satisfies Modes<AppModeV2>,
-} satisfies { [key in MajorVersion]: Modes<any> };
+export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
+  "2.0.0": ["v2-pay"],
+  "1.3.0": ["v1-pay", "v1-cert", "v1-load-ui"],
+  "1.2.1": ["v1-pay", "v1-cert"],
+  "1.2.0": ["v1-pay", "v1-cert"],
+  "1.1.8": ["v1-pay", "v1-cert"],
+  "1.1.7": ["v1-pay", "v1-cert"],
+};
 
 export interface StateModule {
   playFnSignal: Signal<PlayFn>;
 }
 export const stateModulePromiseSignal = computed<Promise<StateModule>>(() => {
   const appMode = appModeSignal.value;
-  if (isV1Mode(appMode)) return modes.v1[appMode.function].stateModule();
-  if (isV2Mode(appMode)) return modes.v2[appMode.function].stateModule();
-  throw new Error();
+  return modeFns[appMode.fn].stateModule();
 });
 
 export const sdkVersionSignal = computed(() => appModeSignal.value.sdkVersion);
-export function changeSdkVersion(_sdkVersion: SdkVersion) {
-  const sdkVersion = _sdkVersion as any;
-  const beforeMajor = getMajorVersion(appModeSignal.value.sdkVersion);
-  const afterMajor = getMajorVersion(sdkVersion);
-  if (beforeMajor === afterMajor) {
-    appModeSignal.value = { ...appModeSignal.value, sdkVersion };
-    return;
-  }
-  switch (afterMajor) {
-    case "v1": {
-      appModeSignal.value = { sdkVersion, function: "pay" };
-      return;
-    }
-    case "v2": {
-      appModeSignal.value = { sdkVersion, function: "pay" };
-      return;
-    }
-  }
+export const sdkFunctionSignal = computed(sanitizeModeFn);
+function sanitizeModeFn(
+  sdkVersion: SdkVersion = appModeSignal.value.sdkVersion,
+  modeFn: ModeFnKey = appModeSignal.value.fn,
+): ModeFnKey {
+  const modes = modeFnKeysPerVersion[sdkVersion];
+  return modes.includes(modeFn) ? modeFn : modes[0];
+}
+export function changeSdkVersion(sdkVersion: SdkVersion) {
+  const oldSdkVersion = appModeSignal.value.sdkVersion;
+  if (sdkVersion === oldSdkVersion) return;
+  const fn = sanitizeModeFn(sdkVersion);
+  appModeSignal.value = { ...appModeSignal.value, sdkVersion, fn };
 }
 
 export const waitingSignal = signal(false);

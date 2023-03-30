@@ -38,6 +38,11 @@ export interface SdkV1 {
       certificationRequest: any,
       callback: (response: any) => void,
     ): void;
+    loadUI(
+      uiType: string,
+      paymentRequest: any,
+      callback: (response: any) => void,
+    ): void;
     // communicate, close, naver_zzim
   };
   cleanUp: () => void;
