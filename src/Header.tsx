@@ -6,11 +6,12 @@ import { SdkVersion, sdkVersions } from "./sdk";
 import {
   appModeSignal,
   changeSdkVersion,
-  getMajorVersion,
   modeFnKeysPerVersion,
   modeFns,
+  modeFnSignal,
   playFnSignal,
   playResultSignal,
+  sdkVersionSignal,
   waitingSignal,
 } from "./state/app";
 import JsonEditor from "./ui/JsonEditor";
@@ -21,12 +22,12 @@ import { userCodeSignal as v1LoadUiUserCodeSignal } from "./state/v1-load-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
 
 export const showTrialSignal = computed(() => {
-  const appMode = appModeSignal.value;
+  const modeFn = modeFnSignal.value;
   const v1PayUserCode = v1PayUserCodeSignal.value;
   const v1CertUserCode = v1CertUserCodeSignal.value;
   const v1LoadUiUserCode = v1LoadUiUserCodeSignal.value;
   const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
-  switch (appMode.fn) {
+  switch (modeFn) {
     case "v1-pay":
       return !v1PayUserCode;
     case "v1-cert":
@@ -40,9 +41,8 @@ export const showTrialSignal = computed(() => {
 
 const Header: React.FC = () => {
   const playResult = playResultSignal.value;
-  const mode = appModeSignal.value;
-  const majorVersion = getMajorVersion(mode.sdkVersion);
-  const { sdkVersion } = mode;
+  const sdkVersion = sdkVersionSignal.value;
+  const modeFn = modeFnSignal.value;
   return (
     <>
       <header className="relative flex flex-col sm:flex-row">
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
               {modeFnKeysPerVersion[sdkVersion].map((v) => {
                 const { label } = modeFns[v];
                 return (
-                  <option key={v} value={v} selected={v === mode.fn}>
+                  <option key={v} value={v} selected={v === modeFn}>
                     {label}
                   </option>
                 );
