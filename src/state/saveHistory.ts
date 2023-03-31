@@ -15,7 +15,7 @@ import {
   fieldSignals as v2PayFieldSignals,
 } from "./v2-pay";
 
-const LOCAL_STORAGE_HISTORY = "history";
+export const LOCAL_STORAGE_HISTORY = "history";
 
 export type SaveMode = "v1-pay" | "v1-cert" | "v2-pay";
 
@@ -57,42 +57,42 @@ const v1PgObject = {
 
 type pgNameKeys = keyof typeof v1PgObject;
 
-const getMode = (): SaveMode => {
+function getMode(): SaveMode {
   const appMode = appModeSignal.value;
   const modeFn = modeFnSignal.value;
 
-      if (modeFn=== "v1-pay") return "v1-pay";
-      if (modeFn === "v1-cert") return "v1-cert";
-      if (modeFn === "v2-pay") return "v2-pay";
-      return "v1-pay";
-};
+  if (modeFn === "v1-pay") return "v1-pay";
+  if (modeFn === "v1-cert") return "v1-cert";
+  if (modeFn === "v2-pay") return "v2-pay";
+  return "v1-pay";
+}
 
-const makeHistoryName = (mode: SaveMode) => {
+function makeHistoryName(mode: SaveMode) {
   if (mode === "v1-pay") {
     const pg = v1PayFieldSignals.pg.valueSignal.value as pgNameKeys;
     const pgName = v1PgObject[pg] ? v1PgObject[pg] : pg;
     const payMethod = v1PayFieldSignals.pay_method.valueSignal.value;
 
-    const hasName = (pgName.length + payMethod.length) > 0;
+    const hasName = pgName.length + payMethod.length > 0;
     return hasName ? `${pgName}_${payMethod}` : "v1_pay";
   }
 
   if (mode === "v1-cert") {
     const pg = v1CertFieldSignals.pg.valueSignal.value as pgNameKeys;
-    const hasName = (pg.length) > 0;
+    const hasName = pg.length > 0;
 
     return hasName ? `${pg}` : "v1_본인인증";
   }
 
   const payMethod = v2PayFieldSignals.payMethod.valueSignal.value;
-  const hasName = (payMethod.length) > 0;
+  const hasName = payMethod.length > 0;
   return hasName ? `v2_${payMethod}` : "v2_pay";
-};
+}
 
-const getFieldsSignalValue = (
+function getFieldsSignalValue(
   fields: Fields,
-  targetFieldSignals: FieldSignals,
-) => {
+  targetFieldSignals: FieldSignals
+) {
   const result: HistoryField = {};
 
   Object.entries(fields).forEach(([key, field]) => {
@@ -113,9 +113,9 @@ const getFieldsSignalValue = (
   });
 
   return result;
-};
+}
 
-const getFieldsValue = (mode: SaveMode) => {
+function getFieldsValue(mode: SaveMode) {
   if (mode === "v1-pay") {
     return getFieldsSignalValue(v1PayFields, v1PayFieldSignals);
   }
@@ -125,7 +125,7 @@ const getFieldsValue = (mode: SaveMode) => {
   }
 
   return getFieldsSignalValue(v2PayFields, v2PayFieldSignals);
-};
+}
 
 function getUserCode(mode: SaveMode) {
   if (mode === "v1-pay") {
@@ -138,7 +138,7 @@ function getUserCode(mode: SaveMode) {
   return null;
 }
 
-export const saveHistory = () => {
+export function saveHistory() {
   const mode = getMode();
   const name = makeHistoryName(mode);
   const fields = getFieldsValue(mode);
@@ -156,11 +156,11 @@ export const saveHistory = () => {
   if (prevHistories) {
     localStorage.setItem(
       LOCAL_STORAGE_HISTORY,
-      JSON.stringify([historyItem, ...JSON.parse(prevHistories)]),
+      JSON.stringify([historyItem, ...JSON.parse(prevHistories)])
     );
 
     return;
   }
 
   localStorage.setItem(LOCAL_STORAGE_HISTORY, JSON.stringify([historyItem]));
-};
+}

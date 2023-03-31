@@ -77,7 +77,7 @@ function fillInputs(historyItem: HistoryItem) {
     appModeSignal.value = {
       sdkVersion: historyItem.sdkVersion,
       fn: "v1-cert",
-    } as AppMode;
+    } 
     v1CertUserCodeSignal.value = historyItem.userCode || "";
     applyHistoryFields(v1CertFields, v1CertFieldSignals, historyItem.fields);
     return;
