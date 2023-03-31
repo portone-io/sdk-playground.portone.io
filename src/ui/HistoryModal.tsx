@@ -23,7 +23,7 @@ import {
   HistoryItem,
   LOCAL_STORAGE_HISTORY,
   SaveMode,
-} from "../state/saveHistory";
+} from "../state/history";
 import CollapseHistoryItem from "./CollapseHistoryItem";
 import { Fields, FieldSignals } from "../state/fields";
 

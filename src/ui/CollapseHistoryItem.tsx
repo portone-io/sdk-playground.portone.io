@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { SaveMode } from "../state/saveHistory";
+import { SaveMode } from "../state/history";
 
 export interface ExpandProps {
   isOpen?: boolean;

@@ -20,7 +20,7 @@ import { userCodeSignal as v1PayUserCodeSignal } from "./state/v1-pay";
 import { userCodeSignal as v1CertUserCodeSignal } from "./state/v1-cert";
 import { userCodeSignal as v1LoadUiUserCodeSignal } from "./state/v1-load-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
-import { saveHistory } from "./state/saveHistory";
+import { saveHistory } from "./state/history";
 
 export const showTrialSignal = computed(() => {
   const modeFn = modeFnSignal.value;
