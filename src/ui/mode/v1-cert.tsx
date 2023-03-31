@@ -53,7 +53,7 @@ const View: React.FC = () => {
             <JsonEditor
               key={resetCountSignal.value}
               value={jsonTextSignal.value}
-              onChange={(json) => (jsonTextSignal.value = json)}
+              onChange={(json) => jsonTextSignal.value = json}
             />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">
@@ -62,13 +62,17 @@ const View: React.FC = () => {
               <ForQa />
             </details>
           </details>
-          <Control required label="가맹점 식별코드" code="userCode">
+          <Control
+            required
+            label="가맹점 식별코드"
+            code="userCode"
+          >
             <input
               className="border"
               type="text"
               placeholder="imp00000000"
               value={userCodeSignal.value}
-              onInput={(e) => (userCodeSignal.value = e.currentTarget.value)}
+              onInput={(e) => userCodeSignal.value = e.currentTarget.value}
             />
           </Control>
           {Object.entries(fields).map(([key, field]) => (

@@ -53,7 +53,9 @@ const Header: React.FC = () => {
             <span className="ml-2">SDK 놀이터</span>
           </h1>
           <div>
-            <span>SDK 버전</span>
+            <span>
+              SDK 버전
+            </span>
             <select
               className="ml-2"
               onChange={(e) => {
@@ -95,12 +97,12 @@ const Header: React.FC = () => {
               <div className="relative p-2 bg-black">
                 <button
                   className="absolute right-2"
-                  onClick={() => (playResultSignal.value = undefined)}
+                  onClick={() => playResultSignal.value = undefined}
                 >
                   close
                 </button>
                 {playResult.success ? "실행 성공" : "실행 실패"}
-                {playResult.response != null && (
+                {(playResult.response != null) && (
                   <JsonEditor
                     className="text-black"
                     value={JSON.stringify(playResult.response, null, 2)}
@@ -108,7 +110,7 @@ const Header: React.FC = () => {
                     readOnly
                   />
                 )}
-                {playResult.errorStack != null && (
+                {(playResult.errorStack != null) && (
                   <CodeMirror
                     className="text-black"
                     value={playResult.errorStack}
@@ -130,7 +132,7 @@ const PlayButton: React.FC = () => {
   const waiting = waitingSignal.value;
   const play = playFnSignal.value;
   const showTrial = showTrialSignal.value;
-  const openTrialModal = () => (trialModalOpenSignal.value = true);
+  const openTrialModal = () => trialModalOpenSignal.value = true;
   const doBounce = showTrial && !trialModalOpenSignal.value;
 
   const onClickPlay = () => {
@@ -151,7 +153,12 @@ const PlayButton: React.FC = () => {
 
 const WaitingIndicator: React.FC = () => {
   return (
-    <svg className="waiting" width="1rem" height="1rem" viewBox="0 0 30 30">
+    <svg
+      className="waiting"
+      width="1rem"
+      height="1rem"
+      viewBox="0 0 30 30"
+    >
       <circle
         cx="15"
         cy="15"
