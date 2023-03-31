@@ -2,6 +2,7 @@ import * as React from "react";
 import Header from "./Header";
 import { waitingSignal } from "./state/app";
 import { pgUiModalOpenSignal } from "./state/v1-load-ui";
+import HistoryModal from "./ui/HistoryModal";
 import Modal from "./ui/Modal";
 import Mode from "./ui/mode/Mode";
 
@@ -11,6 +12,7 @@ const App: React.FC = () => {
       <Header />
       <Mode />
       <PgUiModal />
+      <HistoryModal />
     </div>
   );
 };

@@ -29,7 +29,6 @@ const View: React.FC = () => {
   const parseJsonFailed = jsonValueSignal.value == null;
   return (
     <>
-      <HistoryModal />
       <p className="mb-4 text-xs text-slate-500">
         PG가 콘솔에서 테스트로 설정된 경우, 승인된 결제 건은 매일
         자정(23:00~23:50분 사이)에 자동으로 취소됩니다.
