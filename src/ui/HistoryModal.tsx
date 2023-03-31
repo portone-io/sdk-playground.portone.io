@@ -18,7 +18,12 @@ import {
   fieldSignals as v2PayFieldSignals,
 } from "../state/v2-pay";
 
-import { HistoryField, HistoryItem, LOCAL_STORAGE_HISTORY, SaveMode } from "../state/saveHistory";
+import {
+  HistoryField,
+  HistoryItem,
+  LOCAL_STORAGE_HISTORY,
+  SaveMode,
+} from "../state/saveHistory";
 import CollapseHistoryItem from "./CollapseHistoryItem";
 import { Fields, FieldSignals } from "../state/fields";
 
@@ -36,7 +41,7 @@ function getFields(mode: SaveMode): Fields {
 function applyHistoryFields(
   fields: Fields,
   targetFieldSignals: FieldSignals,
-  historyField: HistoryField
+  historyField: HistoryField,
 ) {
   Object.entries(fields).forEach(([key, field]) => {
     if (
@@ -52,8 +57,8 @@ function applyHistoryFields(
       targetFieldSignals[key].enabledSignal.value = historyField[key].enable;
       applyHistoryFields(field.input.fields, fieldSignals, innerHistoryField);
     } else {
-      targetFieldSignals[key].enabledSignal.value =
-        historyField[key]?.enable || false;
+      targetFieldSignals[key].enabledSignal.value = historyField[key]?.enable ||
+        false;
       targetFieldSignals[key].valueSignal.value = historyField[key]?.value;
     }
     return;
@@ -77,7 +82,7 @@ function fillInputs(historyItem: HistoryItem) {
     appModeSignal.value = {
       sdkVersion: historyItem.sdkVersion,
       fn: "v1-cert",
-    } 
+    };
     v1CertUserCodeSignal.value = historyItem.userCode || "";
     applyHistoryFields(v1CertFields, v1CertFieldSignals, historyItem.fields);
     return;

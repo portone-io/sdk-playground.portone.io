@@ -91,7 +91,7 @@ function makeHistoryName(mode: SaveMode) {
 
 function getFieldsSignalValue(
   fields: Fields,
-  targetFieldSignals: FieldSignals
+  targetFieldSignals: FieldSignals,
 ) {
   const result: HistoryField = {};
 
@@ -156,7 +156,7 @@ export function saveHistory() {
   if (prevHistories) {
     localStorage.setItem(
       LOCAL_STORAGE_HISTORY,
-      JSON.stringify([historyItem, ...JSON.parse(prevHistories)])
+      JSON.stringify([historyItem, ...JSON.parse(prevHistories)]),
     );
 
     return;
