@@ -18,7 +18,7 @@ import {
   fieldSignals as v2PayFieldSignals,
 } from "../state/v2-pay";
 
-import { HistoryField, HistoryItem, SaveMode } from "../state/saveHistory";
+import { HistoryField, HistoryItem, LOCAL_STORAGE_HISTORY, SaveMode } from "../state/saveHistory";
 import CollapseHistoryItem from "./CollapseHistoryItem";
 import { Fields, FieldSignals } from "../state/fields";
 
@@ -94,7 +94,10 @@ function formatDate(date: Date): string {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  const hour = date.getHours().toString().padStart(2, "0");
+  const minute = date.getMinutes().toString().padStart(2, "0");
+
+  return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
 export const HistoryModalOpenSignal = signal(false);
@@ -102,7 +105,7 @@ const expandItemIndex = signal(-1);
 
 const HistoryModal: React.FC = () => {
   const open = HistoryModalOpenSignal.value;
-  const list = localStorage.getItem("history");
+  const list = localStorage.getItem(LOCAL_STORAGE_HISTORY);
   const historyList: HistoryItem[] = list === null ? [] : JSON.parse(list);
 
   const onClickApplyHistory = (e: React.MouseEvent, index: number) => {
