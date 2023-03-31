@@ -14,6 +14,7 @@ import Control, { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
 import JsonEditor from "../../ui/JsonEditor";
 import FieldControl from "../field/FieldControl";
+import { HistoryModalOpenSignal } from "../HistoryModal";
 import Reset from "./Reset";
 import { ForQa } from "./v1";
 
@@ -35,6 +36,12 @@ const View: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 md:pb-80">
           <Reset resetFn={resetFn} />
+          <button
+            className="text-sm my-1 w-36 rounded font-bold text-red-100 bg-red-600"
+            onClick={() => (HistoryModalOpenSignal.value = true)}
+          >
+            입력 이력보기
+          </button>
           <details>
             <summary
               className={`text-xs ${
@@ -46,7 +53,7 @@ const View: React.FC = () => {
             <JsonEditor
               key={resetCountSignal.value}
               value={jsonTextSignal.value}
-              onChange={(json) => jsonTextSignal.value = json}
+              onChange={(json) => (jsonTextSignal.value = json)}
             />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">
@@ -55,17 +62,13 @@ const View: React.FC = () => {
               <ForQa />
             </details>
           </details>
-          <Control
-            required
-            label="가맹점 식별코드"
-            code="userCode"
-          >
+          <Control required label="가맹점 식별코드" code="userCode">
             <input
               className="border"
               type="text"
               placeholder="imp00000000"
               value={userCodeSignal.value}
-              onInput={(e) => userCodeSignal.value = e.currentTarget.value}
+              onInput={(e) => (userCodeSignal.value = e.currentTarget.value)}
             />
           </Control>
           {Object.entries(fields).map(([key, field]) => (

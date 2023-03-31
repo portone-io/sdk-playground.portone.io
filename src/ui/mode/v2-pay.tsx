@@ -17,6 +17,7 @@ import { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
 import JsonEditor from "../../ui/JsonEditor";
 import FieldControl from "../field/FieldControl";
+import { HistoryModalOpenSignal } from "../HistoryModal";
 import Reset from "./Reset";
 
 const resetCountSignal = signal(0);
@@ -32,13 +33,20 @@ const View: React.FC = () => {
     <>
       <p className="mb-4 text-xs text-slate-500">
         PG가 콘솔에서 테스트로 설정된 경우, 승인된 결제 건은 매일
-        자정(23:00~23:50분 사이)에 자동으로 취소됩니다.<br />
+        자정(23:00~23:50분 사이)에 자동으로 취소됩니다.
+        <br />
         "<RequiredIndicator />" 표시는 필수입력 항목을 의미합니다. 상황에 따라서
         필수입력 표시가 아니어도 입력이 필요할 수 있습니다.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 md:pb-80">
           <Reset resetFn={resetFn} />
+          <button
+            className="text-sm my-1 w-36 rounded font-bold text-red-100 bg-red-600"
+            onClick={() => (HistoryModalOpenSignal.value = true)}
+          >
+            입력 이력보기
+          </button>
           <details>
             <summary
               className={`text-xs ${
@@ -50,7 +58,7 @@ const View: React.FC = () => {
             <JsonEditor
               key={resetCountSignal.value}
               value={jsonTextSignal.value}
-              onChange={(json) => jsonTextSignal.value = json}
+              onChange={(json) => (jsonTextSignal.value = json)}
             />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">

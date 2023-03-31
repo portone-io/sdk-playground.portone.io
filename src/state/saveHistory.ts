@@ -1,4 +1,4 @@
-import { appModeSignal, getMajorVersion } from "./app";
+import { appModeSignal, getMajorVersion, modeFnSignal } from "./app";
 import { Fields, FieldSignals } from "./fields";
 import {
   fields as v1CertFields,
@@ -20,7 +20,7 @@ const LOCAL_STORAGE_HISTORY = "history";
 export type SaveMode = "v1-pay" | "v1-cert" | "v2-pay";
 
 export type HistoryField = {
-  [key in string]: { enable: boolean; value: string | boolean | object };
+  [key in string]: { enable: boolean; value: string | boolean | HistoryField };
 };
 
 export interface HistoryItem {
@@ -59,18 +59,12 @@ type pgNameKeys = keyof typeof v1PgObject;
 
 const getMode = (): SaveMode => {
   const appMode = appModeSignal.value;
-  const majorVersion = getMajorVersion(appMode.sdkVersion);
-  switch (majorVersion) {
-    case "v1": {
-      if (appMode.function === "pay") return "v1-pay";
-      if (appMode.function === "cert") return "v1-cert";
-    }
-    case "v2": {
-      if (appMode.function === "pay") return "v2-pay";
-    }
-    default:
+  const modeFn = modeFnSignal.value;
+
+      if (modeFn=== "v1-pay") return "v1-pay";
+      if (modeFn === "v1-cert") return "v1-cert";
+      if (modeFn === "v2-pay") return "v2-pay";
       return "v1-pay";
-  }
 };
 
 const makeHistoryName = (mode: SaveMode) => {
@@ -144,7 +138,7 @@ function getUserCode(mode: SaveMode) {
   return null;
 }
 
-export const save = () => {
+export const saveHistory = () => {
   const mode = getMode();
   const name = makeHistoryName(mode);
   const fields = getFieldsValue(mode);

@@ -18,38 +18,30 @@ import {
   fieldSignals as v2PayFieldSignals,
 } from "../state/v2-pay";
 
-// expand 가 존재하고 하나가 열려있을때 다른 패널을닫혀야함.
 import { HistoryField, HistoryItem, SaveMode } from "../state/saveHistory";
-import Expand from "./Expand";
+import CollapseHistoryItem from "./CollapseHistoryItem";
 import { Fields, FieldSignals } from "../state/fields";
 
-export const HistoryModalOpenSignal = signal(false);
-
-function getFieldsAndSignals(mode: SaveMode): [Fields, FieldSignals] {
+function getFields(mode: SaveMode): Fields {
   if (mode === "v1-pay") {
-    return [v1PayFields, v1PayFieldSignals];
+    return v1PayFields;
   }
 
   if (mode === "v1-cert") {
-    return [v1CertFields, v1CertFieldSignals];
+    return v1CertFields;
   }
-
-  if (mode === "v2-pay") {
-    return [v2PayFields, v2PayFieldSignals];
-  }
-
-  return [v1PayFields, v1PayFieldSignals];
+  return v2PayFields;
 }
 
-function apply(
+function applyHistoryFields(
   fields: Fields,
   targetFieldSignals: FieldSignals,
-  historyField: HistoryField,
+  historyField: HistoryField
 ) {
   Object.entries(fields).forEach(([key, field]) => {
     if (
-      field.input.type === "object" && typeof historyField[key]
-          .value === "object"
+      field.input.type === "object" &&
+      typeof historyField[key].value === "object"
     ) {
       const fieldSignals = targetFieldSignals[key].valueSignal
         .value as FieldSignals;
@@ -58,62 +50,71 @@ function apply(
         .value as HistoryField;
 
       targetFieldSignals[key].enabledSignal.value = historyField[key].enable;
-      apply(field.input.fields, fieldSignals, innerHistoryField);
+      applyHistoryFields(field.input.fields, fieldSignals, innerHistoryField);
     } else {
-      targetFieldSignals[key].enabledSignal.value = historyField[key]?.enable ||
-        false;
+      targetFieldSignals[key].enabledSignal.value =
+        historyField[key]?.enable || false;
       targetFieldSignals[key].valueSignal.value = historyField[key]?.value;
     }
-
     return;
   });
 }
 
 function fillInputs(historyItem: HistoryItem) {
+  HistoryModalOpenSignal.value = false;
   const mode = historyItem.mode;
   if (mode === "v1-pay") {
     appModeSignal.value = {
       sdkVersion: historyItem.sdkVersion,
-      function: "pay",
+      fn: "v1-pay",
     };
     v1PayUserCodeSignal.value = historyItem.userCode || "";
-    apply(v1PayFields, v1PayFieldSignals, historyItem.fields);
+    applyHistoryFields(v1PayFields, v1PayFieldSignals, historyItem.fields);
     return;
   }
 
   if (mode === "v1-cert") {
     appModeSignal.value = {
       sdkVersion: historyItem.sdkVersion,
-      function: "cert",
+      fn: "v1-cert",
     } as AppMode;
     v1CertUserCodeSignal.value = historyItem.userCode || "";
-    apply(v1CertFields, v1CertFieldSignals, historyItem.fields);
+    applyHistoryFields(v1CertFields, v1CertFieldSignals, historyItem.fields);
     return;
   }
 
   appModeSignal.value = {
     sdkVersion: "2.0.0",
-    function: "pay",
+    fn: "v1-pay",
   };
-  apply(v2PayFields, v2PayFieldSignals, historyItem.fields);
+  applyHistoryFields(v2PayFields, v2PayFieldSignals, historyItem.fields);
 }
+
+function formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export const HistoryModalOpenSignal = signal(false);
+const expandItemIndex = signal(-1);
 
 const HistoryModal: React.FC = () => {
   const open = HistoryModalOpenSignal.value;
   const list = localStorage.getItem("history");
   const historyList: HistoryItem[] = list === null ? [] : JSON.parse(list);
-  console.log(historyList);
 
-  const onClickApplyHistory = (index: number) => {
-    return (e: React.MouseEvent) => {
-      e.stopPropagation();
-      const historyItem = historyList[index];
-      fillInputs(historyItem);
-    };
+  const onClickApplyHistory = (e: React.MouseEvent, index: number) => {
+    e.stopPropagation();
+    const historyItem = historyList[index];
+    fillInputs(historyItem);
   };
 
-  const onClickExpand = () => {
-    console.log("expand!");
+  const onClickExpand = (index: number) => {
+    index === expandItemIndex.value
+      ? (expandItemIndex.value = -1)
+      : (expandItemIndex.value = index);
   };
 
   return (
@@ -121,21 +122,20 @@ const HistoryModal: React.FC = () => {
       open={open}
       title="입력 이력 불러오기"
       description="적용 하기 버튼을 클릭하면 해당 입력 이력을 불러와서 자동으로 채워줍니다."
-      onClose={() => HistoryModalOpenSignal.value = false}
+      onClose={() => (HistoryModalOpenSignal.value = false)}
     >
       <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
         {historyList.map((historyItem, index) => (
-          <Expand
+          <CollapseHistoryItem
             title={historyItem.name}
-            isOpen={true}
-            onClickApply={onClickApplyHistory(index)}
-            onClickExpand={onClickExpand}
+            isOpen={expandItemIndex.value === index}
+            onClickApply={(e) => onClickApplyHistory(e, index)}
+            onClickExpand={() => onClickExpand(index)}
+            date={formatDate(new Date(historyItem.createAt))}
+            mode={historyItem.mode}
           >
-            <HistoryContent
-              mode={historyItem.mode}
-              historyFields={historyItem.fields}
-            />
-          </Expand>
+            <HistoryContent mode={historyItem.mode} historyItem={historyItem} />
+          </CollapseHistoryItem>
         ))}
       </div>
     </Modal>
@@ -146,27 +146,73 @@ export default HistoryModal;
 
 export interface HistoryContentProps {
   mode: SaveMode;
-  historyFields: HistoryField;
+  historyItem: HistoryItem;
 }
 
-const HistoryContent: React.FC<HistoryContentProps> = (
-  { mode, historyFields },
-) => {
-  const [fields, fieldSignals] = getFieldsAndSignals(mode);
-  console.log(historyFields);
-
+const HistoryContent: React.FC<HistoryContentProps> = ({
+  mode,
+  historyItem,
+}) => {
   return (
     <div>
-      {historyFields && Object.entries(historyFields).map(
-        ([key, field]) => {
-          if (typeof field?.value === "object") {
-            return <div>test</div>;
-          }
-
-          return <div>{fields[key].label} : {field?.value}</div>;
-        },
+      {mode !== "v2-pay" && (
+        <div className="ml-2">
+          <span className="bg-gray-100 px-2 mr-1">가맹점 식별 코드 :</span>
+          {historyItem.userCode}
+        </div>
       )}
-      test
+      <HistoryFieldItem
+        mode={mode}
+        historyField={historyItem.fields}
+        fieldsForLabel={getFields(mode)}
+      />
+    </div>
+  );
+};
+
+export interface HistoryFieldItemProps {
+  mode: SaveMode;
+  historyField: HistoryField;
+  fieldsForLabel: Fields;
+}
+
+const HistoryFieldItem: React.FC<HistoryFieldItemProps> = ({
+  mode,
+  historyField,
+  fieldsForLabel,
+}) => {
+  return (
+    <div className="ml-2">
+      {historyField &&
+        Object.entries(historyField).map(([key, field]) => {
+          const fieldForLabel = fieldsForLabel[key];
+
+          if (
+            fieldForLabel.input.type === "object" &&
+            typeof field?.value === "object"
+          ) {
+            return (
+              <div className="my-1">
+                <span className="bg-gray-100 px-2 py-1 mr-1">
+                  {fieldForLabel.label} :
+                </span>
+                <HistoryFieldItem
+                  mode={mode}
+                  historyField={field?.value}
+                  fieldsForLabel={fieldForLabel.input.fields}
+                />
+              </div>
+            );
+          }
+          return (
+            <div className="my-1">
+              <span className="bg-gray-100 px-2 mr-1">
+                {fieldForLabel.label} :
+              </span>
+              {typeof field?.value !== "object" && field?.value}
+            </div>
+          );
+        })}
     </div>
   );
 };
