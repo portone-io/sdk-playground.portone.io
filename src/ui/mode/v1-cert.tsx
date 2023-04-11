@@ -30,17 +30,17 @@ const View: React.FC = () => {
   return (
     <>
       <p className="mb-4 text-xs text-slate-500">
-        "<RequiredIndicator />" 표시는 필수입력 항목을 의미합니다. 상황에 따라서
-        필수입력 표시가 아니어도 입력이 필요할 수 있습니다.
+        "<RequiredIndicator />" 표시는 필수입력 항목을 의미합니다. 상황에 따라서 필수입력 표시가 아니어도 입력이
+        필요할 수 있습니다.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 md:pb-80">
           <Reset resetFn={resetFn} />
           <button
-            className="text-sm my-1 w-36 rounded font-bold text-red-100 bg-red-600"
+            className="text-sm my-1 w-36 rounded font-bold text-white bg-gray-700"
             onClick={() => (HistoryModalOpenSignal.value = true)}
           >
-            입력 이력보기
+            실행 이력보기
           </button>
           <details>
             <summary

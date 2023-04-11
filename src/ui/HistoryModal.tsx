@@ -128,8 +128,8 @@ const HistoryModal: React.FC = () => {
   return (
     <Modal
       open={open}
-      title="입력 이력 불러오기"
-      description="적용 하기 버튼을 클릭하면 해당 입력 이력을 불러와서 자동으로 채워줍니다."
+      title="실행 이력 불러오기"
+      description="적용 하기 버튼을 클릭하면 해당 실행 이력을 불러와서 자동으로 채워줍니다."
       onClose={() => (HistoryModalOpenSignal.value = false)}
     >
       <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
