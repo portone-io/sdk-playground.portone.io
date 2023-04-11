@@ -132,10 +132,15 @@ const HistoryModal: React.FC = () => {
       description="적용 하기 버튼을 클릭하면 해당 실행 이력을 불러와서 자동으로 채워줍니다."
       onClose={() => (HistoryModalOpenSignal.value = false)}
     >
+      {!historyList.length && (
+        <div className="flex justify-center flex-col items-center p-2">
+          <h3 className="text-xl mb-4">현재 실행한 이력이 없습니다.</h3>
+          <p>실행 버튼을 클릭 한 후 다시 확인하시면 기존 실행 이력을 확인이 가능합니다.</p>
+        </div>
+      )}
       <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
         {historyList.map((historyItem, index) => (
           <CollapseHistoryItem
-            title={historyItem.name}
             isOpen={expandItemIndex.value === index}
             onClickApply={(e) => onClickApplyHistory(e, index)}
             onClickExpand={() => onClickExpand(index)}
