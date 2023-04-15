@@ -170,8 +170,9 @@ const HistoryContent: React.FC<HistoryContentProps> = ({
     <div>
       {mode !== "v2-pay" && (
         <div className="ml-2">
-          <span className="bg-gray-100 px-2 mr-1">가맹점 식별 코드 :</span>
-          {historyItem.userCode}
+          <span className=" mr-1">가맹점 식별 코드</span>
+          <span className="text-xs px-2 bg-orange-100 mr-1">userCode</span>
+          : {historyItem.userCode}
         </div>
       )}
       <HistoryFieldItem
@@ -199,6 +200,7 @@ const HistoryFieldItem: React.FC<HistoryFieldItemProps> = ({
       {historyField &&
         Object.entries(historyField).map(([key, field]) => {
           const fieldForLabel = fieldsForLabel[key];
+          if (!field.enable) return;
 
           if (
             fieldForLabel.input.type === "object" &&
@@ -206,9 +208,11 @@ const HistoryFieldItem: React.FC<HistoryFieldItemProps> = ({
           ) {
             return (
               <div className="my-1">
-                <span className="bg-gray-100 px-2 py-1 mr-1">
-                  {fieldForLabel.label} :
+                <span className="px-1 py-1 mr-1">
+                  {fieldForLabel.label}
                 </span>
+                <span className="text-xs px-2 bg-orange-100">{key}</span>
+                :
                 <HistoryFieldItem
                   mode={mode}
                   historyField={field?.value}
@@ -219,10 +223,11 @@ const HistoryFieldItem: React.FC<HistoryFieldItemProps> = ({
           }
           return (
             <div className="my-1">
-              <span className="bg-gray-100 px-2 mr-1">
-                {fieldForLabel.label} :
+              <span className=" px-1 mr-1">
+                {fieldForLabel.label}
               </span>
-              {typeof field?.value !== "object" && field?.value}
+              <span className="text-xs px-2 bg-orange-100 mr-1">{key}</span>
+              : {typeof field?.value !== "object" && field?.value}
             </div>
           );
         })}
