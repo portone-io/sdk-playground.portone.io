@@ -102,7 +102,16 @@ const payPresets = [
   {
     name: "이니시스",
     icon: "inicis",
-    methods: ["card", "trans", "vbank", "phone", "cultureland"],
+    methods: [
+      "card",
+      "trans",
+      "vbank",
+      "phone",
+      "cultureland",
+      "smartculture",
+      "happymoney",
+      "booknlife",
+    ],
     handler(method) {
       trialModalOpenSignal.value = false;
       appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
@@ -584,7 +593,10 @@ type PayMethod =
   | "trans"
   | "vbank"
   | "phone"
-  | "cultureland";
+  | "cultureland"
+  | "smartculture"
+  | "happymoney"
+  | "booknlife";
 
 interface PayPresetProps {
   name: string;
@@ -623,6 +635,9 @@ const payMethodEmojis: Record<PayMethod, string> = {
   vbank: "🏦",
   phone: "📱",
   cultureland: "💸",
+  smartculture: "💸",
+  happymoney: "💸",
+  booknlife: "💸",
 };
 
 const payMethodNames: Record<PayMethod, string> = {
@@ -631,4 +646,7 @@ const payMethodNames: Record<PayMethod, string> = {
   vbank: "가상계좌 이체",
   phone: "휴대폰 소액결제",
   cultureland: "문화상품권",
+  smartculture: "스마트문상",
+  happymoney: "해피머니",
+  booknlife: "도서문화상품권",
 };
