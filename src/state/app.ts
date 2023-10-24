@@ -86,7 +86,7 @@ export const playFnSignal = computed(() => {
       const stateModule = await stateModulePromise;
       const playFn = stateModule.playFnSignal.value;
       const response: any = await playFn();
-      const success = ("err_code" in response) || ("code" in response);
+      const success = ("error_code" in response) || ("code" in response);
       playResultSignal.value = { success, response };
     } catch (error) {
       const errorStack = error instanceof Error ? error.stack : String(error);
