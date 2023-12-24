@@ -8,31 +8,26 @@ import {
   Fields,
   resetFieldSignals,
 } from "./fields";
-import persisted, { prefix } from "./persisted";
-import { sdkV1Signal } from "./v1";
+import { prefix } from "./persisted";
+import { createAccountSignals, sdkV1Signal } from "./v1";
 
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
-  userCodeSignal.value = defaultUserCode;
+  accountSignals.reset();
   jsonTextSignal.value = "{}";
 }
 
-const defaultUserCode = "";
-export const userCodeSignal = persisted(
-  localStorage,
-  `${prefix}.v1-pay.userCode`,
-  defaultUserCode,
-);
+export const accountSignals = createAccountSignals(`${prefix}.v1-pay`);
 
 export const playFnSignal = computed(() => {
   const sdkV1 = sdkV1Signal.value;
-  const userCode = userCodeSignal.value;
+  const userCode = accountSignals.userCodeSignal.value;
   const configObject = configObjectSignal.value;
   return function requestPay() {
     if (!sdkV1) return Promise.reject(new Error("sdk not loaded"));
     return new Promise((resolve, reject) => {
       if (!userCode) reject(new Error("userCode is empty"));
-      sdkV1.IMP.init(userCode);
+      accountSignals.impInit(sdkV1);
       sdkV1.IMP.request_pay(configObject, resolve);
     });
   };
@@ -40,7 +35,7 @@ export const playFnSignal = computed(() => {
 
 export const codePreviewSignal = computed<string>(() => {
   const version = sdkVersionSignal.value;
-  const userCode = userCodeSignal.value;
+  const accountCodePreview = accountSignals.codePreviewSignal.value;
   const configObject = configObjectSignal.value;
   return [
     ...(
@@ -57,8 +52,7 @@ export const codePreviewSignal = computed<string>(() => {
     `<button onclick="requestPay()">결제하기</button>`,
     ``,
     `<script>`,
-    `const userCode = ${JSON.stringify(userCode)};`,
-    `IMP.init(userCode);`,
+    accountCodePreview,
     ``,
     `function requestPay() {`,
     `  IMP.request_pay(${toJs(configObject, "  ", 1)});`,
