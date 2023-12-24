@@ -1,5 +1,11 @@
-import { effect, signal } from "@preact/signals";
-import { SdkV1, SdkV1Version } from "../sdk";
+import {
+  computed,
+  effect,
+  type ReadonlySignal,
+  type Signal,
+  signal,
+} from "@preact/signals";
+import { type SdkV1, SdkV1Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
@@ -87,4 +93,54 @@ async function loadSdkV1(
       return initSdk({ window: globalThis, api_server: CORE_SERVER });
     }
   }
+}
+
+export interface AccountSignals {
+  userCodeSignal: Signal<string>;
+  tierCodeSignal: Signal<string>;
+  tierCodeEnabledSignal: Signal<boolean>;
+  codePreviewSignal: ReadonlySignal<string>;
+  reset: () => void;
+}
+export function createAccountSignals(
+  keyPrefix: string,
+): AccountSignals {
+  const userCodeSignal = persisted(
+    localStorage,
+    `${keyPrefix}.userCode`,
+    "",
+  );
+  const tierCodeSignal = persisted(
+    localStorage,
+    `${keyPrefix}.tierCode`,
+    "",
+  );
+  const tierCodeEnabledSignal = persisted(
+    localStorage,
+    `${keyPrefix}.tierCode.enabled`,
+    false,
+  );
+  const codePreviewSignal = computed<string>(() => {
+    const userCode = userCodeSignal.value;
+    const tierCode = tierCodeSignal.value;
+    const tierCodeEnabled = tierCodeEnabledSignal.value;
+    if (tierCodeEnabled && tierCode) {
+      return `IMP.agency(${JSON.stringify(userCode)}, ${
+        JSON.stringify(tierCode)
+      });`;
+    } else {
+      return `IMP.init(${JSON.stringify(userCode)});`;
+    }
+  });
+  return {
+    userCodeSignal,
+    tierCodeSignal,
+    tierCodeEnabledSignal,
+    codePreviewSignal,
+    reset() {
+      userCodeSignal.value = "";
+      tierCodeSignal.value = "";
+      tierCodeEnabledSignal.value = false;
+    },
+  };
 }

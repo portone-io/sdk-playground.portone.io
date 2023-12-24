@@ -2,13 +2,13 @@ import { signal } from "@preact/signals";
 import * as React from "react";
 import { reset as resetV1 } from "../../state/v1";
 import {
+  accountSignals,
   codePreviewSignal,
   fields,
   fieldSignals,
   jsonTextSignal,
   jsonValueSignal,
   reset,
-  userCodeSignal,
 } from "../../state/v1-pay";
 import Control, { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
@@ -23,6 +23,12 @@ const resetFn = () => {
   reset();
   ++resetCountSignal.value;
 };
+
+const {
+  userCodeSignal,
+  tierCodeSignal,
+  tierCodeEnabledSignal,
+} = accountSignals;
 
 const View: React.FC = () => {
   const parseJsonFailed = jsonValueSignal.value == null;
@@ -68,6 +74,23 @@ const View: React.FC = () => {
               placeholder="imp00000000"
               value={userCodeSignal.value}
               onInput={(e) => userCodeSignal.value = e.currentTarget.value}
+            />
+          </Control>
+          <Control
+            label="하위가맹점(Tier) 코드"
+            code="tierCode"
+            enabled={tierCodeEnabledSignal.value}
+            onToggle={(value) => tierCodeEnabledSignal.value = value}
+          >
+            <input
+              className="border"
+              type="text"
+              placeholder="000"
+              value={tierCodeSignal.value}
+              onInput={(e) => {
+                tierCodeEnabledSignal.value = true;
+                tierCodeSignal.value = e.currentTarget.value;
+              }}
             />
           </Control>
           {Object.entries(fields).map(([key, field]) => (

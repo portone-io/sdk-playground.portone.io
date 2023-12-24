@@ -7,22 +7,17 @@ import {
   resetFieldSignals,
 } from "./fields";
 import persisted, { prefix } from "./persisted";
-import { sdkV1Signal } from "./v1";
+import { createAccountSignals, sdkV1Signal } from "./v1";
 import { fields as v1PayFields } from "./v1-pay";
 
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
-  userCodeSignal.value = defaultUserCode;
+  accountSignals.reset();
   uiTypeSignal.value = defaultUiType;
   jsonTextSignal.value = "{}";
 }
 
-const defaultUserCode = "";
-export const userCodeSignal = persisted(
-  localStorage,
-  `${prefix}.v1-load-ui.userCode`,
-  defaultUserCode,
-);
+export const accountSignals = createAccountSignals(`${prefix}.v1-load-ui`);
 
 const defaultUiType = "";
 export const uiTypeSignal = persisted(
@@ -34,14 +29,16 @@ export const uiTypeSignal = persisted(
 export const pgUiModalOpenSignal = signal(false);
 export const playFnSignal = computed(() => {
   const sdkV1 = sdkV1Signal.value;
-  const userCode = userCodeSignal.value;
+  const userCode = accountSignals.userCodeSignal.value;
+  const tierCode = accountSignals.tierCodeSignal.value;
   const uiType = uiTypeSignal.value;
   const configObject = configObjectSignal.value;
   return function loadUI() {
     if (!sdkV1) return Promise.reject(new Error("sdk not loaded"));
     return new Promise((resolve, reject) => {
       if (!userCode) reject(new Error("userCode is empty"));
-      sdkV1.IMP.init(userCode);
+      if (tierCode) sdkV1.IMP.agency(userCode, tierCode);
+      else sdkV1.IMP.init(userCode);
       sdkV1.IMP.loadUI(uiType, configObject, (response) => {
         resolve(response);
         pgUiModalOpenSignal.value = false;
@@ -52,7 +49,7 @@ export const playFnSignal = computed(() => {
 });
 
 export const codePreviewSignal = computed<string>(() => {
-  const userCode = userCodeSignal.value;
+  const accountCodePreview = accountSignals.codePreviewSignal.value;
   const uiType = uiTypeSignal.value;
   const uiTypeRepr = JSON.stringify(uiType);
   const configObject = configObjectSignal.value;
@@ -64,8 +61,7 @@ export const codePreviewSignal = computed<string>(() => {
     `</div>`,
     ``,
     `<script>`,
-    `const userCode = ${JSON.stringify(userCode)};`,
-    `IMP.init(userCode);`,
+    accountCodePreview,
     `IMP.loadUI(${uiTypeRepr}, ${toJs(configObject)});`,
     `</script>`,
   ].join("\n");

@@ -16,16 +16,16 @@ import {
 } from "./state/app";
 import JsonEditor from "./ui/JsonEditor";
 import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
-import { userCodeSignal as v1PayUserCodeSignal } from "./state/v1-pay";
-import { userCodeSignal as v1CertUserCodeSignal } from "./state/v1-cert";
-import { userCodeSignal as v1LoadUiUserCodeSignal } from "./state/v1-load-ui";
+import { accountSignals as v1PayAccountSignals } from "./state/v1-pay";
+import { accountSignals as v1CertAccountSignals } from "./state/v1-cert";
+import { accountSignals as v1LoadUiAccountSignals } from "./state/v1-load-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
 
 export const showTrialSignal = computed(() => {
   const modeFn = modeFnSignal.value;
-  const v1PayUserCode = v1PayUserCodeSignal.value;
-  const v1CertUserCode = v1CertUserCodeSignal.value;
-  const v1LoadUiUserCode = v1LoadUiUserCodeSignal.value;
+  const v1PayUserCode = v1PayAccountSignals.userCodeSignal.value;
+  const v1CertUserCode = v1CertAccountSignals.userCodeSignal.value;
+  const v1LoadUiUserCode = v1LoadUiAccountSignals.userCodeSignal.value;
   const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
   switch (modeFn) {
     case "v1-pay":
