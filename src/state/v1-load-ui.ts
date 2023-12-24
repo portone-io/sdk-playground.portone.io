@@ -30,15 +30,13 @@ export const pgUiModalOpenSignal = signal(false);
 export const playFnSignal = computed(() => {
   const sdkV1 = sdkV1Signal.value;
   const userCode = accountSignals.userCodeSignal.value;
-  const tierCode = accountSignals.tierCodeSignal.value;
   const uiType = uiTypeSignal.value;
   const configObject = configObjectSignal.value;
   return function loadUI() {
     if (!sdkV1) return Promise.reject(new Error("sdk not loaded"));
     return new Promise((resolve, reject) => {
       if (!userCode) reject(new Error("userCode is empty"));
-      if (tierCode) sdkV1.IMP.agency(userCode, tierCode);
-      else sdkV1.IMP.init(userCode);
+      accountSignals.impInit(sdkV1);
       sdkV1.IMP.loadUI(uiType, configObject, (response) => {
         resolve(response);
         pgUiModalOpenSignal.value = false;

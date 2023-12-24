@@ -22,14 +22,12 @@ export const accountSignals = createAccountSignals(`${prefix}.v1-pay`);
 export const playFnSignal = computed(() => {
   const sdkV1 = sdkV1Signal.value;
   const userCode = accountSignals.userCodeSignal.value;
-  const tierCode = accountSignals.tierCodeSignal.value;
   const configObject = configObjectSignal.value;
   return function requestPay() {
     if (!sdkV1) return Promise.reject(new Error("sdk not loaded"));
     return new Promise((resolve, reject) => {
       if (!userCode) reject(new Error("userCode is empty"));
-      if (tierCode) sdkV1.IMP.agency(userCode, tierCode);
-      else sdkV1.IMP.init(userCode);
+      accountSignals.impInit(sdkV1);
       sdkV1.IMP.request_pay(configObject, resolve);
     });
   };

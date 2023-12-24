@@ -101,6 +101,7 @@ export interface AccountSignals {
   tierCodeEnabledSignal: Signal<boolean>;
   codePreviewSignal: ReadonlySignal<string>;
   reset: () => void;
+  impInit: (sdkV1: SdkV1) => void;
 }
 export function createAccountSignals(
   keyPrefix: string,
@@ -141,6 +142,13 @@ export function createAccountSignals(
       userCodeSignal.value = "";
       tierCodeSignal.value = "";
       tierCodeEnabledSignal.value = false;
+    },
+    impInit(sdkV1) {
+      const userCode = userCodeSignal.value;
+      const tierCode = tierCodeSignal.value;
+      const tierCodeEnabled = tierCodeEnabledSignal.value;
+      if (tierCodeEnabled && tierCode) sdkV1.IMP.agency(userCode, tierCode);
+      else sdkV1.IMP.init(userCode);
     },
   };
 }
