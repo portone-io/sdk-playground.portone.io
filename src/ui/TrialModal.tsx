@@ -18,6 +18,27 @@ import {
   fieldSignals as v1LoadUiFieldSignals,
   uiTypeSignal as v1LoadUiUiTypeSignal,
 } from "../state/v1-load-ui";
+import _trialData from "./trial.yaml";
+
+interface TrialDataItem {
+  label: string;
+  icon: string;
+  "v1-cert": {
+    account: { userCode: string };
+    field: Record<keyof typeof v1CertFields, any>;
+  };
+  "v1-pay": {
+    account: { userCode: string };
+    field: Record<keyof typeof v1PayFields, any>;
+    case: Record<string, Record<keyof typeof v1PayFields, any>>;
+  };
+  "v1-load-ui": {
+    account: { userCode: string };
+    uiType: string;
+    field: Record<keyof typeof v1LoadUiFields, any>;
+  };
+}
+const trialData = _trialData as TrialDataItem[];
 
 export const trialModalOpenSignal = signal(false);
 const TrialModal: React.FC = () => {
@@ -32,21 +53,92 @@ const TrialModal: React.FC = () => {
       <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
         <Group>본인인증</Group>
         <div className="grid sm:grid-cols-2 gap-2">
-          <CertPreset icon="inicis" handler={fillInicisCert}>
-            이니시스
-          </CertPreset>
+          {trialData.filter((item) => "v1-cert" in item).map(
+            (item, index) => (
+              <CertPreset
+                key={index}
+                icon={item.icon}
+                handler={() => {
+                  trialModalOpenSignal.value = false;
+                  appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-cert" };
+                  v1CertAccountSignals.userCodeSignal.value =
+                    item["v1-cert"].account.userCode;
+                  v1CertFieldSignals.merchant_uid.valueSignal.value =
+                    v1CertFields.merchant_uid.input.generate();
+                  const fields = Object.entries(item["v1-cert"].field);
+                  for (const [field, value] of fields) {
+                    v1CertFieldSignals[field].enabledSignal.value = true;
+                    v1CertFieldSignals[field].valueSignal.value = value;
+                  }
+                }}
+              >
+                {item.label}
+              </CertPreset>
+            ),
+          )}
         </div>
         <Group>PG 제공 UI</Group>
         <div className="grid sm:grid-cols-2 gap-2">
-          <LoadUiPreset icon="paypal" handler={fillPaypalLoadUi}>
-            페이팔 SPB
-          </LoadUiPreset>
+          {trialData.filter((item) => "v1-load-ui" in item).map(
+            (item, index) => (
+              <LoadUiPreset
+                key={index}
+                icon={item.icon}
+                handler={() => {
+                  trialModalOpenSignal.value = false;
+                  appModeSignal.value = {
+                    sdkVersion: "1.3.0",
+                    fn: "v1-load-ui",
+                  };
+                  v1LoadUiAccountSignals.userCodeSignal.value =
+                    item["v1-load-ui"].account.userCode;
+                  v1LoadUiUiTypeSignal.value = item["v1-load-ui"].uiType;
+                  v1LoadUiFieldSignals.merchant_uid.valueSignal.value =
+                    v1LoadUiFields.merchant_uid.input.generate();
+                  const fields = Object.entries(item["v1-load-ui"].field);
+                  for (const [field, value] of fields) {
+                    v1LoadUiFieldSignals[field].enabledSignal.value = true;
+                    v1LoadUiFieldSignals[field].valueSignal.value = value;
+                  }
+                }}
+              >
+                {item.label}
+              </LoadUiPreset>
+            ),
+          )}
         </div>
         <Group>결제</Group>
         <div className="grid sm:grid-cols-2 gap-2">
-          {payPresets.map((preset, index) => (
-            <PayPreset key={index} {...preset} />
-          ))}
+          {trialData.filter((item) => "v1-pay" in item).map(
+            (item, index) => (
+              <PayPreset
+                key={index}
+                name={item.label}
+                icon={item.icon}
+                cases={Object.entries(item["v1-pay"].case).map((
+                  [label, caseFields],
+                ) => ({
+                  label,
+                  handler() {
+                    trialModalOpenSignal.value = false;
+                    appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
+                    v1PayAccountSignals.userCodeSignal.value =
+                      item["v1-pay"].account.userCode;
+                    v1PayFieldSignals.merchant_uid.valueSignal.value =
+                      v1PayFields.merchant_uid.input.generate();
+                    const fields = [
+                      ...Object.entries(item["v1-pay"].field),
+                      ...Object.entries(caseFields),
+                    ];
+                    for (const [field, value] of fields) {
+                      v1PayFieldSignals[field].enabledSignal.value = true;
+                      v1PayFieldSignals[field].valueSignal.value = value;
+                    }
+                  },
+                }))}
+              />
+            ),
+          )}
         </div>
       </div>
     </Modal>
@@ -54,459 +146,6 @@ const TrialModal: React.FC = () => {
 };
 
 export default TrialModal;
-
-function fillMerchantUid(mode: "v1-cert" | "v1-pay" | "v1-load-ui") {
-  if (mode === "v1-cert") {
-    v1CertFieldSignals.merchant_uid.valueSignal.value = v1CertFields
-      .merchant_uid.input.generate();
-  } else if (mode === "v1-pay") {
-    v1PayFieldSignals.merchant_uid.valueSignal.value = v1PayFields
-      .merchant_uid.input.generate();
-  } else if (mode === "v1-load-ui") {
-    v1LoadUiFieldSignals.merchant_uid.valueSignal.value = v1LoadUiFields
-      .merchant_uid.input.generate();
-  }
-}
-
-function fillInicisCert() {
-  trialModalOpenSignal.value = false;
-  appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-cert" };
-  v1CertAccountSignals.userCodeSignal.value = "imp29272276";
-  v1CertFieldSignals.pg.enabledSignal.value = true;
-  v1CertFieldSignals.pg.valueSignal.value = "inicis_unified";
-  fillMerchantUid("v1-cert");
-}
-
-function fillPaypalLoadUi() {
-  trialModalOpenSignal.value = false;
-  appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-load-ui" };
-  v1LoadUiAccountSignals.userCodeSignal.value = "imp14397622";
-  v1LoadUiUiTypeSignal.value = "paypal-spb";
-  v1LoadUiFieldSignals.pg.enabledSignal.value = true;
-  v1LoadUiFieldSignals.pg.valueSignal.value = "paypal_v2";
-  v1LoadUiFieldSignals.pay_method.valueSignal.value = "paypal";
-  v1LoadUiFieldSignals.name.enabledSignal.value = true;
-  v1LoadUiFieldSignals.name.valueSignal.value = "테스트 결제";
-  v1LoadUiFieldSignals.amount.valueSignal.value = 1;
-  v1LoadUiFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-  fillMerchantUid("v1-load-ui");
-}
-
-interface PayPreset {
-  name: string;
-  icon: string;
-  methods: PayMethod[];
-  handler: (method: PayMethod) => void;
-}
-const payPresets = [
-  {
-    name: "이니시스",
-    icon: "inicis",
-    methods: [
-      "card",
-      "trans",
-      "vbank",
-      "phone",
-      "cultureland",
-      "smartculture",
-      "happymoney",
-      "booknlife",
-    ],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "html5_inicis";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-        v1PayFieldSignals.buyer_email.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_email.valueSignal.value = "buyer@example.com";
-      }
-    },
-  },
-  {
-    name: "KCP",
-    icon: "kcp",
-    methods: ["card", "trans", "vbank", "phone", "cultureland"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "kcp";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
-    },
-  },
-  {
-    name: "나이스페이먼츠",
-    icon: "nice",
-    methods: ["card", "trans", "vbank"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "nice";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
-    },
-  },
-  {
-    name: "KICC",
-    icon: "kicc",
-    methods: ["card", "trans", "vbank", "phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "kicc";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
-    },
-  },
-  {
-    name: "다날",
-    icon: "danal",
-    methods: ["card", "phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      if (method === "card") {
-        v1PayFieldSignals.pg.valueSignal.value = "danal_tpay";
-      } else {
-        v1PayFieldSignals.pg.valueSignal.value = "danal";
-      }
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-    },
-  },
-  {
-    name: "헥토파이낸셜",
-    icon: "settle",
-    methods: ["card", "trans", "vbank", "phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "settle";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
-    },
-  },
-  {
-    name: "스마트로",
-    icon: "smartro",
-    methods: ["card", "trans", "vbank", "phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "smartro";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
-    },
-  },
-  {
-    name: "블루월넛",
-    icon: "bluewalnut",
-    methods: ["card", "trans", "vbank", "phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "bluewalnut";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-      v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-    },
-  },
-  {
-    name: "KSNET",
-    icon: "ksnet",
-    methods: ["card", "trans", "vbank", "phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "ksnet";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-      v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-    },
-  },
-  {
-    name: "토스페이먼츠 (신)",
-    icon: "toss",
-    methods: ["card", "trans", "vbank", "phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "tosspayments";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "trans") {
-        v1PayFieldSignals.buyer_email.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_email.valueSignal.value = "buyer@example.com";
-      }
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
-    },
-  },
-  {
-    name: "토스페이먼츠 (구)",
-    icon: "toss",
-    methods: ["card", "trans", "vbank", "phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "uplus";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "trans") {
-        v1PayFieldSignals.buyer_email.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_email.valueSignal.value = "buyer@example.com";
-      }
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
-    },
-  },
-  {
-    name: "키움페이",
-    icon: "daou",
-    methods: ["card", "trans", "vbank"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "daou";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      if (method === "vbank") {
-        v1PayFieldSignals.buyer_name.enabledSignal.value = true;
-        v1PayFieldSignals.buyer_name.valueSignal.value = "포트원";
-      }
-    },
-  },
-  {
-    name: "모빌리언스",
-    icon: "inicis",
-    methods: ["phone"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "mobilians";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-    },
-  },
-  {
-    name: "엑심베이",
-    icon: "eximbay",
-    methods: ["card"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "eximbay";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-    },
-  },
-  {
-    name: "페이먼트월",
-    icon: "paymentwall",
-    methods: ["card"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "paymentwall";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 1000;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-      v1PayFieldSignals.buyer_email.enabledSignal.value = true;
-      v1PayFieldSignals.buyer_email.valueSignal.value = "buyer@example.com";
-    },
-  },
-  {
-    name: "카카오페이",
-    icon: "kakao",
-    methods: ["card"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "kakaopay";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-    },
-  },
-  {
-    name: "토스페이",
-    icon: "toss",
-    methods: ["card"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "tosspay";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-    },
-  },
-  {
-    name: "페이코",
-    icon: "payco",
-    methods: ["card"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "payco";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-    },
-  },
-  {
-    name: "스마일페이",
-    icon: "smilepay",
-    methods: ["card"],
-    handler(method) {
-      trialModalOpenSignal.value = false;
-      appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-      v1PayAccountSignals.userCodeSignal.value = "imp14397622";
-      v1PayFieldSignals.pg.enabledSignal.value = true;
-      v1PayFieldSignals.pg.valueSignal.value = "smilepay";
-      v1PayFieldSignals.pay_method.valueSignal.value = method;
-      fillMerchantUid("v1-pay");
-      v1PayFieldSignals.name.enabledSignal.value = true;
-      v1PayFieldSignals.name.valueSignal.value = "테스트 결제";
-      v1PayFieldSignals.amount.valueSignal.value = 100;
-      v1PayFieldSignals.buyer_tel.valueSignal.value = "010-0000-0000";
-    },
-  },
-] satisfies PayPreset[];
 
 interface GrpupProps {
   children?: React.ReactNode;
@@ -551,12 +190,7 @@ const CertPreset: React.FC<CertPresetProps> = (
   return (
     <SingularPreset
       icon={icon}
-      buttonChildren={
-        <>
-          <span>👤</span>
-          <span>본인인증</span>
-        </>
-      }
+      buttonChildren={<span>👤 본인인증</span>}
       handler={handler}
     >
       {children}
@@ -575,12 +209,7 @@ const LoadUiPreset: React.FC<LoadUiPresetProps> = (
   return (
     <SingularPreset
       icon={icon}
-      buttonChildren={
-        <>
-          <span>⬇️</span>
-          <span>UI 불러오기</span>
-        </>
-      }
+      buttonChildren={<span>⬇️ UI 불러오기</span>}
       handler={handler}
     >
       {children}
@@ -588,24 +217,16 @@ const LoadUiPreset: React.FC<LoadUiPresetProps> = (
   );
 };
 
-type PayMethod =
-  | "card"
-  | "trans"
-  | "vbank"
-  | "phone"
-  | "cultureland"
-  | "smartculture"
-  | "happymoney"
-  | "booknlife";
-
 interface PayPresetProps {
   name: string;
   icon: string;
-  methods: PayMethod[];
-  handler: (method: PayMethod) => void;
+  cases: {
+    label: string;
+    handler: () => void;
+  }[];
 }
 const PayPreset: React.FC<PayPresetProps> = (
-  { name, icon, methods, handler },
+  { name, icon, cases },
 ) => {
   return (
     <div className="px-4 py-4 flex flex-col gap-4 items-stretch text-sm break-all rounded bg-slate-100">
@@ -614,39 +235,16 @@ const PayPreset: React.FC<PayPresetProps> = (
         <span className="text-lg">{name}</span>
       </div>
       <div className="flex flex-col items-stretch gap-1.5">
-        {methods.map((method) => (
+        {cases.map(({ label, handler }, i) => (
           <button
-            key={method}
+            key={i}
             className="flex gap-2 text-slate-800 text-[1.05rem] px-4 py-2 rounded bg-white shadow hover:translate-x-0.5 transition-transform cursor-pointer"
-            onClick={() => handler(method)}
+            onClick={handler}
           >
-            <span>{payMethodEmojis[method]}</span>
-            <span>{payMethodNames[method]}</span>
+            <span>{label}</span>
           </button>
         ))}
       </div>
     </div>
   );
-};
-
-const payMethodEmojis: Record<PayMethod, string> = {
-  card: "💳",
-  trans: "🏧",
-  vbank: "🏦",
-  phone: "📱",
-  cultureland: "💸",
-  smartculture: "💸",
-  happymoney: "💸",
-  booknlife: "💸",
-};
-
-const payMethodNames: Record<PayMethod, string> = {
-  card: "카드결제",
-  trans: "계좌이체",
-  vbank: "가상계좌 이체",
-  phone: "휴대폰 소액결제",
-  cultureland: "문화상품권",
-  smartculture: "스마트문상",
-  happymoney: "해피머니",
-  booknlife: "도서문화상품권",
 };

@@ -1,0 +1,354 @@
+- label: 이니시스
+  icon: inicis
+  v1-cert:
+    account:
+      userCode: imp29272276
+    field:
+      pg: inicis_unified
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: html5_inicis
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+        buyer_email: buyer@example.com
+      📱 휴대폰 소액결제:
+        pay_method: phone
+      💸 문화상품권:
+        pay_method: cultureland
+      💸 스마트문상:
+        pay_method: smartculture
+      💸 해피머니:
+        pay_method: happymoney
+      💸 도서문화상품권:
+        pay_method: booknlife
+- label: 페이팔 SPB
+  icon: paypal
+  v1-load-ui:
+    account:
+      userCode: imp14397622
+    uiType: paypal-spb
+    field:
+      pg: paypal_v2
+      pay_method: paypal
+      name: 테스트 결제
+      amount: 1
+      buyer_tel: 010-0000-0000
+- label: KCP
+  icon: kcp
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: kcp
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+      💸 문화상품권:
+        pay_method: cultureland
+- label: 나이스페이먼츠
+  icon: nice
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: nice
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+- label: KICC
+  icon: kicc
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: kicc
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 다날
+  icon: danal
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+        pg: danal_tpay
+      📱 휴대폰 소액결제:
+        pay_method: phone
+        pg: danal
+- label: 헥토파이낸셜
+  icon: settle
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: settle
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 스마트로
+  icon: smartro
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: smartro
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 블루월넛
+  icon: bluewalnut
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: bluewalnut
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+      buyer_name: 포트원
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: KSNET
+  icon: ksnet
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: ksnet
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+      buyer_name: 포트원
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 토스페이먼츠 (신)
+  icon: toss
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: tosspayments
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+        buyer_email: buyer@example.com
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 토스페이먼츠 (구)
+  icon: toss
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: uplus
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+        buyer_email: buyer@example.com
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 키움페이
+  icon: daou
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: daou
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+- label: 모빌리언스
+  icon: inicis
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: mobilians
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 엑심베이
+  icon: eximbay
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: eximbay
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+- label: 페이먼트월
+  icon: paymentwall
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: paymentwall
+      name: 테스트 결제
+      amount: 1000
+      buyer_tel: 010-0000-0000
+      buyer_email: buyer@example.com
+    case:
+      💳 카드결제:
+        pay_method: card
+- label: 카카오페이
+  icon: kakao
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: kakaopay
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+- label: 토스페이
+  icon: toss
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: tosspay
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+- label: 페이코
+  icon: payco
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: payco
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+- label: 스마일페이
+  icon: smilepay
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: smilepay
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
