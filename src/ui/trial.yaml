@@ -84,6 +84,25 @@
       🏦 가상계좌 이체:
         pay_method: vbank
         buyer_name: 포트원
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+    case:
+      💳 카드결제:
+        payMethod: CARD
+        channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
+      🏧 계좌이체:
+        payMethod: TRANSFER
+        channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
+      📱 휴대폰 소액결제:
+        payMethod: MOBILE
+        channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        channelKey: channel-key-e6c31df1-5559-4b4a-9b2c-a35793d14db2
 - label: KICC
   icon: kicc
   v1-pay:

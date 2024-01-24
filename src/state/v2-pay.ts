@@ -94,17 +94,17 @@ export const fields = {
       default: "",
     },
   },
-  channelName: {
+  channelKey: {
     required: false,
-    label: "채널 이름",
+    label: "채널 키",
     input: {
       type: "text",
-      placeholder: "",
+      placeholder: "channel-key-aabcdeff-0000-1234-abcd-00001234abcd",
       default: "",
     },
   },
   pgProvider: {
-    required: true,
+    required: false,
     label: "PG사 구분코드",
     input: {
       type: "text",
@@ -177,9 +177,54 @@ export const fields = {
           required: false,
           label: "주소",
           input: {
-            type: "text",
-            placeholder: "시군구읍면동",
-            default: "",
+            type: "object",
+            fields: {
+              country: {
+                required: false,
+                label: "국가코드",
+                input: {
+                  type: "text",
+                  placeholder: "KR | US | CN | JP",
+                  default: "",
+                },
+              },
+              addressLine1: {
+                required: true,
+                label: "일반주소",
+                input: {
+                  type: "text",
+                  placeholder: "",
+                  default: "",
+                },
+              },
+              addressLine2: {
+                required: true,
+                label: "상세주소",
+                input: {
+                  type: "text",
+                  placeholder: "",
+                  default: "",
+                },
+              },
+              city: {
+                required: false,
+                label: "도시",
+                input: {
+                  type: "text",
+                  placeholder: "",
+                  default: "",
+                },
+              },
+              province: {
+                required: false,
+                label: "주, 도, 시",
+                input: {
+                  type: "text",
+                  placeholder: "",
+                  default: "",
+                },
+              },
+            },
           },
         },
         zipcode: {
@@ -206,6 +251,24 @@ export const fields = {
           input: {
             type: "text",
             placeholder: "1234",
+            default: "",
+          },
+        },
+        birthMonth: {
+          required: false,
+          label: "출생월",
+          input: {
+            type: "text",
+            placeholder: "12",
+            default: "",
+          },
+        },
+        birthDay: {
+          required: false,
+          label: "출생일",
+          input: {
+            type: "text",
+            placeholder: "34",
             default: "",
           },
         },
