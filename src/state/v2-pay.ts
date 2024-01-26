@@ -275,6 +275,15 @@ export const fields = {
       },
     },
   },
+  redirectUrl: {
+    required: false,
+    label: "리디렉션 URL",
+    input: {
+      type: "text",
+      placeholder: "",
+      default: "",
+    },
+  },
 } satisfies Fields;
 
 export const fieldSignals = createFieldSignals(

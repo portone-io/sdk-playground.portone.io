@@ -90,6 +90,7 @@
       orderName: 테스트 결제
       totalAmount: 100
       currency: KRW
+      redirectUrl: https://sdk-playground.portone.io/
     case:
       💳 카드결제:
         payMethod: CARD
