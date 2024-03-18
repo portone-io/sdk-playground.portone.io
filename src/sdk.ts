@@ -56,6 +56,7 @@ export type InitSdkV2Fn = (config: InitSdkV2Config) => SdkV2;
 export interface SdkV2 {
   PortOne: {
     requestPayment(config: any): Promise<any>;
+    requestIdentityVerification(config: any): Promise<any>;
   };
   cleanUp: () => void;
 }
