@@ -1,10 +1,6 @@
 import { signal } from "@preact/signals";
 import * as React from "react";
-import {
-  checkoutServerSignal,
-  coreServerSignal,
-  reset as resetV2,
-} from "../../state/v2";
+import { checkoutServerSignal, reset as resetV2 } from "../../state/v2";
 import {
   codePreviewSignal,
   fields,
@@ -57,17 +53,6 @@ const View: React.FC = () => {
                 포트원 내부 QA 전용 설정
               </summary>
               <div className="flex flex-col gap-2">
-                <label>
-                  <div>Core API URL</div>
-                  <input
-                    type="text"
-                    className="border w-full"
-                    value={coreServerSignal.value}
-                    onChange={(e) => {
-                      coreServerSignal.value = e.currentTarget.value;
-                    }}
-                  />
-                </label>
                 <label>
                   <div>Checkout API URL</div>
                   <input

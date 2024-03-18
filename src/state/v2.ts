@@ -5,17 +5,8 @@ import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
 
 export function reset() {
-  coreServerSignal.value = defaultCoreServer;
   checkoutServerSignal.value = defaultCheckoutServer;
 }
-
-const defaultCoreServer = "https://service.iamport.kr";
-export const coreServerSignal = persisted(
-  localStorage,
-  `${prefix}.v2.coreServer`,
-  defaultCoreServer,
-);
-export const coreServerUrlSignal = createUrlSignal(coreServerSignal);
 
 const defaultCheckoutServer = "https://checkout-service.prod.iamport.co";
 export const checkoutServerSignal = persisted(
@@ -29,9 +20,8 @@ export const sdkV2Signal = signal<SdkV2 | undefined>(undefined);
 
 effect(() => {
   const version = sdkVersionSignal.value;
-  const coreServerUrl = coreServerUrlSignal.value;
   const checkoutServerUrl = checkoutServerUrlSignal.value;
-  if (!(coreServerUrl && checkoutServerUrl)) {
+  if (!checkoutServerUrl) {
     sdkV2Signal.value = undefined;
     return;
   }
@@ -40,7 +30,6 @@ effect(() => {
     if (getMajorVersion(version) === "v2") {
       const sdk = await loadSdkV2(
         version as SdkV2Version,
-        coreServerUrl.origin,
         checkoutServerUrl.origin,
       );
       if (cleaned) return;
@@ -57,7 +46,6 @@ effect(() => {
 
 async function loadSdkV2(
   version: SdkV2Version,
-  CORE_SERVER: string,
   CHECKOUT_SERVER: string,
 ): Promise<SdkV2> {
   switch (version) {
@@ -65,7 +53,7 @@ async function loadSdkV2(
       const { default: PortOne, slots } = await import(
         "https://cdn.portone.io/v2/browser-sdk.esm.js"
       );
-      Object.assign(slots, { CORE_SERVER, CHECKOUT_SERVER });
+      Object.assign(slots, { CHECKOUT_SERVER });
       return { PortOne, cleanUp: () => {} };
     }
   }
