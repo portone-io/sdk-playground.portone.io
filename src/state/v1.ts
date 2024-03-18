@@ -10,6 +10,12 @@ import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
 
+declare global {
+  interface Window {
+    jQuery?: typeof import("jquery");
+  }
+}
+
 export function reset() {
   coreServerSignal.value = defaultCoreServer;
   checkoutServerSignal.value = defaultCheckoutServer;
@@ -69,7 +75,7 @@ async function loadSdkV1(
   switch (version) {
     case "1.3.0": {
       const { default: IMP, slots } = await import(
-        "../sdk/iamport-1.3.0.esm.js"
+        "https://cdn.iamport.kr/v1/iamport.esm.js"
       );
       const cleanUp = IMP.deinit;
       slots.CORE_SERVER = CORE_SERVER;
@@ -77,22 +83,75 @@ async function loadSdkV1(
       return { IMP, cleanUp };
     }
     case "1.2.1": {
-      const { default: initSdk } = await import("../sdk/iamport-1.2.1");
-      return initSdk({ window: globalThis, api_server: CORE_SERVER });
+      const { IMP } = await loadLegacySdk(
+        "iamport.payment-1.2.1.js",
+      );
+      IMP.slots.CORE_SERVER = CORE_SERVER;
+      return { IMP, cleanUp: () => IMP.style.remove() };
     }
     case "1.2.0": {
-      const { default: initSdk } = await import("../sdk/iamport-1.2.0");
-      return initSdk({ window: globalThis, api_server: CORE_SERVER });
+      const { IMP } = await loadLegacySdk(
+        "iamport.payment-1.2.0.js",
+      );
+      IMP.slots.CORE_SERVER = CORE_SERVER;
+      return { IMP, cleanUp: () => IMP.style.remove() };
     }
     case "1.1.8": {
-      const { default: initSdk } = await import("../sdk/iamport-1.1.8");
-      return initSdk({ window: globalThis, api_server: CORE_SERVER });
+      const { IMP } = await loadLegacySdk(
+        "iamport.payment-1.1.8.js",
+      );
+      IMP.slots.CORE_SERVER = CORE_SERVER;
+      return { IMP, cleanUp: () => IMP.style.remove() };
     }
     case "1.1.7": {
-      const { default: initSdk } = await import("../sdk/iamport-1.1.7");
-      return initSdk({ window: globalThis, api_server: CORE_SERVER });
+      const { IMP } = await loadLegacySdk(
+        "iamport.payment-1.1.7.js",
+      );
+      IMP.slots.CORE_SERVER = CORE_SERVER;
+      return { IMP, cleanUp: () => IMP.style.remove() };
     }
   }
+}
+
+async function loadLegacySdk(
+  filename: string,
+) {
+  const jQueryInjection = window.jQuery || import("jquery").then((module) => {
+    window.jQuery = module.default;
+  });
+  const response = await fetch(`https://cdn.iamport.kr/js/${filename}`);
+  const script = await response.text();
+  // 1. replace polyfill modules and module assignment to `window.IMP` with `export default` and additional argument `out` added
+  const esmified = script.replace(
+    /.+;window\.IMP\s*\|\|\s*function\((\S+)\)(.+)\.call\({},\s*window\)/s,
+    ";export default function($1,out)$2",
+  );
+  // 2. inject style into IMP
+  const [, styleVarName] = /.+;(.+?)\.type="text\/css"/.exec(esmified) ?? [];
+  const styleInjected = esmified.replace(
+    /{slots:/,
+    `{style:${styleVarName},slots:`,
+  );
+  // 3. replace minified `window.IMP` with `out.IMP`
+  const outputReplaced = styleInjected.replace(
+    /([^A-Za-z0-9_])\w+\.IMP\s*=/,
+    "$1out.IMP=",
+  );
+  // 4. convert to base64 data URL to import as module
+  const base64Url = `data:text/javascript;base64,${btoa(outputReplaced)}`;
+  const module = await import(
+    /* @vite-ignore */
+    base64Url
+  );
+  const container = {};
+  await jQueryInjection;
+  module.default.call({}, window, container);
+  return container as {
+    IMP: SdkV1["IMP"] & {
+      style: HTMLStyleElement;
+      slots: Record<string, string>;
+    };
+  };
 }
 
 export interface AccountSignals {
