@@ -89,6 +89,7 @@ export const playFnSignal = computed(() => {
       const success = ("error_code" in response) || ("code" in response);
       playResultSignal.value = { success, response };
     } catch (error) {
+      console.error(error);
       const errorStack = error instanceof Error ? error.stack : String(error);
       playResultSignal.value = { success: false, errorStack };
     } finally {
