@@ -69,7 +69,7 @@ export const fields = {
     },
   },
   customer: {
-    required: true,
+    required: false,
     label: "고객 정보",
     input: {
       type: "object",
@@ -130,7 +130,7 @@ export const fields = {
           },
         },
         address: {
-          required: true,
+          required: false,
           label: "주소",
           input: {
             type: "object",
@@ -145,7 +145,7 @@ export const fields = {
                 },
               },
               addressLine1: {
-                required: true,
+                required: false,
                 label: "일반 주소",
                 input: {
                   type: "text",
@@ -154,7 +154,7 @@ export const fields = {
                 },
               },
               addressLine2: {
-                required: true,
+                required: false,
                 label: "상세 주소",
                 input: {
                   type: "text",

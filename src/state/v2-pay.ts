@@ -168,9 +168,54 @@ export const fields = {
           required: false,
           label: "주소",
           input: {
-            type: "text",
-            placeholder: "시군구읍면동",
-            default: "",
+            type: "object",
+            fields: {
+              country: {
+                required: false,
+                label: "국가",
+                input: {
+                  type: "text",
+                  placeholder: "KR",
+                  default: "",
+                },
+              },
+              addressLine1: {
+                required: false,
+                label: "일반 주소",
+                input: {
+                  type: "text",
+                  placeholder: "성수이로20길 16",
+                  default: "",
+                },
+              },
+              addressLine2: {
+                required: false,
+                label: "상세 주소",
+                input: {
+                  type: "text",
+                  placeholder: "제이케이타워 4층",
+                  default: "",
+                },
+              },
+              city: {
+                required: false,
+                label: "도시",
+                input: {
+                  type: "text",
+                  placeholder: "성동구",
+                  default: "",
+                },
+              },
+              province: {
+                required: false,
+                label: "주, 도, 시",
+                input: {
+                  type: "text",
+                  placeholder: "서울특별시",
+                  default: "",
+                },
+              },
+            },
           },
         },
         zipcode: {
@@ -187,7 +232,7 @@ export const fields = {
           label: "구매자 성별",
           input: {
             type: "text",
-            placeholder: "GENDER_OTHER",
+            placeholder: "OTHER",
             default: "",
           },
         },
@@ -196,11 +241,65 @@ export const fields = {
           label: "출생년도",
           input: {
             type: "text",
-            placeholder: "1234",
+            placeholder: "1970",
+            default: "",
+          },
+        },
+        birthMonth: {
+          required: false,
+          label: "출생월",
+          input: {
+            type: "text",
+            placeholder: "1",
+            default: "",
+          },
+        },
+        birthDay: {
+          required: false,
+          label: "출생일",
+          input: {
+            type: "text",
+            placeholder: "1",
             default: "",
           },
         },
       },
+    },
+  },
+  windowType: {
+    required: false,
+    label: "결제 창 유형",
+    input: {
+      type: "object",
+      fields: {
+        pc: {
+          required: false,
+          label: "PC에서의 창 유형",
+          input: {
+            type: "text",
+            placeholder: "IFRAME",
+            default: "",
+          },
+        },
+        mobile: {
+          required: false,
+          label: "모바일에서의 창 유형",
+          input: {
+            type: "text",
+            placeholder: "REDIRECT",
+            default: "",
+          },
+        },
+      },
+    },
+  },
+  redirectUrl: {
+    required: false,
+    label: "결제 후 이동할 URL",
+    input: {
+      type: "text",
+      placeholder: "https://example.com",
+      default: "",
     },
   },
 } satisfies Fields;
