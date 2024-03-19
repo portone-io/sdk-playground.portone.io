@@ -1,6 +1,5 @@
 import { computed } from "@preact/signals";
 import * as React from "react";
-import CodeMirror from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import { SdkVersion, sdkVersions } from "./sdk";
 import {
@@ -110,11 +109,9 @@ const Header: React.FC = () => {
                   />
                 )}
                 {(playResult.errorStack != null) && (
-                  <CodeMirror
-                    className="text-black"
-                    value={playResult.errorStack}
-                    readOnly
-                  />
+                  <div className="flex flex-col font-mono bg-white text-black whitespace-nowrap overflow-auto px-1">
+                    {playResult.errorStack}
+                  </div>
                 )}
               </div>
             </div>
