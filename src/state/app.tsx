@@ -1,4 +1,6 @@
 import { computed, Signal, signal } from "@preact/signals";
+import { parse as parseErrorStack } from "error-stack-parser-es";
+import type { ReactNode } from "react";
 import { MajorVersion, SdkVersion } from "../sdk";
 import persisted, { prefix } from "./persisted";
 
@@ -90,16 +92,35 @@ export const playFnSignal = computed(() => {
       playResultSignal.value = { success, response };
     } catch (error) {
       console.error(error);
-      const errorStack = error instanceof Error ? error.stack : String(error);
+      const errorStack = error instanceof Error
+        ? buildErrorStack(error)
+        : String(error);
       playResultSignal.value = { success: false, errorStack };
     } finally {
       waitingSignal.value = false;
     }
   };
 });
+
+function buildErrorStack(error: Error) {
+  const stack = parseErrorStack(error);
+  return (
+    <>
+      <span>{error.name}: {error.message}</span>
+      <ul className="ml-12">
+        {stack.map((frame) => (
+          <li>
+            at {frame.functionName}{" "}
+            ({frame.fileName}:{frame.lineNumber}:{frame.columnNumber})
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 export interface PlayResult {
   success: boolean;
   response?: object;
-  errorStack?: string;
+  errorStack?: ReactNode;
 }
 export const playResultSignal = signal<PlayResult | undefined>(undefined);

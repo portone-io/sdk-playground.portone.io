@@ -38,6 +38,9 @@ dependencies:
   autoprefixer:
     specifier: 10.4.18
     version: 10.4.18(postcss@8.4.36)
+  error-stack-parser-es:
+    specifier: ^0.1.1
+    version: 0.1.1
   jquery:
     specifier: ^3.7.1
     version: 3.7.1
@@ -1304,6 +1307,10 @@ packages:
   /entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
     engines: {node: '>=0.12'}
+    dev: false
+
+  /error-stack-parser-es@0.1.1:
+    resolution: {integrity: sha512-g/9rfnvnagiNf+DRMHEVGuGuIBlCIMDFoTA616HaP2l9PlCjGjVhD98PNbVSJvmK4TttqT5mV5tInMhoFgi+aA==}
     dev: false
 
   /esbuild@0.19.12:
