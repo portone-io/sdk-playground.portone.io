@@ -8,10 +8,10 @@ import {
   jsonTextSignal,
   jsonValueSignal,
   reset,
-} from "../../state/v2-pay";
-import { RequiredIndicator } from "../../ui/Control";
-import HtmlEditor from "../../ui/HtmlEditor";
-import JsonEditor from "../../ui/JsonEditor";
+} from "../../state/v2-identity-verification";
+import { RequiredIndicator } from "../Control";
+import HtmlEditor from "../HtmlEditor";
+import JsonEditor from "../JsonEditor";
 import FieldControl from "../field/FieldControl";
 import Reset from "./Reset";
 
@@ -27,8 +27,6 @@ const View: React.FC = () => {
   return (
     <>
       <p className="mb-4 text-xs text-slate-500">
-        PG가 콘솔에서 테스트로 설정된 경우, 승인된 결제 건은 매일
-        자정(23:00~23:50분 사이)에 자동으로 취소됩니다.<br />
         "<RequiredIndicator />" 표시는 필수입력 항목을 의미합니다. 상황에 따라서
         필수입력 표시가 아니어도 입력이 필요할 수 있습니다.
       </p>

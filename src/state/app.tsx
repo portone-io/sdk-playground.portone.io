@@ -39,6 +39,14 @@ export const modeFns = {
     label: "결제",
     stateModule: () => import("./v2-pay"),
   },
+  "v2-identity-verification": {
+    label: "본인인증",
+    stateModule: () => import("./v2-identity-verification"),
+  },
+  "v2-load-payment-ui": {
+    label: "PG 결제 UI",
+    stateModule: () => import("./v2-load-payment-ui"),
+  },
 } satisfies {
   [key: string]: {
     label: string;
@@ -46,7 +54,7 @@ export const modeFns = {
   };
 };
 export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
-  "2.0.0": ["v2-pay"],
+  "2.0.0": ["v2-pay", "v2-identity-verification", "v2-load-payment-ui"],
   "1.3.0": ["v1-pay", "v1-cert", "v1-load-ui"],
   "1.2.1": ["v1-pay", "v1-cert"],
   "1.2.0": ["v1-pay", "v1-cert"],

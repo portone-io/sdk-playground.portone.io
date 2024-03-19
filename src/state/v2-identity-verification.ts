@@ -18,9 +18,9 @@ export function reset() {
 export const playFnSignal = computed(() => {
   const sdkV2 = sdkV2Signal.value;
   const configObject = configObjectSignal.value;
-  return function requestPay() {
+  return function requestIdentityVerification() {
     if (!sdkV2) return Promise.reject(new Error("sdk not loaded"));
-    return sdkV2.PortOne.requestPayment(configObject);
+    return sdkV2.PortOne.requestIdentityVerification(configObject);
   };
 });
 
@@ -29,11 +29,11 @@ export const codePreviewSignal = computed<string>(() => {
   return [
     `<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>`,
     ``,
-    `<button onclick="requestPay()">결제하기</button>`,
+    `<button onclick="requestIdentityVerification()">본인 인증하기</button>`,
     ``,
     `<script>`,
-    `function requestPay() {`,
-    `  PortOne.requestPayment(${toJs(configObject, "  ", 1)});`,
+    `function requestIdentityVerification() {`,
+    `  PortOne.requestIdentityVerification(${toJs(configObject, "  ", 1)});`,
     `}`,
     `</script>`,
   ].join("\n");
@@ -49,9 +49,9 @@ export const fields = {
       default: "",
     },
   },
-  paymentId: {
+  identityVerificationId: {
     required: true,
-    label: "결제 ID",
+    label: "본인인증건 ID",
     input: {
       type: "text",
       default: "",
@@ -59,44 +59,9 @@ export const fields = {
       generate: () => `test_${Date.now().toString(36)}`,
     },
   },
-  orderName: {
-    required: true,
-    label: "주문명",
-    input: {
-      type: "text",
-      placeholder: "짜장면 1개 단무지 추가",
-      default: "",
-    },
-  },
-  totalAmount: {
-    required: true,
-    label: "금액",
-    input: {
-      type: "integer",
-      default: 0,
-    },
-  },
-  payMethod: {
-    required: true,
-    label: "결제 수단",
-    input: {
-      type: "text",
-      placeholder: "CARD",
-      default: "",
-    },
-  },
-  currency: {
-    required: true,
-    label: "결제 통화",
-    input: {
-      type: "text",
-      placeholder: "KRW | USD | EUR | JPY",
-      default: "",
-    },
-  },
   channelKey: {
     required: true,
-    label: "결제 채널 키",
+    label: "본인인증 채널 키",
     input: {
       type: "text",
       placeholder: "channel-key-aabcdeff-0000-1234-abcd-00001234abcd",
@@ -250,7 +215,7 @@ export const fields = {
           label: "출생월",
           input: {
             type: "text",
-            placeholder: "1",
+            placeholder: "01",
             default: "",
           },
         },
@@ -259,7 +224,7 @@ export const fields = {
           label: "출생일",
           input: {
             type: "text",
-            placeholder: "1",
+            placeholder: "01",
             default: "",
           },
         },
@@ -268,7 +233,7 @@ export const fields = {
   },
   windowType: {
     required: false,
-    label: "결제 창 유형",
+    label: "본인인증 창 유형",
     input: {
       type: "object",
       fields: {
@@ -286,7 +251,7 @@ export const fields = {
           label: "모바일에서의 창 유형",
           input: {
             type: "text",
-            placeholder: "REDIRECT",
+            placeholder: "POPUP",
             default: "",
           },
         },
@@ -295,7 +260,7 @@ export const fields = {
   },
   redirectUrl: {
     required: false,
-    label: "결제 후 이동할 URL",
+    label: "본인인증 후 이동할 URL",
     input: {
       type: "text",
       placeholder: "https://example.com",
@@ -306,12 +271,12 @@ export const fields = {
 
 export const fieldSignals = createFieldSignals(
   localStorage,
-  `${prefix}.v2-pay.fields`,
+  `${prefix}.v2-identity-verification.fields`,
   fields,
 );
 export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
   localStorage,
-  `${prefix}.v2-pay.json`,
+  `${prefix}.v2-identity-verification.json`,
 );
 export const configObjectSignal = createConfigObjectSignal({
   fields,
