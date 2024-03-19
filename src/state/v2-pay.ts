@@ -94,21 +94,12 @@ export const fields = {
       default: "",
     },
   },
-  channelName: {
-    required: false,
-    label: "채널 이름",
-    input: {
-      type: "text",
-      placeholder: "",
-      default: "",
-    },
-  },
-  pgProvider: {
+  channelKey: {
     required: true,
-    label: "PG사 구분코드",
+    label: "결제 채널 키",
     input: {
       type: "text",
-      placeholder: "PG_PROVIDER_TOSSPAYMENTS",
+      placeholder: "channel-key-aabcdeff-0000-1234-abcd-00001234abcd",
       default: "",
     },
   },
