@@ -25,6 +25,10 @@ declare module "https://cdn.portone.io/v2/browser-sdk.esm.js" {
   const PortOne: {
     requestPayment(config: any): Promise<any>;
     requestIdentityVerification(config: any): Promise<any>;
+    loadPaymentUI(
+      config: any,
+      callbacks: Record<string, Function>,
+    ): Promise<any>;
   };
   export const slots: Record<string, string>;
   export default PortOne;
