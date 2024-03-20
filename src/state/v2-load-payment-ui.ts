@@ -17,14 +17,6 @@ export function reset() {
   jsonTextSignal.value = "{}";
 }
 
-const defaultUiType = "";
-export const uiTypeSignal = persisted(
-  localStorage,
-  `${prefix}.v2-load-payment-ui.uiType`,
-  defaultUiType,
-);
-effect(() => console.log(uiTypeSignal.value));
-
 export const playFnSignal = computed(() => {
   const sdkV2 = sdkV2Signal.value;
   const configObject = configObjectSignal.value;
@@ -42,7 +34,7 @@ export const playFnSignal = computed(() => {
 
 export const codePreviewSignal = computed<string>(() => {
   const configObject = configObjectSignal.value;
-  const uiType = uiTypeSignal.value;
+  const uiType = fieldSignals.uiType.valueSignal.value;
   const uiTypeRepr = JSON.stringify(uiType);
   return [
     `<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>`,
@@ -52,7 +44,7 @@ export const codePreviewSignal = computed<string>(() => {
     `</div>`,
     ``,
     `<script>`,
-    `PortOne.loadPaymentUI(${toJs(configObject, "  ", 1)});`,
+    `PortOne.loadPaymentUI(${toJs(configObject)});`,
     `</script>`,
   ].join("\n");
 });
@@ -64,7 +56,7 @@ export const fields = {
     input: {
       type: "text",
       placeholder: "PAYPAL_SPB",
-      default: defaultUiType,
+      default: "",
     },
   },
   ...v2PayFields,

@@ -56,7 +56,7 @@ export const fields = {
       type: "text",
       default: "",
       placeholder: "",
-      generate: () => `test_${Date.now().toString(36)}`,
+      generate: () => `test${Date.now().toString(36)}`,
     },
   },
   orderName: {

@@ -19,6 +19,8 @@ import { accountSignals as v1PayAccountSignals } from "./state/v1-pay";
 import { accountSignals as v1CertAccountSignals } from "./state/v1-cert";
 import { accountSignals as v1LoadUiAccountSignals } from "./state/v1-load-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
+import { fieldSignals as v2LoadPaymentUiFieldSignals } from "./state/v2-load-payment-ui";
+import { fieldSignals as v2IdentityVerificationFieldSignals } from "./state/v2-identity-verification";
 
 export const showTrialSignal = computed(() => {
   const modeFn = modeFnSignal.value;
@@ -26,6 +28,10 @@ export const showTrialSignal = computed(() => {
   const v1CertUserCode = v1CertAccountSignals.userCodeSignal.value;
   const v1LoadUiUserCode = v1LoadUiAccountSignals.userCodeSignal.value;
   const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
+  const v2LoadPaymentUiStoreId =
+    v2LoadPaymentUiFieldSignals.storeId.valueSignal.value;
+  const v2IdentityVerificationStoreId =
+    v2IdentityVerificationFieldSignals.storeId.valueSignal.value;
   switch (modeFn) {
     case "v1-pay":
       return !v1PayUserCode;
@@ -35,6 +41,10 @@ export const showTrialSignal = computed(() => {
       return !v1LoadUiUserCode;
     case "v2-pay":
       return !v2PayStoreId;
+    case "v2-load-payment-ui":
+      return !v2LoadPaymentUiStoreId;
+    case "v2-identity-verification":
+      return !v2IdentityVerificationStoreId;
   }
 });
 

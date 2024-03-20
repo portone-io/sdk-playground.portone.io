@@ -1,0 +1,467 @@
+- label: 이니시스
+  icon: inicis
+  v1-cert:
+    account:
+      userCode: imp29272276
+    field:
+      pg: inicis_unified
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: html5_inicis
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+        buyer_email: buyer@example.com
+      📱 휴대폰 소액결제:
+        pay_method: phone
+      💸 문화상품권:
+        pay_method: cultureland
+      💸 스마트문상:
+        pay_method: smartculture
+      💸 해피머니:
+        pay_method: happymoney
+      💸 도서문화상품권:
+        pay_method: booknlife
+- label: 페이팔 SPB
+  icon: paypal
+  v1-load-ui:
+    account:
+      userCode: imp14397622
+    uiType: paypal-spb
+    field:
+      pg: paypal_v2
+      pay_method: paypal
+      name: 테스트 결제
+      amount: 1
+      buyer_tel: 010-0000-0000
+  v2-load-payment-ui:
+    field:
+      uiType: PAYPAL_SPB
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-ddfbd2ad-facd-41c6-9969-463ec9d5fd23
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: USD
+- label: KCP
+  icon: kcp
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: kcp
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+      💸 문화상품권:
+        pay_method: cultureland
+- label: 나이스페이먼츠
+  icon: nice
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: nice
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+      redirectUrl: https://sdk-playground.portone.io/
+    case:
+      💳 카드결제:
+        payMethod: CARD
+        channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
+      🏧 계좌이체:
+        payMethod: TRANSFER
+        channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
+      📱 휴대폰 소액결제:
+        payMethod: MOBILE
+        channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        channelKey: channel-key-e6c31df1-5559-4b4a-9b2c-a35793d14db2
+- label: KICC
+  icon: kicc
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: kicc
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 다날
+  icon: danal
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+        pg: danal_tpay
+      📱 휴대폰 소액결제:
+        pay_method: phone
+        pg: danal
+- label: 헥토파이낸셜
+  icon: settle
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: settle
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 스마트로
+  icon: smartro
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: smartro
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-c4a4b281-a1e5-40c9-8140-f055262bcefd
+      orderName: 테스트 결제
+      totalAmount: 1000
+      currency: KRW
+      customer:
+        phoneNumber: 010-0000-0000
+    case:
+      💳 카드결제:
+        payMethod: CARD
+      🏧 계좌이체:
+        payMethod: TRANSFER
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        virtualAccount:
+          accountExpiry:
+            validHours: 1
+      📱 휴대폰 소액결제:
+        payMethod: MOBILE
+        productType: DIGITAL
+- label: 블루월넛
+  icon: bluewalnut
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: bluewalnut
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+      buyer_name: 포트원
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: KSNET
+  icon: ksnet
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: ksnet
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+      buyer_name: 포트원
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+      📱 휴대폰 소액결제:
+        pay_method: phone
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-4a5daa34-aecb-44af-aaad-e42384acfb6e
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+      customer:
+        fullName: 포트원
+    case:
+      💳 카드결제:
+        payMethod: CARD
+      🏧 계좌이체:
+        payMethod: TRANSFER
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        virtualAccount:
+          accountExpiry:
+            validHours: 1
+      📱 휴대폰 소액결제:
+        payMethod: MOBILE
+        productType: DIGITAL
+- label: 토스페이먼츠 (신)
+  icon: toss
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: tosspayments
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+        buyer_email: buyer@example.com
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-ebe7daa6-4fe4-41bd-b17d-3495264399b5
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+    case:
+      💳 카드결제:
+        payMethod: CARD
+      🏧 계좌이체:
+        payMethod: TRANSFER
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        virtualAccount:
+          accountExpiry:
+            validHours: 1
+- label: 토스페이먼츠 (구)
+  icon: toss
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: uplus
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+        buyer_email: buyer@example.com
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 키움페이
+  icon: daou
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: daou
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_name: 포트원
+- label: 모빌리언스
+  icon: inicis
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: mobilians
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      📱 휴대폰 소액결제:
+        pay_method: phone
+- label: 엑심베이
+  icon: eximbay
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: eximbay
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+- label: 페이먼트월
+  icon: paymentwall
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: paymentwall
+      name: 테스트 결제
+      amount: 1000
+      buyer_tel: 010-0000-0000
+      buyer_email: buyer@example.com
+    case:
+      💳 카드결제:
+        pay_method: card
+- label: 카카오페이
+  icon: kakao
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: kakaopay
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-01764171-b249-4c16-9d18-e9174fa8e611
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+    case:
+      💰 통합결제:
+        payMethod: EASY_PAY
+        easyPay:
+          easyPayProvider: KAKAOPAY
+- label: 토스페이
+  icon: toss
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: tosspay
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-1d494380-d047-458a-a20a-edd28f7f635c
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+    case:
+      💰 통합결제:
+        payMethod: EASY_PAY
+        easyPay:
+          easyPayProvider: TOSSPAY
+- label: 페이코
+  icon: payco
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: payco
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+- label: 스마일페이
+  icon: smilepay
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: smilepay
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
