@@ -44,6 +44,14 @@
       name: 테스트 결제
       amount: 1
       buyer_tel: 010-0000-0000
+  v2-load-payment-ui:
+    field:
+      uiType: PAYPAL_SPB
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-ddfbd2ad-facd-41c6-9969-463ec9d5fd23
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: USD
 - label: KCP
   icon: kcp
   v1-pay:
@@ -180,6 +188,28 @@
         buyer_name: 포트원
       📱 휴대폰 소액결제:
         pay_method: phone
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-c4a4b281-a1e5-40c9-8140-f055262bcefd
+      orderName: 테스트 결제
+      totalAmount: 1000
+      currency: KRW
+      customer:
+        phoneNumber: 010-0000-0000
+    case:
+      💳 카드결제:
+        payMethod: CARD
+      🏧 계좌이체:
+        payMethod: TRANSFER
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        virtualAccount:
+          accountExpiry:
+            validHours: 1
+      📱 휴대폰 소액결제:
+        payMethod: MOBILE
+        productType: DIGITAL
 - label: 블루월넛
   icon: bluewalnut
   v1-pay:
@@ -220,6 +250,28 @@
         pay_method: vbank
       📱 휴대폰 소액결제:
         pay_method: phone
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-4a5daa34-aecb-44af-aaad-e42384acfb6e
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+      customer:
+        fullName: 포트원
+    case:
+      💳 카드결제:
+        payMethod: CARD
+      🏧 계좌이체:
+        payMethod: TRANSFER
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        virtualAccount:
+          accountExpiry:
+            validHours: 1
+      📱 휴대폰 소액결제:
+        payMethod: MOBILE
+        productType: DIGITAL
 - label: 토스페이먼츠 (신)
   icon: toss
   v1-pay:
@@ -241,6 +293,23 @@
         buyer_name: 포트원
       📱 휴대폰 소액결제:
         pay_method: phone
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-ebe7daa6-4fe4-41bd-b17d-3495264399b5
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+    case:
+      💳 카드결제:
+        payMethod: CARD
+      🏧 계좌이체:
+        payMethod: TRANSFER
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        virtualAccount:
+          accountExpiry:
+            validHours: 1
 - label: 토스페이먼츠 (구)
   icon: toss
   v1-pay:
@@ -333,6 +402,18 @@
     case:
       💳 카드결제:
         pay_method: card
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-01764171-b249-4c16-9d18-e9174fa8e611
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+    case:
+      💰 통합결제:
+        payMethod: EASY_PAY
+        easyPay:
+          easyPayProvider: KAKAOPAY
 - label: 토스페이
   icon: toss
   v1-pay:
@@ -346,6 +427,18 @@
     case:
       💳 카드결제:
         pay_method: card
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-1d494380-d047-458a-a20a-edd28f7f635c
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+    case:
+      💰 통합결제:
+        payMethod: EASY_PAY
+        easyPay:
+          easyPayProvider: TOSSPAY
 - label: 페이코
   icon: payco
   v1-pay:

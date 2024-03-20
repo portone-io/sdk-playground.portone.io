@@ -1,4 +1,4 @@
-import { signal } from "@preact/signals";
+import { Signal, signal } from "@preact/signals";
 import * as React from "react";
 import Modal from "./Modal";
 import { appModeSignal } from "../state/app";
@@ -6,23 +6,38 @@ import {
   accountSignals as v1CertAccountSignals,
   fields as v1CertFields,
   fieldSignals as v1CertFieldSignals,
+  jsonTextSignal as v1CertJsonTextSignal,
 } from "../state/v1-cert";
 import {
   accountSignals as v1PayAccountSignals,
   fields as v1PayFields,
   fieldSignals as v1PayFieldSignals,
+  jsonTextSignal as v1PayJsonTextSignal,
 } from "../state/v1-pay";
 import {
   accountSignals as v1LoadUiAccountSignals,
   fields as v1LoadUiFields,
   fieldSignals as v1LoadUiFieldSignals,
+  jsonTextSignal as v1LoadUiJsonTextSignal,
   uiTypeSignal as v1LoadUiUiTypeSignal,
 } from "../state/v1-load-ui";
 import {
   fields as v2PayFields,
   fieldSignals as v2PayFieldSignals,
+  jsonTextSignal as v2PayJsonTextSignal,
 } from "../state/v2-pay";
+import {
+  fields as v2IdentityVerificationFields,
+  fieldSignals as v2IdentityVerificationFieldSignals,
+  jsonTextSignal as v2IdentityVerificationJsonTextSignal,
+} from "../state/v2-identity-verification";
+import {
+  fields as v2LoadPaymentUiFields,
+  fieldSignals as v2LoadPaymentUiFieldSignals,
+  jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
+} from "../state/v2-load-payment-ui";
 import _trialData from "./trial.yaml";
+import { FieldSignals } from "../state/fields";
 
 interface TrialDataItem {
   label: string;
@@ -42,9 +57,14 @@ interface TrialDataItem {
     field: Record<keyof typeof v1LoadUiFields, any>;
   };
   "v2-pay": {
-    account: { userCode: string };
-    field: Record<keyof typeof v1PayFields, any>;
-    case: Record<string, Record<keyof typeof v1PayFields, any>>;
+    field: Record<keyof typeof v2PayFields, any>;
+    case: Record<string, Record<keyof typeof v2PayFields, any>>;
+  };
+  "v2-identity-verification": {
+    field: Record<keyof typeof v2IdentityVerificationFields, any>;
+  };
+  "v2-load-payment-ui": {
+    field: Record<keyof typeof v2LoadPaymentUiFields, any>;
   };
 }
 const trialData = _trialData as TrialDataItem[];
@@ -73,6 +93,30 @@ const TrialModal: React.FC = () => {
 
 export default TrialModal;
 
+function applyFieldsToSignals(
+  fields: [string, any][],
+  signals: FieldSignals,
+  jsonTextSignal?: Signal<string>,
+) {
+  const json: Record<string, any> = {};
+  for (const [field, value] of fields) {
+    if (!signals[field]) {
+      if (jsonTextSignal) json[field] = value;
+      continue;
+    }
+    signals[field].enabledSignal.value = true;
+    if (value != null && typeof value === "object") {
+      applyFieldsToSignals(
+        Object.entries(value),
+        signals[field].valueSignal.value,
+      );
+    } else {
+      signals[field].valueSignal.value = value;
+    }
+  }
+  if (jsonTextSignal) jsonTextSignal.value = JSON.stringify(json, null, 2);
+}
+
 const V1Trials: React.FC = () => {
   return (
     <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
@@ -91,10 +135,11 @@ const V1Trials: React.FC = () => {
                 v1CertFieldSignals.merchant_uid.valueSignal.value = v1CertFields
                   .merchant_uid.input.generate();
                 const fields = Object.entries(item["v1-cert"].field);
-                for (const [field, value] of fields) {
-                  v1CertFieldSignals[field].enabledSignal.value = true;
-                  v1CertFieldSignals[field].valueSignal.value = value;
-                }
+                applyFieldsToSignals(
+                  fields,
+                  v1CertFieldSignals,
+                  v1CertJsonTextSignal,
+                );
               }}
             >
               {item.label}
@@ -121,10 +166,11 @@ const V1Trials: React.FC = () => {
                 v1LoadUiFieldSignals.merchant_uid.valueSignal.value =
                   v1LoadUiFields.merchant_uid.input.generate();
                 const fields = Object.entries(item["v1-load-ui"].field);
-                for (const [field, value] of fields) {
-                  v1LoadUiFieldSignals[field].enabledSignal.value = true;
-                  v1LoadUiFieldSignals[field].valueSignal.value = value;
-                }
+                applyFieldsToSignals(
+                  fields,
+                  v1LoadUiFieldSignals,
+                  v1LoadUiJsonTextSignal,
+                );
               }}
             >
               {item.label}
@@ -155,10 +201,11 @@ const V1Trials: React.FC = () => {
                     ...Object.entries(item["v1-pay"].field),
                     ...Object.entries(caseFields),
                   ];
-                  for (const [field, value] of fields) {
-                    v1PayFieldSignals[field].enabledSignal.value = true;
-                    v1PayFieldSignals[field].valueSignal.value = value;
-                  }
+                  applyFieldsToSignals(
+                    fields,
+                    v1PayFieldSignals,
+                    v1PayJsonTextSignal,
+                  );
                 },
               }))}
             />
@@ -172,6 +219,34 @@ const V1Trials: React.FC = () => {
 const V2Trials: React.FC = () => {
   return (
     <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
+      <Group>PG 결제 UI</Group>
+      <div className="grid sm:grid-cols-2 gap-2">
+        {trialData.filter((item) => "v2-load-payment-ui" in item).map(
+          (item, index) => (
+            <LoadUiPreset
+              key={index}
+              icon={item.icon}
+              handler={() => {
+                trialModalOpenSignal.value = false;
+                appModeSignal.value = {
+                  sdkVersion: "2.0.0",
+                  fn: "v2-load-payment-ui",
+                };
+                v2LoadPaymentUiFieldSignals.paymentId.valueSignal.value =
+                  v2LoadPaymentUiFields.paymentId.input.generate();
+                const fields = Object.entries(item["v2-load-payment-ui"].field);
+                applyFieldsToSignals(
+                  fields,
+                  v2LoadPaymentUiFieldSignals,
+                  v2LoadPaymentUiJsonTextSignal,
+                );
+              }}
+            >
+              {item.label}
+            </LoadUiPreset>
+          ),
+        )}
+      </div>
       <Group>결제</Group>
       <div className="grid sm:grid-cols-2 gap-2">
         {trialData.filter((item) => "v2-pay" in item).map(
@@ -193,10 +268,11 @@ const V2Trials: React.FC = () => {
                     ...Object.entries(item["v2-pay"].field),
                     ...Object.entries(caseFields),
                   ];
-                  for (const [field, value] of fields) {
-                    v2PayFieldSignals[field].enabledSignal.value = true;
-                    v2PayFieldSignals[field].valueSignal.value = value;
-                  }
+                  applyFieldsToSignals(
+                    fields,
+                    v2PayFieldSignals,
+                    v2PayJsonTextSignal,
+                  );
                 },
               }))}
             />

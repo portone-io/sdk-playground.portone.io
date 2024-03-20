@@ -1,4 +1,4 @@
-import { signal } from "@preact/signals";
+import { signal, useSignal } from "@preact/signals";
 import * as React from "react";
 import { checkoutServerSignal, reset as resetV2 } from "../../state/v2";
 import {
@@ -24,6 +24,7 @@ const resetFn = () => {
 
 const View: React.FC = () => {
   const parseJsonFailed = jsonValueSignal.value == null;
+  const isJsonOpen = useSignal(false);
   return (
     <>
       <p className="mb-4 text-xs text-slate-500">
@@ -33,7 +34,7 @@ const View: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 md:pb-80">
           <Reset resetFn={resetFn} />
-          <details>
+          <details open={isJsonOpen.value}>
             <summary
               className={`text-xs ${
                 parseJsonFailed ? "text-red-700" : "text-slate-500"
@@ -45,6 +46,7 @@ const View: React.FC = () => {
               key={resetCountSignal.value}
               value={jsonTextSignal.value}
               onChange={(json) => jsonTextSignal.value = json}
+              onReset={() => isJsonOpen.value = true}
             />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">
