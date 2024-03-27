@@ -286,7 +286,7 @@ export const fields = {
           label: "모바일에서의 창 유형",
           input: {
             type: "text",
-            placeholder: "REDIRECT",
+            placeholder: "REDIRECTION",
             default: "",
           },
         },
