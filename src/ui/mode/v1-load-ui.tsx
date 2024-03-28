@@ -4,10 +4,10 @@ import { reset as resetV1 } from "../../state/v1";
 import {
   accountSignals,
   codePreviewSignal,
+  extraFields,
+  extraFieldSignals,
   fields,
   fieldSignals,
-  jsonTextSignal,
-  jsonValueSignal,
   reset,
   uiTypeSignal,
 } from "../../state/v1-load-ui";
@@ -17,6 +17,7 @@ import JsonEditor from "../../ui/JsonEditor";
 import FieldControl from "../field/FieldControl";
 import Reset from "./Reset";
 import { ForQa } from "./v1";
+import ExtraFieldEditor from "../ExtraFieldEditor";
 
 const resetCountSignal = signal(0);
 const resetFn = () => {
@@ -32,7 +33,6 @@ const {
 } = accountSignals;
 
 const View: React.FC = () => {
-  const parseJsonFailed = jsonValueSignal.value == null;
   const isJsonOpen = useSignal(false);
   return (
     <>
@@ -47,17 +47,14 @@ const View: React.FC = () => {
           <Reset resetFn={resetFn} />
           <details open={isJsonOpen.value}>
             <summary
-              className={`text-xs ${
-                parseJsonFailed ? "text-red-700" : "text-slate-500"
-              } cursor-pointer`}
+              className="text-xs text-slate-500 cursor-pointer"
             >
-              추가 파라미터 (JSON{parseJsonFailed && " 파싱 실패"})
+              추가 파라미터
             </summary>
-            <JsonEditor
+            <ExtraFieldEditor
               key={resetCountSignal.value}
-              value={jsonTextSignal.value}
-              onChange={(json) => jsonTextSignal.value = json}
-              onReset={() => isJsonOpen.value = true}
+              extraFields={extraFields}
+              extraFieldSignals={extraFieldSignals}
             />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">

@@ -2,9 +2,11 @@ import { computed, effect } from "@preact/signals";
 import { toJs } from "./code";
 import {
   createConfigObjectSignal,
+  createExtraFields,
+  createExtraFieldSignals,
   createFieldSignals,
-  createJsonSignals,
   Fields,
+  resetExtraFieldSignals,
   resetFieldSignals,
 } from "./fields";
 import persisted, { prefix } from "./persisted";
@@ -14,7 +16,7 @@ import { pgUiModalOpenSignal } from "./v1-load-ui";
 
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
-  jsonTextSignal.value = "{}";
+  resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
 export const playFnSignal = computed(() => {
@@ -67,12 +69,18 @@ export const fieldSignals = createFieldSignals(
   `${prefix}.v2-load-payment-ui.fields`,
   fields,
 );
-export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+export const extraFields = createExtraFields(
   localStorage,
-  `${prefix}.v2-load-payment-ui.json`,
+  `${prefix}.v2-load-payment-ui.extra-fields.json`,
+);
+export const extraFieldSignals = createExtraFieldSignals(
+  localStorage,
+  `${prefix}.v2-load-payment-ui.extra-fields`,
+  extraFields,
 );
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
-  jsonValueSignal,
+  extraFields,
+  extraFieldSignals,
 });

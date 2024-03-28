@@ -2,8 +2,10 @@ import { computed, signal } from "@preact/signals";
 import { toJs } from "./code";
 import {
   createConfigObjectSignal,
+  createExtraFieldSignals,
+  createExtraFields,
   createFieldSignals,
-  createJsonSignals,
+  resetExtraFieldSignals,
   resetFieldSignals,
 } from "./fields";
 import persisted, { prefix } from "./persisted";
@@ -14,7 +16,7 @@ export function reset() {
   resetFieldSignals(fields, fieldSignals);
   accountSignals.reset();
   uiTypeSignal.value = defaultUiType;
-  jsonTextSignal.value = "{}";
+  resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
 export const accountSignals = createAccountSignals(`${prefix}.v1-load-ui`);
@@ -72,12 +74,18 @@ export const fieldSignals = createFieldSignals(
   `${prefix}.v1-load-ui.fields`,
   fields,
 );
-export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+export const extraFields = createExtraFields(
   localStorage,
-  `${prefix}.v1-load-ui.json`,
+  `${prefix}.v1-load-ui.extra-fields.json`,
+);
+export const extraFieldSignals = createExtraFieldSignals(
+  localStorage,
+  `${prefix}.v1-load-ui.extra-fields`,
+  extraFields,
 );
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
-  jsonValueSignal,
+  extraFields,
+  extraFieldSignals,
 });

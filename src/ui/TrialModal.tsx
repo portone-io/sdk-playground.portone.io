@@ -6,38 +6,44 @@ import {
   accountSignals as v1CertAccountSignals,
   fields as v1CertFields,
   fieldSignals as v1CertFieldSignals,
-  jsonTextSignal as v1CertJsonTextSignal,
+  extraFields as v1CertExtraFields,
+  extraFieldSignals as v1CertExtraFieldSignals,
 } from "../state/v1-cert";
 import {
   accountSignals as v1PayAccountSignals,
   fields as v1PayFields,
   fieldSignals as v1PayFieldSignals,
-  jsonTextSignal as v1PayJsonTextSignal,
+  extraFields as v1PayExtraFields,
+  extraFieldSignals as v1PayExtraFieldSignals,
 } from "../state/v1-pay";
 import {
   accountSignals as v1LoadUiAccountSignals,
   fields as v1LoadUiFields,
   fieldSignals as v1LoadUiFieldSignals,
-  jsonTextSignal as v1LoadUiJsonTextSignal,
+  extraFields as v1LoadUiExtraFields,
+  extraFieldSignals as v1LoadUiExtraFieldSignals,
   uiTypeSignal as v1LoadUiUiTypeSignal,
 } from "../state/v1-load-ui";
 import {
   fields as v2PayFields,
   fieldSignals as v2PayFieldSignals,
-  jsonTextSignal as v2PayJsonTextSignal,
+  extraFields as v2PayExtraFields,
+  extraFieldSignals as v2PayExtraFieldSignals,
 } from "../state/v2-pay";
 import {
   fields as v2IdentityVerificationFields,
   fieldSignals as v2IdentityVerificationFieldSignals,
-  jsonTextSignal as v2IdentityVerificationJsonTextSignal,
+  extraFields as v2IdentityVerificationExtraFields,
+  extraFieldSignals as v2IdentityVerificationExtraFieldSignals,
 } from "../state/v2-identity-verification";
 import {
   fields as v2LoadPaymentUiFields,
   fieldSignals as v2LoadPaymentUiFieldSignals,
-  jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
+  extraFields as v2LoadPaymentUiExtraFields,
+  extraFieldSignals as v2LoadPaymentUiExtraFieldSignals,
 } from "../state/v2-load-payment-ui";
 import _trialData from "./trial.yaml";
-import { FieldSignals } from "../state/fields";
+import { ExtraFieldSignals, ExtraFields, Field, FieldSignal, FieldSignals, Fields } from "../state/fields";
 
 interface TrialDataItem {
   label: string;
@@ -96,12 +102,13 @@ export default TrialModal;
 function applyFieldsToSignals(
   fields: [string, any][],
   signals: FieldSignals,
-  jsonTextSignal?: Signal<string>,
+  extraFields?: ExtraFields,
+  extraFieldSignals?: ExtraFieldSignals,
 ) {
   const json: Record<string, any> = {};
   for (const [field, value] of fields) {
     if (!signals[field]) {
-      if (jsonTextSignal) json[field] = value;
+      if (extraFields && extraFieldSignals) json[field] = value;
       continue;
     }
     signals[field].enabledSignal.value = true;
@@ -114,7 +121,50 @@ function applyFieldsToSignals(
       signals[field].valueSignal.value = value;
     }
   }
-  if (jsonTextSignal) jsonTextSignal.value = JSON.stringify(json, null, 2);
+  if (extraFields && extraFieldSignals) {
+    extraFields.value = createExtraFields(json);
+    applyFieldsToSignals([...Object.entries(json)], extraFieldSignals.value);
+  }
+}
+
+function createExtraFields(json: Record<string, any>): Fields {
+  return Object.fromEntries(Object.entries(json).map(([key, value]) => {
+    return [
+      key,
+      {
+        label: key,
+        required: false,
+        input: (() => {
+          switch (typeof value) {
+            case "string":
+              return {
+                type: "text",
+                placeholder: "",
+                default: value,
+              };
+            case "number":
+              return {
+                type: "integer",
+                placeholder: "",
+                default: value,
+              };
+            case "boolean":
+              return {
+                type: "toggle",
+                default: value,
+              };
+            case "object":
+              return {
+                type: "object",
+                fields: createExtraFields(value),
+              };
+            default:
+              throw new Error(`Unsupported type: ${typeof value}`);
+          }
+        })(),
+      } satisfies Field,
+    ];
+  }));
 }
 
 const V1Trials: React.FC = () => {
@@ -138,7 +188,8 @@ const V1Trials: React.FC = () => {
                 applyFieldsToSignals(
                   fields,
                   v1CertFieldSignals,
-                  v1CertJsonTextSignal,
+                  v1CertExtraFields,
+                  v1CertExtraFieldSignals,
                 );
               }}
             >
@@ -169,7 +220,8 @@ const V1Trials: React.FC = () => {
                 applyFieldsToSignals(
                   fields,
                   v1LoadUiFieldSignals,
-                  v1LoadUiJsonTextSignal,
+                  v1LoadUiExtraFields,
+                  v1LoadUiExtraFieldSignals,
                 );
               }}
             >
@@ -204,7 +256,8 @@ const V1Trials: React.FC = () => {
                   applyFieldsToSignals(
                     fields,
                     v1PayFieldSignals,
-                    v1PayJsonTextSignal,
+                    v1PayExtraFields,
+                    v1PayExtraFieldSignals,
                   );
                 },
               }))}
@@ -238,7 +291,8 @@ const V2Trials: React.FC = () => {
                 applyFieldsToSignals(
                   fields,
                   v2LoadPaymentUiFieldSignals,
-                  v2LoadPaymentUiJsonTextSignal,
+                  v2LoadPaymentUiExtraFields,
+                  v2LoadPaymentUiExtraFieldSignals,
                 );
               }}
             >
@@ -271,7 +325,8 @@ const V2Trials: React.FC = () => {
                   applyFieldsToSignals(
                     fields,
                     v2PayFieldSignals,
-                    v2PayJsonTextSignal,
+                    v2PayExtraFields,
+                    v2PayExtraFieldSignals,
                   );
                 },
               }))}

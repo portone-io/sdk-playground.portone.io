@@ -3,9 +3,11 @@ import { sdkVersionSignal } from "./app";
 import { toJs } from "./code";
 import {
   createConfigObjectSignal,
+  createExtraFields,
+  createExtraFieldSignals,
   createFieldSignals,
-  createJsonSignals,
   Fields,
+  resetExtraFieldSignals,
   resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
@@ -14,7 +16,7 @@ import { createAccountSignals, sdkV1Signal } from "./v1";
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
   accountSignals.reset();
-  jsonTextSignal.value = "{}";
+  resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
 export const accountSignals = createAccountSignals(`${prefix}.v1-cert`);
@@ -149,12 +151,18 @@ export const fieldSignals = createFieldSignals(
   `${prefix}.v1-cert.fields`,
   fields,
 );
-export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+export const extraFields = createExtraFields(
   localStorage,
-  `${prefix}.v1-cert.json`,
+  `${prefix}.v1-cert.extra-fields.json`,
+);
+export const extraFieldSignals = createExtraFieldSignals(
+  localStorage,
+  `${prefix}.v1-cert.extra-fields`,
+  extraFields,
 );
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
-  jsonValueSignal,
+  extraFields,
+  extraFieldSignals,
 });
