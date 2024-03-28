@@ -12,11 +12,9 @@ import {
 } from "../../state/v1-pay";
 import Control, { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
-import JsonEditor from "../../ui/JsonEditor";
-import FieldControl from "../field/FieldControl";
 import Reset from "./Reset";
 import { ForQa } from "./v1";
-import ExtraFieldEditor from "../ExtraFieldEditor";
+import FieldControls from "../field/FieldControls";
 
 const resetCountSignal = signal(0);
 const resetFn = () => {
@@ -50,11 +48,7 @@ const View: React.FC = () => {
             >
               추가 파라미터
             </summary>
-            <ExtraFieldEditor
-              key={resetCountSignal.value}
-              extraFields={extraFields}
-              extraFieldSignals={extraFieldSignals}
-            />
+            <FieldControls fields={extraFields.value} fieldSignals={extraFieldSignals.value} />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">
                 포트원 내부 QA 전용 설정
@@ -92,14 +86,7 @@ const View: React.FC = () => {
               }}
             />
           </Control>
-          {Object.entries(fields).map(([key, field]) => (
-            <FieldControl
-              key={key}
-              code={key}
-              field={field}
-              fieldSignal={fieldSignals[key]}
-            />
-          ))}
+          <FieldControls fields={fields} fieldSignals={fieldSignals} />
         </div>
         <div>
           <div
