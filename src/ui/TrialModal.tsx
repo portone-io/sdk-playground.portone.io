@@ -37,7 +37,7 @@ import {
   jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
 } from "../state/v2-load-payment-ui";
 import _trialData from "./trial.yaml";
-import { FieldSignals } from "../state/fields";
+import { FieldSignalArray, FieldSignals } from "../state/fields";
 
 interface TrialDataItem {
   label: string;
@@ -110,6 +110,20 @@ function applyFieldsToSignals(
         Object.entries(value),
         signals[field].valueSignal.value,
       );
+    } else if (Array.isArray(value)) {
+      const signal = signals[field] as FieldSignalArray;
+      signal.lengthSignal.value = value.length;
+      signal.valueSignal.value = value.map((item) => {
+        if (item != null && typeof item === "object") {
+          const obj: Record<string, any> = {};
+          applyFieldsToSignals(Object.entries(item), obj);
+          return obj;
+        } else if (Array.isArray(item)) {
+          throw new Error("Nested arrays are not supported.");
+        } else {
+          return item;
+        }
+      });
     } else {
       signals[field].valueSignal.value = value;
     }

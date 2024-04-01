@@ -1,5 +1,6 @@
 import { Field, FieldSignal, Input } from "../../state/fields";
 import Control from "../Control";
+import FieldInputArray from "./FieldInputArray";
 import FieldInputInteger from "./FieldInputInteger";
 import FieldInputObject from "./FieldInputObject";
 import FieldInputText from "./FieldInputText";
@@ -38,4 +39,5 @@ const fieldInputComponents: {
   text: FieldInputText,
   integer: FieldInputInteger,
   toggle: FieldInputToggle,
+  array: FieldInputArray,
 };
