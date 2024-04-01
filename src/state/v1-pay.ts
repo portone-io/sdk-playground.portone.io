@@ -6,6 +6,7 @@ import {
   createExtraFields,
   createExtraFieldSignals,
   createFieldSignals,
+  createJsonSignals,
   Fields,
   resetExtraFieldSignals,
   resetFieldSignals,
@@ -16,6 +17,7 @@ import { createAccountSignals, sdkV1Signal } from "./v1";
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
   accountSignals.reset();
+  jsonTextSignal.value = "{}";
   resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
@@ -292,18 +294,23 @@ export const fieldSignals = createFieldSignals(
   `${prefix}.v1-pay.fields`,
   fields,
 );
+export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+  localStorage,
+  `${prefix}.v1-pay.json`,
+);
 export const extraFields = createExtraFields(
   localStorage,
-  `${prefix}.v1-pay.extra-fields.json`,
+  `${prefix}.v1-pay.extra.json`,
 );
 export const extraFieldSignals = createExtraFieldSignals(
   localStorage,
-  `${prefix}.v1-pay.extra-fields`,
+  `${prefix}.v1-pay.extra.fields`,
   extraFields,
 );
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
+  jsonValueSignal,
   extraFields,
   extraFieldSignals,
 });

@@ -64,6 +64,27 @@ export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
   }
 }
 
+export interface JsonSignals {
+  jsonTextSignal: Signal<string>;
+  jsonValueSignal: ReadonlySignal<any>;
+}
+export function createJsonSignals(
+  storage: Storage,
+  key: string,
+  initialJsonText: string = "{}",
+): JsonSignals {
+  const jsonTextSignal = persisted(storage, key, initialJsonText);
+  const jsonValueSignal = computed(() => {
+    const jsonText = jsonTextSignal.value;
+    try {
+      return JSON.parse(jsonText);
+    } catch {
+      return undefined;
+    }
+  });
+  return { jsonTextSignal, jsonValueSignal };
+}
+
 export type ExtraFields = Signal<Fields>;
 export type ExtraFieldSignals = ReadonlySignal<FieldSignals>;
 export function createExtraFields(
@@ -86,17 +107,20 @@ export function resetExtraFieldSignals(fields: ExtraFields, extraFieldSignals: E
 interface CreateConfigObjectSignalConfig {
   fields: Fields;
   fieldSignals: FieldSignals;
+  jsonValueSignal: Signal<any>;
   extraFields: ExtraFields;
   extraFieldSignals: ExtraFieldSignals;
 }
 export function createConfigObjectSignal({
   fields,
   fieldSignals,
+  jsonValueSignal,
   extraFields,
   extraFieldSignals,
 }: CreateConfigObjectSignalConfig) {
   return computed(() => ({
     ...getObject(fields, fieldSignals),
+    ...jsonValueSignal.value,
     ...getObject(extraFields.value, extraFieldSignals.value),
   }));
   function getObject(fields: Fields, fieldSignals: FieldSignals): any {

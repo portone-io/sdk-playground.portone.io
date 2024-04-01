@@ -5,6 +5,7 @@ import {
   createExtraFields,
   createExtraFieldSignals,
   createFieldSignals,
+  createJsonSignals,
   Fields,
   resetExtraFieldSignals,
   resetFieldSignals,
@@ -14,6 +15,7 @@ import { sdkV2Signal } from "./v2";
 
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
+  jsonTextSignal.value = "{}";
   resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
@@ -276,18 +278,23 @@ export const fieldSignals = createFieldSignals(
   `${prefix}.v2-identity-verification.fields`,
   fields,
 );
+export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+  localStorage,
+  `${prefix}.v2-identity-verification.json`,
+);
 export const extraFields = createExtraFields(
   localStorage,
-  `${prefix}.v2-identity-verification.extra-fields.json`,
+  `${prefix}.v2-identity-verification.extra.json`,
 );
 export const extraFieldSignals = createExtraFieldSignals(
   localStorage,
-  `${prefix}.v2-identity-verification.extra-fields`,
+  `${prefix}.v2-identity-verification.extra.fields`,
   extraFields,
 );
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
+  jsonValueSignal,
   extraFields,
   extraFieldSignals,
 });

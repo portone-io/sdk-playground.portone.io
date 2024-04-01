@@ -5,6 +5,7 @@ import {
   createExtraFields,
   createExtraFieldSignals,
   createFieldSignals,
+  createJsonSignals,
   Fields,
   resetExtraFieldSignals,
   resetFieldSignals,
@@ -16,6 +17,7 @@ import { pgUiModalOpenSignal } from "./v1-load-ui";
 
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
+  jsonTextSignal.value = "{}";
   resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
@@ -69,18 +71,23 @@ export const fieldSignals = createFieldSignals(
   `${prefix}.v2-load-payment-ui.fields`,
   fields,
 );
+export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+  localStorage,
+  `${prefix}.v2-load-payment-ui.json`,
+);
 export const extraFields = createExtraFields(
   localStorage,
-  `${prefix}.v2-load-payment-ui.extra-fields.json`,
+  `${prefix}.v2-load-payment-ui.extra.json`,
 );
 export const extraFieldSignals = createExtraFieldSignals(
   localStorage,
-  `${prefix}.v2-load-payment-ui.extra-fields`,
+  `${prefix}.v2-load-payment-ui.extra.fields`,
   extraFields,
 );
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
+  jsonValueSignal,
   extraFields,
   extraFieldSignals,
 });

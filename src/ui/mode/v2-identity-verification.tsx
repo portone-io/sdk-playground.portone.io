@@ -7,10 +7,13 @@ import {
   extraFieldSignals,
   fields,
   fieldSignals,
+  jsonTextSignal,
+  jsonValueSignal,
   reset,
 } from "../../state/v2-identity-verification";
 import { RequiredIndicator } from "../Control";
 import HtmlEditor from "../HtmlEditor";
+import JsonEditor from "../JsonEditor";
 import Reset from "./Reset";
 import FieldControls from "../field/FieldControls";
 
@@ -22,6 +25,7 @@ const resetFn = () => {
 };
 
 const View: React.FC = () => {
+  const parseJsonFailed = jsonValueSignal.value == null;
   const isJsonOpen = useSignal(false);
   return (
     <>
@@ -34,11 +38,18 @@ const View: React.FC = () => {
           <Reset resetFn={resetFn} />
           <details open={isJsonOpen.value}>
             <summary
-              className="text-xs text-slate-500 cursor-pointer"
+              className={`text-xs ${
+                parseJsonFailed ? "text-red-700" : "text-slate-500"
+              } cursor-pointer`}
             >
-              추가 파라미터
+              추가 파라미터 (JSON{parseJsonFailed && " 파싱 실패"})
             </summary>
-            <FieldControls fields={extraFields.value} fieldSignals={extraFieldSignals.value} />
+            <JsonEditor
+              key={resetCountSignal.value}
+              value={jsonTextSignal.value}
+              onChange={(json) => jsonTextSignal.value = json}
+              onReset={() => isJsonOpen.value = true}
+            />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">
                 포트원 내부 QA 전용 설정

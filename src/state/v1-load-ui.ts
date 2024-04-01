@@ -5,6 +5,7 @@ import {
   createExtraFieldSignals,
   createExtraFields,
   createFieldSignals,
+  createJsonSignals,
   resetExtraFieldSignals,
   resetFieldSignals,
 } from "./fields";
@@ -16,6 +17,7 @@ export function reset() {
   resetFieldSignals(fields, fieldSignals);
   accountSignals.reset();
   uiTypeSignal.value = defaultUiType;
+  jsonTextSignal.value = "{}";
   resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
@@ -74,18 +76,23 @@ export const fieldSignals = createFieldSignals(
   `${prefix}.v1-load-ui.fields`,
   fields,
 );
+export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
+  localStorage,
+  `${prefix}.v1-load-ui.json`,
+);
 export const extraFields = createExtraFields(
   localStorage,
-  `${prefix}.v1-load-ui.extra-fields.json`,
+  `${prefix}.v1-load-ui.extra.json`,
 );
 export const extraFieldSignals = createExtraFieldSignals(
   localStorage,
-  `${prefix}.v1-load-ui.extra-fields`,
+  `${prefix}.v1-load-ui.extra.fields`,
   extraFields,
 );
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
+  jsonValueSignal,
   extraFields,
   extraFieldSignals,
 });
