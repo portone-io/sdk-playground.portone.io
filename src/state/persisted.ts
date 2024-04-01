@@ -2,7 +2,7 @@ import { effect, Signal, signal } from "@preact/signals";
 
 // sp는 sdk-playground의 이니셜
 // 하위호환 깰 때마다 숫자 1씩 올리기
-export const prefix = "sp1";
+export const prefix = "sp0";
 
 const disposeFnMap = new Map<string, () => void>();
 const registry = new FinalizationRegistry<string>((key) => {
