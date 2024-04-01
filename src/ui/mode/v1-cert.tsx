@@ -4,8 +4,6 @@ import { reset as resetV1 } from "../../state/v1";
 import {
   accountSignals,
   codePreviewSignal,
-  extraFields,
-  extraFieldSignals,
   fields,
   fieldSignals,
   jsonTextSignal,

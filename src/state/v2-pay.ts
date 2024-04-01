@@ -2,12 +2,9 @@ import { computed } from "@preact/signals";
 import { toJs } from "./code";
 import {
   createConfigObjectSignal,
-  createExtraFields,
-  createExtraFieldSignals,
   createFieldSignals,
   createJsonSignals,
   Fields,
-  resetExtraFieldSignals,
   resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
@@ -16,7 +13,6 @@ import { sdkV2Signal } from "./v2";
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
   jsonTextSignal.value = "{}";
-  resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
 export const playFnSignal = computed(() => {
@@ -87,6 +83,33 @@ export const fields = {
       type: "text",
       placeholder: "CARD",
       default: "",
+    },
+  },
+  virtualAccount: {
+    required: true,
+    label: "가상계좌 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "VIRTUAL_ACCOUNT"),
+    input: {
+      type: "object",
+      fields: {
+        accountExpiry: {
+          required: true,
+          label: "가상계좌 입금 만료기한",
+          input: {
+            type: "object",
+            fields: {
+              validHours: {
+                required: true,
+                label: "가상계좌 입금 유효 시간",
+                input: {
+                  type: "integer",
+                  default: 1,
+                },
+              }
+            }
+          },
+        },
+      },
     },
   },
   currency: {
@@ -317,19 +340,8 @@ export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
   localStorage,
   `${prefix}.v2-pay.json`,
 );
-export const extraFields = createExtraFields(
-  localStorage,
-  `${prefix}.v2-pay.extra.json`,
-);
-export const extraFieldSignals = createExtraFieldSignals(
-  localStorage,
-  `${prefix}.v2-pay.extra.fields`,
-  extraFields,
-);
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
   jsonValueSignal,
-  extraFields,
-  extraFieldSignals,
 });

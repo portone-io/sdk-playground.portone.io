@@ -3,8 +3,6 @@ import * as React from "react";
 import { checkoutServerSignal, reset as resetV2 } from "../../state/v2";
 import {
   codePreviewSignal,
-  extraFields,
-  extraFieldSignals,
   fields,
   fieldSignals,
   jsonTextSignal,

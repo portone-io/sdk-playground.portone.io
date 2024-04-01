@@ -2,12 +2,9 @@ import { computed } from "@preact/signals";
 import { toJs } from "./code";
 import {
   createConfigObjectSignal,
-  createExtraFields,
-  createExtraFieldSignals,
   createFieldSignals,
   createJsonSignals,
   Fields,
-  resetExtraFieldSignals,
   resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
@@ -16,7 +13,6 @@ import { sdkV2Signal } from "./v2";
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
   jsonTextSignal.value = "{}";
-  resetExtraFieldSignals(extraFields, extraFieldSignals);
 }
 
 export const playFnSignal = computed(() => {
@@ -282,19 +278,8 @@ export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
   localStorage,
   `${prefix}.v2-identity-verification.json`,
 );
-export const extraFields = createExtraFields(
-  localStorage,
-  `${prefix}.v2-identity-verification.extra.json`,
-);
-export const extraFieldSignals = createExtraFieldSignals(
-  localStorage,
-  `${prefix}.v2-identity-verification.extra.fields`,
-  extraFields,
-);
 export const configObjectSignal = createConfigObjectSignal({
   fields,
   fieldSignals,
   jsonValueSignal,
-  extraFields,
-  extraFieldSignals,
 });

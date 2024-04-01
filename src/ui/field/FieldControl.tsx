@@ -16,8 +16,9 @@ const FieldControl: React.FC<FieldControlProps> = (
 ) => {
   const { enabledSignal } = fieldSignal;
   const FieldInput = fieldInputComponents[field.input.type];
+  const hidden = field.hidden?.value;
   return (
-    <Control
+    !hidden && <Control
       label={field.label}
       code={code}
       required={field.required}

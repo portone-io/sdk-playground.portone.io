@@ -8,6 +8,7 @@ export interface Field {
   required: boolean;
   label: string;
   input: Input;
+  hidden?: Signal<boolean>;
 }
 export type Input = ObjectInput | TextInput | IntegerInput | ToggleInput;
 interface InputBase<TType extends string> {
@@ -85,47 +86,26 @@ export function createJsonSignals(
   return { jsonTextSignal, jsonValueSignal };
 }
 
-export type ExtraFields = Signal<Fields>;
-export type ExtraFieldSignals = ReadonlySignal<FieldSignals>;
-export function createExtraFields(
-  storage: Storage,
-  key: string,
-): ExtraFields {
-  return persisted(storage, key, {});
-}
-export function createExtraFieldSignals(
-  storage: Storage,
-  keyPrefix: string,
-  extraFields: ExtraFields,
-): ExtraFieldSignals {
-  return computed(() => createFieldSignals(storage, keyPrefix, extraFields.value));
-}
-export function resetExtraFieldSignals(fields: ExtraFields, extraFieldSignals: ExtraFieldSignals) {
-  fields.value = {};
-}
-
 interface CreateConfigObjectSignalConfig {
   fields: Fields;
   fieldSignals: FieldSignals;
   jsonValueSignal: Signal<any>;
-  extraFields: ExtraFields;
-  extraFieldSignals: ExtraFieldSignals;
 }
 export function createConfigObjectSignal({
   fields,
   fieldSignals,
   jsonValueSignal,
-  extraFields,
-  extraFieldSignals,
 }: CreateConfigObjectSignalConfig) {
   return computed(() => ({
     ...getObject(fields, fieldSignals),
     ...jsonValueSignal.value,
-    ...getObject(extraFields.value, extraFieldSignals.value),
   }));
   function getObject(fields: Fields, fieldSignals: FieldSignals): any {
     const result: any = {};
     for (const [key, field] of Object.entries(fields)) {
+      if (field.hidden?.value) {
+        continue;
+      }
       const fieldSignal = fieldSignals[key];
       const value = field.input.type === "object"
         ? getObject(field.input.fields, fieldSignal.valueSignal.value)
