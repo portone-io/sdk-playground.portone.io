@@ -85,6 +85,134 @@ export const fields = {
       default: "",
     },
   },
+  card: {
+    required: true,
+    label: "카드 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "CARD"),
+    input: {
+      type: "object",
+      fields: {
+        cardCompany: {
+          required: false,
+          label: "카드사 다이렉트 호출 시 필요한 카드사 식별 값",
+          input: {
+            type: "text",
+            placeholder: "KOOKMIN_CARD",
+            default: ""
+          }
+        },
+        availableCards: {
+          required: false,
+          label: "일부 카드사만 노출 설정",
+          input: {
+            type: "array",
+            inputItem: {
+              type: "text",
+              default: "",
+              placeholder: "KOOKMIN_CARD"
+            },
+            default: []
+          }
+        },
+        useFreeInterestFromMall: {
+          required: false,
+          label: "상점분담 무이자 활성화 여부",
+          input: {
+            type: "toggle",
+            default: false
+          }
+        },
+        installment: {
+          required: false,
+          label: "할부 설정",
+          input: {
+            type: "object",
+            fields: {
+              freeInstallmentPlans: {
+                required: false,
+                label: "무이자 할부 설정",
+                input: {
+                  type: "array",
+                  inputItem: {
+                    type: "object",
+                    fields: {
+                      cardCompany: {
+                        required: true,
+                        label: "무이자 할부를 제공하는 카드사 식별 값",
+                        input: {
+                          type: "text",
+                          placeholder: "KOOKMIN_CARD",
+                          default: ""
+                        }
+                      },
+                      months: {
+                        required: true,
+                        label: "무이자 할부를 제공하는 개월 수",
+                        input: {
+                          type: "array",
+                          inputItem: {
+                            type: "integer",
+                            default: 0,
+                          },
+                          default: []
+                        }
+                      }
+                    }
+                  },
+                  default: []
+                }
+              },
+              monthOption: {
+                required: false,
+                label: "할부 개월 수 설정",
+                input: {
+                  type: "object",
+                  fields: {
+                    fixedMonth: {
+                      required: false,
+                      label: "고정된 할부 개월수",
+                      input: {
+                        type: "integer",
+                        default: 0,
+                      }
+                    },
+                    availableMonthList: {
+                      required: false,
+                      label: "선택 가능한 할부 개월수 리스트",
+                      input: {
+                        type: "array",
+                        inputItem: {
+                          type: "integer",
+                          default: 0,
+                        },
+                        default: []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        useCardPoint: {
+          required: false,
+          label: "카드사 포인트 사용 여부",
+          input: {
+            type: "toggle",
+            default: false
+          }
+        },
+        useAppCardOnly: {
+          required: false,
+          label: "앱 카드만 허용할지 여부",
+          input: {
+            type: "toggle",
+            default: false
+          }
+        }
+      },
+    },
+  },
   virtualAccount: {
     required: true,
     label: "가상계좌 정보",
