@@ -18,8 +18,8 @@ import {
   accountSignals as v1LoadUiAccountSignals,
   fields as v1LoadUiFields,
   fieldSignals as v1LoadUiFieldSignals,
-  uiTypeSignal as v1LoadUiUiTypeSignal,
   jsonTextSignal as v1LoadUiJsonTextSignal,
+  uiTypeSignal as v1LoadUiUiTypeSignal,
 } from "../state/v1-load-ui";
 import {
   fields as v2PayFields,
@@ -37,7 +37,7 @@ import {
   jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
 } from "../state/v2-load-payment-ui";
 import _trialData from "./trial.yaml";
-import { Field, FieldSignal, FieldSignals, Fields } from "../state/fields";
+import { FieldSignals } from "../state/fields";
 
 interface TrialDataItem {
   label: string;
@@ -138,6 +138,7 @@ const V1Trials: React.FC = () => {
                 applyFieldsToSignals(
                   fields,
                   v1CertFieldSignals,
+                  v1CertJsonTextSignal,
                 );
               }}
             >

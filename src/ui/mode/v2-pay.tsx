@@ -12,8 +12,8 @@ import {
 import { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
 import JsonEditor from "../../ui/JsonEditor";
-import Reset from "./Reset";
 import FieldControls from "../field/FieldControls";
+import Reset from "./Reset";
 
 const resetCountSignal = signal(0);
 const resetFn = () => {
