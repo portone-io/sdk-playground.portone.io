@@ -363,6 +363,25 @@ export const fields = {
       },
     },
   },
+  giftCertificate: {
+    required: true,
+    label: "상품권 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "GIFT_CERTIFICATE"),
+    input: {
+      type: "object",
+      fields: {
+        giftCertificateType: {
+          required: true,
+          label: "상품권을 특정할 수 있는 값",
+          input: {
+            type: "text",
+            placeholder: "BOOKNLIFE | SMART_MUNSANG | CULTURELAND | HAPPYMONEY",
+            default: "",
+          },
+        },
+      },
+    },
+  },
   currency: {
     required: true,
     label: "결제 통화",
