@@ -457,6 +457,19 @@ export const fields = {
       default: "",
     },
   },
+  noticeUrl: {
+    required: false,
+    label: "웹훅 수신 URL",
+    input: {
+      type: "array",
+      inputItem: {
+        type: "text",
+        default: "",
+        placeholder: "https://example.com",
+      },
+      default: [],
+    },
+  },
 } satisfies Fields;
 
 export const fieldSignals = createFieldSignals(
