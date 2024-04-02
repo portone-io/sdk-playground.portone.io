@@ -382,6 +382,144 @@ export const fields = {
       },
     },
   },
+  easyPay: {
+    required: true,
+    label: "간편결제 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "EASY_PAY"),
+    input: {
+      type: "object",
+      fields: {
+        easyPayProvider: {
+          required: false,
+          label: "간편결제 수단",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: "",
+          },
+        },
+        useFreeInterestFromMall: {
+          required: false,
+          label: "상점분담 무이자 활성화 여부",
+          input: {
+            type: "toggle",
+            default: false,
+          },
+        },
+        useCardPoint: {
+          required: false,
+          label: "카드사 포인트 사용 여부",
+          input: {
+            type: "toggle",
+            default: false,
+          },
+        },
+        availableCards: {
+          required: false,
+          label: "일부 카드사만 노출 설정",
+          input: {
+            type: "array",
+            inputItem: {
+              type: "text",
+              default: "",
+              placeholder: "KOOKMIN_CARD",
+            },
+            default: [],
+          },
+        },
+        installment: {
+          required: false,
+          label: "할부 설정",
+          input: {
+            type: "object",
+            fields: {
+              freeInstallmentPlans: {
+                required: false,
+                label: "무이자 할부 설정",
+                input: {
+                  type: "array",
+                  inputItem: {
+                    type: "object",
+                    fields: {
+                      cardCompany: {
+                        required: true,
+                        label: "무이자 할부를 제공하는 카드사 식별 값",
+                        input: {
+                          type: "text",
+                          placeholder: "KOOKMIN_CARD",
+                          default: "",
+                        },
+                      },
+                      months: {
+                        required: true,
+                        label: "무이자 할부를 제공하는 개월 수",
+                        input: {
+                          type: "array",
+                          inputItem: {
+                            type: "integer",
+                            default: 0,
+                          },
+                          default: [],
+                        },
+                      },
+                    },
+                  },
+                  default: [],
+                },
+              },
+              monthOption: {
+                required: false,
+                label: "할부 개월 수 설정",
+                input: {
+                  type: "object",
+                  fields: {
+                    fixedMonth: {
+                      required: true,
+                      label: "고정된 할부 개월수",
+                      input: {
+                        type: "integer",
+                        default: 0,
+                      },
+                    },
+                    availableMonthList: {
+                      required: true,
+                      label: "선택 가능한 할부 개월수 리스트",
+                      input: {
+                        type: "array",
+                        inputItem: {
+                          type: "integer",
+                          default: 0,
+                        },
+                        default: [],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        cashReceiptType: {
+          required: false,
+          label: "결제창에서 발급 가능한 현금영수증 발급 유형",
+          input: {
+            type: "text",
+            placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
+            default: "",
+          },
+        },
+        customerIdentifier: {
+          required: false,
+          label: "현금영수증 발행 대상 식별 정보",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: ""
+          },
+        },
+      },
+    },
+  },
   currency: {
     required: true,
     label: "결제 통화",
