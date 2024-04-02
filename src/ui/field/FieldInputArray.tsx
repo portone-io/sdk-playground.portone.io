@@ -10,7 +10,7 @@ const FieldInputArray: React.FC<FieldInputProps<ArrayInput>> = ({
   fieldInput,
   fieldSignal,
 }) => {
-  let fieldSignalArray = fieldSignal as FieldSignalArray;
+  const fieldSignalArray = fieldSignal as FieldSignalArray;
   const fieldSignals = fieldSignal.valueSignal.value;
   const FieldInput = fieldInputComponents[fieldInput.inputItem.type];
   return (
