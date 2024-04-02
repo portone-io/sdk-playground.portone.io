@@ -41,7 +41,11 @@ export interface FieldSignal {
   valueSignal: Signal<any>;
 }
 export interface FieldSignalArray extends FieldSignal {
-  lengthSignal: Signal<number>;
+  append: () => void;
+  remove: (index: number) => void;
+  clear: () => void;
+  resize: (length: number) => void;
+  getKey: (index: number) => string;
 }
 export function createFieldSignals(
   storage: Storage,
@@ -57,23 +61,58 @@ export function createFieldSignals(
         valueSignal = signal(createFieldSignals(storage, pKey, field.input.fields));
       } else if (field.input.type === "array") {
         const inputItem = field.input.inputItem;
-        const lengthSignal = persisted(storage, `${pKey}.length`, field.input.default.length);
+        const keySignals: Signal<string[]> = persisted(storage, pKey, []);
+        const append = () => {
+          keySignals.value = [...keySignals.value, `${pKey}.${Math.random().toString(36).slice(2)}`];
+        }
+        const remove = (index: number) => {
+          keySignals.value = keySignals.value.filter((_, i) => i !== index);
+        }
+        const clear = () => {
+          keySignals.value = [];
+        }
+        const getKey = (index: number) => {
+          return keySignals.value[index];
+        }
+        const resize = (length: number) => {
+          if (length < keySignals.value.length) {
+            keySignals.value = keySignals.value.slice(0, length);
+          } else {
+            while (keySignals.value.length < length) {
+              append();
+            }
+          }
+        }
         const valueSignal = computed(() => {
-          const length = lengthSignal.value;
-          const signals: Signal[] = [];
-          for (let i = 0; i < length; i++) {
-            const itemKey = `${pKey}.${i}`;
+          const keys = keySignals.value;
+          const signals: FieldSignal[] = [];
+          for (const key of keys) {
+            const itemKey = key;
             if (inputItem.type === "object") {
-              signals.push(signal(createFieldSignals(storage, itemKey, inputItem.fields)));
+              signals.push({
+                enabledSignal: signal(true),
+                valueSignal: signal(createFieldSignals(storage, itemKey, inputItem.fields)),
+              });
             } else if (inputItem.type === "array") {
               throw new Error("Nested arrays are not supported.");
             } else {
-              signals.push(persisted(storage, itemKey, inputItem.default));
+              signals.push({
+                enabledSignal: signal(true),
+                valueSignal: persisted(storage, itemKey, inputItem.default),
+              });
             }
           }
           return signals;
         });
-        return [key, { enabledSignal, lengthSignal, valueSignal } satisfies FieldSignalArray];
+        return [key, {
+          enabledSignal,
+          valueSignal,
+          append,
+          remove,
+          clear,
+          resize,
+          getKey,
+        } satisfies FieldSignalArray];
       } else {
         valueSignal = persisted(storage, pKey, field.input.default);
       }
@@ -89,6 +128,7 @@ export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
     if (field.input.type === "object") {
       resetFieldSignals(field.input.fields, valueSignal.value);
     } else if (field.input.type === "array") {
+      (fieldSignal as FieldSignalArray).resize(field.input.default.length);
       for (const itemSignal of valueSignal.value) {
         if (field.input.inputItem.type === "object") {
           resetFieldSignals(field.input.inputItem.fields, itemSignal.value);
@@ -98,7 +138,6 @@ export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
           itemSignal.value = field.input.inputItem.default;
         }
       }
-      (fieldSignal as FieldSignalArray).lengthSignal.value = length;
     } else {
       valueSignal.value = field.input.default;
     }
@@ -152,13 +191,13 @@ export function createConfigObjectSignal({
         value = getObject(field.input.fields, fieldSignal.valueSignal.value);
       } else if (field.input.type === "array") {
         const inputItem = field.input.inputItem;
-        value = fieldSignal.valueSignal.value.map((itemSignal: Signal<any>) => {
+        value = fieldSignal.valueSignal.value.map((itemSignal: FieldSignal) => {
           if (inputItem.type === "object") {
-            return getObject(inputItem.fields, itemSignal.value);
+            return getObject(inputItem.fields, itemSignal.valueSignal.value);
           } else if (inputItem.type === "array") {
             throw new Error("Nested arrays are not supported.");
           } else {
-            return itemSignal.value;
+            return itemSignal.valueSignal.value;
           }
         });
       } else {

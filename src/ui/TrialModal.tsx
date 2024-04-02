@@ -112,7 +112,7 @@ function applyFieldsToSignals(
       );
     } else if (Array.isArray(value)) {
       const signal = signals[field] as FieldSignalArray;
-      signal.lengthSignal.value = value.length;
+      signal.resize(value.length);
       signal.valueSignal.value = value.map((item) => {
         if (item != null && typeof item === "object") {
           const obj: Record<string, any> = {};
