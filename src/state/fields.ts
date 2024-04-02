@@ -6,6 +6,7 @@ export interface Fields {
 }
 export interface Field {
   required: boolean;
+  enabled?: boolean;
   label: string;
   input: Input;
   hidden?: Signal<boolean>;
@@ -55,7 +56,7 @@ export function createFieldSignals(
   return Object.fromEntries(
     Object.entries(fields).map(([key, field]) => {
       const pKey = `${keyPrefix}.${key}`;
-      const enabledSignal = persisted(storage, `${pKey}.enabled`, false);
+      const enabledSignal = persisted(storage, `${pKey}.enabled`, field.enabled ?? false);
       let valueSignal;
       if (field.input.type === "object") {
         valueSignal = signal(createFieldSignals(storage, pKey, field.input.fields));
@@ -124,7 +125,7 @@ export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
   for (const [key, fieldSignal] of Object.entries(fieldSignals)) {
     const field = fields[key as keyof typeof fields];
     const { enabledSignal, valueSignal } = fieldSignal;
-    enabledSignal.value = false;
+    enabledSignal.value = field.enabled ?? false;
     if (field.input.type === "object") {
       resetFieldSignals(field.input.fields, valueSignal.value);
     } else if (field.input.type === "array") {
