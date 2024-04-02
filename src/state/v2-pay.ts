@@ -87,6 +87,7 @@ export const fields = {
   },
   card: {
     required: false,
+    enabled: true,
     label: "카드 정보",
     hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "CARD"),
     input: {
@@ -215,6 +216,7 @@ export const fields = {
   },
   virtualAccount: {
     required: false,
+    enabled: true,
     label: "가상계좌 정보",
     hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "VIRTUAL_ACCOUNT"),
     input: {
@@ -296,6 +298,7 @@ export const fields = {
   },
   transfer: {
     required: false,
+    enabled: true,
     label: "계좌이체 정보",
     hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "TRANSFER"),
     input: {
@@ -333,6 +336,7 @@ export const fields = {
   },
   mobile: {
     required: false,
+    enabled: true,
     label: "휴대폰 소액결제 정보",
     hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "MOBILE"),
     input: {
@@ -365,6 +369,7 @@ export const fields = {
   },
   giftCertificate: {
     required: false,
+    enabled: true,
     label: "상품권 정보",
     hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "GIFT_CERTIFICATE"),
     input: {
@@ -384,6 +389,7 @@ export const fields = {
   },
   easyPay: {
     required: false,
+    enabled: true,
     label: "간편결제 정보",
     hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "EASY_PAY"),
     input: {
