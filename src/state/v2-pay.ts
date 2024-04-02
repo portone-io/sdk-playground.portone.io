@@ -294,6 +294,43 @@ export const fields = {
       },
     },
   },
+  transfer: {
+    required: true,
+    label: "계좌이체 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "TRANSFER"),
+    input: {
+      type: "object",
+      fields: {
+        cashReceiptType: {
+          required: false,
+          label: "현금영수증 발급 유형",
+          input: {
+            type: "text",
+            placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
+            default: "",
+          },
+        },
+        customerIdentifier: {
+          required: false,
+          label: "현금영수증 발행 대상 식별 정보",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: ""
+          },
+        },
+        bankCode: {
+          required: true,
+          label: "계좌이체 은행 코드",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: "",
+          },
+        },
+      },
+    },
+  },
   currency: {
     required: true,
     label: "결제 통화",
