@@ -220,6 +220,60 @@ export const fields = {
     input: {
       type: "object",
       fields: {
+        cashReceiptType: {
+          required: false,
+          label: "현금영수증 발급 유형",
+          input: {
+            type: "text",
+            placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
+            default: ""
+          },
+        },
+        customerIdentifier: {
+          required: false,
+          label: "현금영수증 발행 대상 식별 정보",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: ""
+          },
+        },
+        fixedOption: {
+          required: false,
+          label: "고정식 가상계좌 설정",
+          input: {
+            type: "object",
+            fields: {
+              pgAccountId: {
+                required: false,
+                label: "PG사에서 발급받은 가상계좌 ID",
+                input: {
+                  type: "text",
+                  placeholder: "",
+                  default: ""
+                },
+              },
+              accountNumber: {
+                required: false,
+                label: "고정식으로 사용할 가상계좌 번호",
+                input: {
+                  type: "text",
+                  placeholder: "",
+                  default: ""
+                },
+              },
+            },
+          },
+        },
+        bankCode: {
+          required: false,
+          label: "가상계좌 발급 은행 코드",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: ""
+          },
+        },
         accountExpiry: {
           required: true,
           label: "가상계좌 입금 만료기한",
@@ -233,8 +287,8 @@ export const fields = {
                   type: "integer",
                   default: 1,
                 },
-              }
-            }
+              },
+            },
           },
         },
       },
