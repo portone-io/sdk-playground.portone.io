@@ -737,7 +737,7 @@ export const fields = {
       default: "",
     },
   },
-  noticeUrl: {
+  noticeUrls: {
     required: false,
     label: "웹훅 수신 URL",
     input: {
