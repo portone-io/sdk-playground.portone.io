@@ -169,7 +169,7 @@ export const fields = {
                   type: "object",
                   fields: {
                     fixedMonth: {
-                      required: false,
+                      required: true,
                       label: "고정된 할부 개월수",
                       input: {
                         type: "integer",
@@ -177,7 +177,7 @@ export const fields = {
                       }
                     },
                     availableMonthList: {
-                      required: false,
+                      required: true,
                       label: "선택 가능한 할부 개월수 리스트",
                       input: {
                         type: "array",
@@ -275,13 +275,13 @@ export const fields = {
           },
         },
         accountExpiry: {
-          required: true,
+          required: false,
           label: "가상계좌 입금 만료기한",
           input: {
             type: "object",
             fields: {
               validHours: {
-                required: true,
+                required: false,
                 label: "가상계좌 입금 유효 시간",
                 input: {
                   type: "integer",
@@ -320,7 +320,7 @@ export const fields = {
           },
         },
         bankCode: {
-          required: true,
+          required: false,
           label: "계좌이체 은행 코드",
           input: {
             type: "text",
@@ -339,7 +339,7 @@ export const fields = {
       type: "object",
       fields: {
         carrier: {
-          required: true,
+          required: false,
           label: "소액결제 바로 호출을 위한 휴대폰 통신사",
           input: {
             type: "text",
@@ -371,7 +371,7 @@ export const fields = {
       type: "object",
       fields: {
         giftCertificateType: {
-          required: true,
+          required: false,
           label: "상품권을 특정할 수 있는 값",
           input: {
             type: "text",
