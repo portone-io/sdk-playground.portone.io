@@ -170,7 +170,7 @@ export const fields = {
                   type: "object",
                   fields: {
                     fixedMonth: {
-                      required: true,
+                      required: false,
                       label: "고정된 할부 개월수",
                       input: {
                         type: "integer",
@@ -178,7 +178,7 @@ export const fields = {
                       }
                     },
                     availableMonthList: {
-                      required: true,
+                      required: false,
                       label: "선택 가능한 할부 개월수 리스트",
                       input: {
                         type: "array",
@@ -480,7 +480,7 @@ export const fields = {
                   type: "object",
                   fields: {
                     fixedMonth: {
-                      required: true,
+                      required: false,
                       label: "고정된 할부 개월수",
                       input: {
                         type: "integer",
@@ -488,7 +488,7 @@ export const fields = {
                       },
                     },
                     availableMonthList: {
-                      required: true,
+                      required: false,
                       label: "선택 가능한 할부 개월수 리스트",
                       input: {
                         type: "array",
