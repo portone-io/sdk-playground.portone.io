@@ -331,6 +331,38 @@ export const fields = {
       },
     },
   },
+  mobile: {
+    required: true,
+    label: "휴대폰 소액결제 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "MOBILE"),
+    input: {
+      type: "object",
+      fields: {
+        carrier: {
+          required: true,
+          label: "소액결제 바로 호출을 위한 휴대폰 통신사",
+          input: {
+            type: "text",
+            placeholder: "SKT | KT | LGU",
+            default: "",
+          },
+        },
+        availableCarriers: {
+          required: false,
+          label: "일부 통신사만 노출 설정",
+          input: {
+            type: "array",
+            inputItem: {
+              type: "text",
+              default: "",
+              placeholder: "SKT | KT | LGU"
+            },
+            default: [],
+          },
+        },
+      },
+    },
+  },
   currency: {
     required: true,
     label: "결제 통화",
