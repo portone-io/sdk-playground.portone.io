@@ -13,7 +13,9 @@ export function toJs(object: object, indent = "  ", level = 0): string {
       ) {
         return `${ii}${k}: ${toJs(value, indent, level + 1)},\n`;
       } else {
-        return `${ii}${k}: ${JSON.stringify(value)},\n`;
+        return `${ii}${k}: ${JSON.stringify(value, null, 2).split('\n').map((line, index) => {
+          return index === 0 ? line : `${ii}${line}`;
+        }).join("\n")},\n`;
       }
     }).join("")
   }${i}}`;

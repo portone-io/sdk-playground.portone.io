@@ -85,6 +85,465 @@ export const fields = {
       default: "",
     },
   },
+  productType: {
+    required: false,
+    label: "상품 유형",
+    input: {
+      type: "text",
+      placeholder: "PRODUCT_TYPE_REAL | PRODUCT_TYPE_DIGITAL",
+      default: "",
+    },
+  },
+  card: {
+    required: false,
+    enabled: true,
+    label: "카드 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "CARD"),
+    input: {
+      type: "object",
+      fields: {
+        cardCompany: {
+          required: false,
+          label: "카드사 다이렉트 호출 시 필요한 카드사 식별 값",
+          input: {
+            type: "text",
+            placeholder: "KOOKMIN_CARD",
+            default: ""
+          }
+        },
+        availableCards: {
+          required: false,
+          label: "일부 카드사만 노출 설정",
+          input: {
+            type: "array",
+            inputItem: {
+              type: "text",
+              default: "",
+              placeholder: "KOOKMIN_CARD"
+            },
+            default: []
+          }
+        },
+        useFreeInterestFromMall: {
+          required: false,
+          label: "상점분담 무이자 활성화 여부",
+          input: {
+            type: "toggle",
+            default: false
+          }
+        },
+        installment: {
+          required: false,
+          label: "할부 설정",
+          input: {
+            type: "object",
+            fields: {
+              freeInstallmentPlans: {
+                required: false,
+                label: "무이자 할부 설정",
+                input: {
+                  type: "array",
+                  inputItem: {
+                    type: "object",
+                    fields: {
+                      cardCompany: {
+                        required: true,
+                        label: "무이자 할부를 제공하는 카드사 식별 값",
+                        input: {
+                          type: "text",
+                          placeholder: "KOOKMIN_CARD",
+                          default: ""
+                        }
+                      },
+                      months: {
+                        required: true,
+                        label: "무이자 할부를 제공하는 개월 수",
+                        input: {
+                          type: "array",
+                          inputItem: {
+                            type: "integer",
+                            default: 0,
+                          },
+                          default: []
+                        }
+                      }
+                    }
+                  },
+                  default: []
+                }
+              },
+              monthOption: {
+                required: false,
+                label: "할부 개월 수 설정",
+                input: {
+                  type: "object",
+                  fields: {
+                    fixedMonth: {
+                      required: false,
+                      label: "고정된 할부 개월수",
+                      input: {
+                        type: "integer",
+                        default: 0,
+                      }
+                    },
+                    availableMonthList: {
+                      required: false,
+                      label: "선택 가능한 할부 개월수 리스트",
+                      input: {
+                        type: "array",
+                        inputItem: {
+                          type: "integer",
+                          default: 0,
+                        },
+                        default: []
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        useCardPoint: {
+          required: false,
+          label: "카드사 포인트 사용 여부",
+          input: {
+            type: "toggle",
+            default: false
+          }
+        },
+        useAppCardOnly: {
+          required: false,
+          label: "앱 카드만 허용할지 여부",
+          input: {
+            type: "toggle",
+            default: false
+          }
+        }
+      },
+    },
+  },
+  virtualAccount: {
+    required: false,
+    enabled: true,
+    label: "가상계좌 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "VIRTUAL_ACCOUNT"),
+    input: {
+      type: "object",
+      fields: {
+        cashReceiptType: {
+          required: false,
+          label: "현금영수증 발급 유형",
+          input: {
+            type: "text",
+            placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
+            default: ""
+          },
+        },
+        customerIdentifier: {
+          required: false,
+          label: "현금영수증 발행 대상 식별 정보",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: ""
+          },
+        },
+        fixedOption: {
+          required: false,
+          label: "고정식 가상계좌 설정",
+          input: {
+            type: "object",
+            fields: {
+              pgAccountId: {
+                required: false,
+                label: "PG사에서 발급받은 가상계좌 ID",
+                input: {
+                  type: "text",
+                  placeholder: "",
+                  default: ""
+                },
+              },
+              accountNumber: {
+                required: false,
+                label: "고정식으로 사용할 가상계좌 번호",
+                input: {
+                  type: "text",
+                  placeholder: "",
+                  default: ""
+                },
+              },
+            },
+          },
+        },
+        bankCode: {
+          required: false,
+          label: "가상계좌 발급 은행 코드",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: ""
+          },
+        },
+        accountExpiry: {
+          required: false,
+          label: "가상계좌 입금 만료기한",
+          input: {
+            type: "object",
+            fields: {
+              validHours: {
+                required: false,
+                label: "가상계좌 입금 유효 시간",
+                input: {
+                  type: "integer",
+                  default: 1,
+                },
+              },
+              dueDate: {
+                required: false,
+                label: "가상계좌 입금 유효 시각",
+                input: {
+                  type: "text",
+                  placeholder: "YYYY-MM-DD HH:mm:ss",
+                  default: "",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  transfer: {
+    required: false,
+    enabled: true,
+    label: "계좌이체 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "TRANSFER"),
+    input: {
+      type: "object",
+      fields: {
+        cashReceiptType: {
+          required: false,
+          label: "현금영수증 발급 유형",
+          input: {
+            type: "text",
+            placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
+            default: "",
+          },
+        },
+        customerIdentifier: {
+          required: false,
+          label: "현금영수증 발행 대상 식별 정보",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: ""
+          },
+        },
+        bankCode: {
+          required: false,
+          label: "계좌이체 은행 코드",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: "",
+          },
+        },
+      },
+    },
+  },
+  mobile: {
+    required: false,
+    enabled: true,
+    label: "휴대폰 소액결제 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "MOBILE"),
+    input: {
+      type: "object",
+      fields: {
+        carrier: {
+          required: false,
+          label: "소액결제 바로 호출을 위한 휴대폰 통신사",
+          input: {
+            type: "text",
+            placeholder: "SKT | KT | LGU",
+            default: "",
+          },
+        },
+        availableCarriers: {
+          required: false,
+          label: "일부 통신사만 노출 설정",
+          input: {
+            type: "array",
+            inputItem: {
+              type: "text",
+              default: "",
+              placeholder: "SKT | KT | LGU"
+            },
+            default: [],
+          },
+        },
+      },
+    },
+  },
+  giftCertificate: {
+    required: false,
+    enabled: true,
+    label: "상품권 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "GIFT_CERTIFICATE"),
+    input: {
+      type: "object",
+      fields: {
+        giftCertificateType: {
+          required: false,
+          label: "상품권 유형",
+          input: {
+            type: "text",
+            placeholder: "BOOKNLIFE | SMART_MUNSANG | CULTURELAND | HAPPYMONEY",
+            default: "",
+          },
+        },
+      },
+    },
+  },
+  easyPay: {
+    required: false,
+    enabled: true,
+    label: "간편결제 정보",
+    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "EASY_PAY"),
+    input: {
+      type: "object",
+      fields: {
+        easyPayProvider: {
+          required: false,
+          label: "간편결제 수단",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: "",
+          },
+        },
+        useFreeInterestFromMall: {
+          required: false,
+          label: "상점분담 무이자 활성화 여부",
+          input: {
+            type: "toggle",
+            default: false,
+          },
+        },
+        useCardPoint: {
+          required: false,
+          label: "카드사 포인트 사용 여부",
+          input: {
+            type: "toggle",
+            default: false,
+          },
+        },
+        availableCards: {
+          required: false,
+          label: "일부 카드사만 노출 설정",
+          input: {
+            type: "array",
+            inputItem: {
+              type: "text",
+              default: "",
+              placeholder: "KOOKMIN_CARD",
+            },
+            default: [],
+          },
+        },
+        installment: {
+          required: false,
+          label: "할부 설정",
+          input: {
+            type: "object",
+            fields: {
+              freeInstallmentPlans: {
+                required: false,
+                label: "무이자 할부 설정",
+                input: {
+                  type: "array",
+                  inputItem: {
+                    type: "object",
+                    fields: {
+                      cardCompany: {
+                        required: true,
+                        label: "무이자 할부를 제공하는 카드사 식별 값",
+                        input: {
+                          type: "text",
+                          placeholder: "KOOKMIN_CARD",
+                          default: "",
+                        },
+                      },
+                      months: {
+                        required: true,
+                        label: "무이자 할부를 제공하는 개월 수",
+                        input: {
+                          type: "array",
+                          inputItem: {
+                            type: "integer",
+                            default: 0,
+                          },
+                          default: [],
+                        },
+                      },
+                    },
+                  },
+                  default: [],
+                },
+              },
+              monthOption: {
+                required: false,
+                label: "할부 개월 수 설정",
+                input: {
+                  type: "object",
+                  fields: {
+                    fixedMonth: {
+                      required: false,
+                      label: "고정된 할부 개월수",
+                      input: {
+                        type: "integer",
+                        default: 0,
+                      },
+                    },
+                    availableMonthList: {
+                      required: false,
+                      label: "선택 가능한 할부 개월수 리스트",
+                      input: {
+                        type: "array",
+                        inputItem: {
+                          type: "integer",
+                          default: 0,
+                        },
+                        default: [],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        cashReceiptType: {
+          required: false,
+          label: "현금영수증 발급 유형",
+          input: {
+            type: "text",
+            placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
+            default: "",
+          },
+        },
+        customerIdentifier: {
+          required: false,
+          label: "현금영수증 발행 대상 식별 정보",
+          input: {
+            type: "text",
+            placeholder: "",
+            default: ""
+          },
+        },
+      },
+    },
+  },
   currency: {
     required: true,
     label: "결제 통화",
@@ -300,6 +759,19 @@ export const fields = {
       type: "text",
       placeholder: "https://example.com",
       default: "",
+    },
+  },
+  noticeUrls: {
+    required: false,
+    label: "웹훅 수신 URL",
+    input: {
+      type: "array",
+      inputItem: {
+        type: "text",
+        default: "",
+        placeholder: "https://example.com",
+      },
+      default: [],
     },
   },
 } satisfies Fields;

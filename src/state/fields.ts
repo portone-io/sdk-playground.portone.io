@@ -6,10 +6,12 @@ export interface Fields {
 }
 export interface Field {
   required: boolean;
+  enabled?: boolean;
   label: string;
   input: Input;
+  hidden?: Signal<boolean>;
 }
-export type Input = ObjectInput | TextInput | IntegerInput | ToggleInput;
+export type Input = ObjectInput | TextInput | IntegerInput | ToggleInput | ArrayInput;
 interface InputBase<TType extends string> {
   type: TType;
 }
@@ -27,13 +29,24 @@ export interface IntegerInput extends InputBase<"integer"> {
 export interface ToggleInput extends InputBase<"toggle"> {
   default: boolean;
 }
+export interface ArrayInput extends InputBase<"array"> {
+  inputItem: Input;
+  default: any[];
+}
 
 export interface FieldSignals {
-  [key: string]: FieldSignal;
+  [key: string]: FieldSignal | FieldSignalArray;
 }
 export interface FieldSignal {
   enabledSignal: Signal<boolean>;
   valueSignal: Signal<any>;
+}
+export interface FieldSignalArray extends FieldSignal {
+  append: () => void;
+  remove: (index: number) => void;
+  clear: () => void;
+  resize: (length: number) => void;
+  getKey: (index: number) => string;
 }
 export function createFieldSignals(
   storage: Storage,
@@ -43,10 +56,67 @@ export function createFieldSignals(
   return Object.fromEntries(
     Object.entries(fields).map(([key, field]) => {
       const pKey = `${keyPrefix}.${key}`;
-      const enabledSignal = persisted(storage, `${pKey}.enabled`, false);
-      const valueSignal = field.input.type === "object"
-        ? signal(createFieldSignals(storage, pKey, field.input.fields))
-        : persisted(storage, pKey, field.input.default);
+      const enabledSignal = persisted(storage, `${pKey}.enabled`, field.enabled ?? false);
+      let valueSignal;
+      if (field.input.type === "object") {
+        valueSignal = signal(createFieldSignals(storage, pKey, field.input.fields));
+      } else if (field.input.type === "array") {
+        const inputItem = field.input.inputItem;
+        const keySignals: Signal<string[]> = persisted(storage, pKey, []);
+        const append = () => {
+          keySignals.value = [...keySignals.value, `${pKey}.${Math.random().toString(36).slice(2)}`];
+        }
+        const remove = (index: number) => {
+          keySignals.value = keySignals.value.filter((_, i) => i !== index);
+        }
+        const clear = () => {
+          keySignals.value = [];
+        }
+        const getKey = (index: number) => {
+          return keySignals.value[index];
+        }
+        const resize = (length: number) => {
+          if (length < keySignals.value.length) {
+            keySignals.value = keySignals.value.slice(0, length);
+          } else {
+            while (keySignals.value.length < length) {
+              append();
+            }
+          }
+        }
+        const valueSignal = computed(() => {
+          const keys = keySignals.value;
+          const signals: FieldSignal[] = [];
+          for (const key of keys) {
+            const itemKey = key;
+            if (inputItem.type === "object") {
+              signals.push({
+                enabledSignal: signal(true),
+                valueSignal: signal(createFieldSignals(storage, itemKey, inputItem.fields)),
+              });
+            } else if (inputItem.type === "array") {
+              throw new Error("Nested arrays are not supported.");
+            } else {
+              signals.push({
+                enabledSignal: signal(true),
+                valueSignal: persisted(storage, itemKey, inputItem.default),
+              });
+            }
+          }
+          return signals;
+        });
+        return [key, {
+          enabledSignal,
+          valueSignal,
+          append,
+          remove,
+          clear,
+          resize,
+          getKey,
+        } satisfies FieldSignalArray];
+      } else {
+        valueSignal = persisted(storage, pKey, field.input.default);
+      }
       return [key, { enabledSignal, valueSignal }];
     }),
   );
@@ -55,9 +125,20 @@ export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
   for (const [key, fieldSignal] of Object.entries(fieldSignals)) {
     const field = fields[key as keyof typeof fields];
     const { enabledSignal, valueSignal } = fieldSignal;
-    enabledSignal.value = false;
+    enabledSignal.value = field.enabled ?? false;
     if (field.input.type === "object") {
       resetFieldSignals(field.input.fields, valueSignal.value);
+    } else if (field.input.type === "array") {
+      (fieldSignal as FieldSignalArray).resize(field.input.default.length);
+      for (const itemSignal of valueSignal.value) {
+        if (field.input.inputItem.type === "object") {
+          resetFieldSignals(field.input.inputItem.fields, itemSignal.value);
+        } else if (field.input.inputItem.type === "array") {
+          throw new Error("Nested arrays are not supported.");
+        } else {
+          itemSignal.value = field.input.inputItem.default;
+        }
+      }
     } else {
       valueSignal.value = field.input.default;
     }
@@ -102,10 +183,27 @@ export function createConfigObjectSignal({
   function getObject(fields: Fields, fieldSignals: FieldSignals): any {
     const result: any = {};
     for (const [key, field] of Object.entries(fields)) {
+      if (field.hidden?.value) {
+        continue;
+      }
       const fieldSignal = fieldSignals[key];
-      const value = field.input.type === "object"
-        ? getObject(field.input.fields, fieldSignal.valueSignal.value)
-        : fieldSignal.valueSignal.value;
+      let value;
+      if (field.input.type === "object") {
+        value = getObject(field.input.fields, fieldSignal.valueSignal.value);
+      } else if (field.input.type === "array") {
+        const inputItem = field.input.inputItem;
+        value = fieldSignal.valueSignal.value.map((itemSignal: FieldSignal) => {
+          if (inputItem.type === "object") {
+            return getObject(inputItem.fields, itemSignal.valueSignal.value);
+          } else if (inputItem.type === "array") {
+            throw new Error("Nested arrays are not supported.");
+          } else {
+            return itemSignal.valueSignal.value;
+          }
+        });
+      } else {
+        value = fieldSignal.valueSignal.value;
+      }
       const enabled = fieldSignal.enabledSignal.value;
       if (field.required || enabled) {
         result[key] = value;

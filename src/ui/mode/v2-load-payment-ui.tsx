@@ -12,7 +12,7 @@ import {
 import { RequiredIndicator } from "../Control";
 import HtmlEditor from "../HtmlEditor";
 import JsonEditor from "../JsonEditor";
-import FieldControl from "../field/FieldControl";
+import FieldControls from "../field/FieldControls";
 import Reset from "./Reset";
 
 const resetCountSignal = signal(0);
@@ -68,14 +68,7 @@ const View: React.FC = () => {
               </div>
             </details>
           </details>
-          {Object.entries(fields).map(([key, field]) => (
-            <FieldControl
-              key={key}
-              code={key}
-              field={field}
-              fieldSignal={fieldSignals[key]}
-            />
-          ))}
+          <FieldControls fields={fields} fieldSignals={fieldSignals} />
         </div>
         <div>
           <div

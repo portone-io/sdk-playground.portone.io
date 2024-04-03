@@ -1,5 +1,6 @@
 import { Field, FieldSignal, Input } from "../../state/fields";
 import Control from "../Control";
+import FieldInputArray from "./FieldInputArray";
 import FieldInputInteger from "./FieldInputInteger";
 import FieldInputObject from "./FieldInputObject";
 import FieldInputText from "./FieldInputText";
@@ -16,8 +17,9 @@ const FieldControl: React.FC<FieldControlProps> = (
 ) => {
   const { enabledSignal } = fieldSignal;
   const FieldInput = fieldInputComponents[field.input.type];
+  const hidden = field.hidden?.value;
   return (
-    <Control
+    !hidden && <Control
       label={field.label}
       code={code}
       required={field.required}
@@ -37,4 +39,5 @@ const fieldInputComponents: {
   text: FieldInputText,
   integer: FieldInputInteger,
   toggle: FieldInputToggle,
+  array: FieldInputArray,
 };
