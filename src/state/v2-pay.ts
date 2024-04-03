@@ -85,6 +85,15 @@ export const fields = {
       default: "",
     },
   },
+  productType: {
+    required: false,
+    label: "상품 유형",
+    input: {
+      type: "text",
+      placeholder: "PRODUCT_TYPE_REAL | PRODUCT_TYPE_DIGITAL",
+      default: "",
+    },
+  },
   card: {
     required: false,
     enabled: true,
@@ -290,6 +299,15 @@ export const fields = {
                   default: 1,
                 },
               },
+              dueDate: {
+                required: false,
+                label: "가상계좌 입금 유효 시각",
+                input: {
+                  type: "text",
+                  placeholder: "YYYY-MM-DD HH:mm:ss",
+                  default: "",
+                },
+              },
             },
           },
         },
@@ -377,7 +395,7 @@ export const fields = {
       fields: {
         giftCertificateType: {
           required: false,
-          label: "상품권을 특정할 수 있는 값",
+          label: "상품권 유형",
           input: {
             type: "text",
             placeholder: "BOOKNLIFE | SMART_MUNSANG | CULTURELAND | HAPPYMONEY",
@@ -507,7 +525,7 @@ export const fields = {
         },
         cashReceiptType: {
           required: false,
-          label: "결제창에서 발급 가능한 현금영수증 발급 유형",
+          label: "현금영수증 발급 유형",
           input: {
             type: "text",
             placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
