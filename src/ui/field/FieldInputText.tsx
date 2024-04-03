@@ -1,8 +1,8 @@
 import * as React from "react";
-import { TextInput } from "../../state/fields";
+import { TextFieldSignal, TextInput } from "../../state/fields";
 import { FieldInputProps } from "./input";
 
-const FieldInputText: React.FC<FieldInputProps<TextInput>> = ({
+const FieldInputText: React.FC<FieldInputProps<TextInput, TextFieldSignal>> = ({
   fieldInput,
   fieldSignal,
 }) => {

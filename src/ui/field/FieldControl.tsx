@@ -45,7 +45,7 @@ const FieldControl: React.FC<FieldControlProps> = (
 export default FieldControl;
 
 const fieldInputComponents: {
-  [key in Input["type"]]: React.FC<FieldInputProps<any>>;
+  [key in Input["type"]]: React.FC<FieldInputProps<any, any>>;
 } = {
   object: FieldInputObject,
   text: FieldInputText,

@@ -10,11 +10,13 @@ const registry = new FinalizationRegistry<string>((key) => {
   disposeFnMap.delete(key);
 });
 
+type DistributiveSignal<T> = T extends any ? Signal<T> : never;
+
 export default function persisted<T>(
   storage: Storage,
   key: string,
   value: T,
-): Signal<T> {
+): DistributiveSignal<T> {
   const item = storage.getItem(key);
   const s = signal(item == null ? value : JSON.parse(item));
   const disposeFn = effect(() => {
@@ -23,5 +25,5 @@ export default function persisted<T>(
   });
   disposeFnMap.set(key, disposeFn);
   registry.register(s, key);
-  return s;
+  return s as DistributiveSignal<T>;
 }

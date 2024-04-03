@@ -1,9 +1,11 @@
 import * as React from "react";
-import { ToggleInput } from "../../state/fields";
+import { ToggleFieldSignal, ToggleInput } from "../../state/fields";
 import Toggle from "../Toggle";
 import { FieldInputProps } from "./input";
 
-const FieldInputToggle: React.FC<FieldInputProps<ToggleInput>> = ({
+const FieldInputToggle: React.FC<
+  FieldInputProps<ToggleInput, ToggleFieldSignal>
+> = ({
   fieldSignal,
 }) => {
   const { enabledSignal, valueSignal } = fieldSignal;

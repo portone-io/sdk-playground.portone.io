@@ -1,6 +1,9 @@
-import { FieldSignal, FieldSignalArray, Input } from "../../state/fields";
+import { FieldSignal, Input } from "../../state/fields";
 
-export interface FieldInputProps<TInput extends Input> {
+export interface FieldInputProps<
+  TInput extends Input,
+  TFieldSignal extends FieldSignal,
+> {
   fieldInput: TInput;
-  fieldSignal: FieldSignal | FieldSignalArray;
+  fieldSignal: TFieldSignal;
 }
