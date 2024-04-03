@@ -35,6 +35,7 @@ const Control: React.FC<ControlProps> = ({
         <div className="w-full h-full py-1 flex flex-col items-center justify-start bg-orange-50 rounded">
           {required ? <RequiredIndicator /> : (
             <input
+              className="control-checkbox"
               type="checkbox"
               checked={enabled}
               onClick={() => onToggle?.(!enabled)}
