@@ -19,22 +19,27 @@ const FieldControl: React.FC<FieldControlProps> = (
   const FieldInput = fieldInputComponents[field.input.type];
   const hidden = field.hidden?.value;
   return (
-    !hidden && <Control
-      label={field.label}
-      code={code}
-      required={field.required}
-      enabled={enabledSignal.value}
-      onToggle={(value) => enabledSignal.value = value}
-      onClick={(e) => {
-        if (e.target instanceof HTMLInputElement) {
-          if (e.target.classList.contains("control-checkbox") && e.target.checked) {
-            enabledSignal.value = true;
+    !hidden && (
+      <Control
+        label={field.label}
+        code={code}
+        required={field.required}
+        enabled={enabledSignal.value}
+        onToggle={(value) => enabledSignal.value = value}
+        onClick={(e) => {
+          if (e.target instanceof HTMLInputElement) {
+            if (
+              e.target.classList.contains("control-checkbox") &&
+              e.target.checked
+            ) {
+              enabledSignal.value = true;
+            }
           }
-        }
-      }}
-    >
-      <FieldInput fieldInput={field.input} fieldSignal={fieldSignal} />
-    </Control>
+        }}
+      >
+        <FieldInput fieldInput={field.input} fieldSignal={fieldSignal} />
+      </Control>
+    )
   );
 };
 export default FieldControl;
