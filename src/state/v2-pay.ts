@@ -98,7 +98,9 @@ export const fields = {
     required: false,
     enabled: true,
     label: "카드 정보",
-    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "CARD"),
+    hidden: computed(() =>
+      fieldSignals.payMethod?.valueSignal?.value !== "CARD"
+    ),
     input: {
       type: "object",
       fields: {
@@ -108,8 +110,8 @@ export const fields = {
           input: {
             type: "text",
             placeholder: "KOOKMIN_CARD",
-            default: ""
-          }
+            default: "",
+          },
         },
         availableCards: {
           required: false,
@@ -119,18 +121,18 @@ export const fields = {
             inputItem: {
               type: "text",
               default: "",
-              placeholder: "KOOKMIN_CARD"
+              placeholder: "KOOKMIN_CARD",
             },
-            default: []
-          }
+            default: [],
+          },
         },
         useFreeInterestFromMall: {
           required: false,
           label: "상점분담 무이자 활성화 여부",
           input: {
             type: "toggle",
-            default: false
-          }
+            default: false,
+          },
         },
         installment: {
           required: false,
@@ -152,8 +154,8 @@ export const fields = {
                         input: {
                           type: "text",
                           placeholder: "KOOKMIN_CARD",
-                          default: ""
-                        }
+                          default: "",
+                        },
                       },
                       months: {
                         required: true,
@@ -164,13 +166,13 @@ export const fields = {
                             type: "integer",
                             default: 0,
                           },
-                          default: []
-                        }
-                      }
-                    }
+                          default: [],
+                        },
+                      },
+                    },
                   },
-                  default: []
-                }
+                  default: [],
+                },
               },
               monthOption: {
                 required: false,
@@ -184,7 +186,7 @@ export const fields = {
                       input: {
                         type: "integer",
                         default: 0,
-                      }
+                      },
                     },
                     availableMonthList: {
                       required: false,
@@ -195,31 +197,31 @@ export const fields = {
                           type: "integer",
                           default: 0,
                         },
-                        default: []
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+                        default: [],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         useCardPoint: {
           required: false,
           label: "카드사 포인트 사용 여부",
           input: {
             type: "toggle",
-            default: false
-          }
+            default: false,
+          },
         },
         useAppCardOnly: {
           required: false,
           label: "앱 카드만 허용할지 여부",
           input: {
             type: "toggle",
-            default: false
-          }
-        }
+            default: false,
+          },
+        },
       },
     },
   },
@@ -227,7 +229,9 @@ export const fields = {
     required: false,
     enabled: true,
     label: "가상계좌 정보",
-    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "VIRTUAL_ACCOUNT"),
+    hidden: computed(() =>
+      fieldSignals.payMethod?.valueSignal?.value !== "VIRTUAL_ACCOUNT"
+    ),
     input: {
       type: "object",
       fields: {
@@ -237,7 +241,7 @@ export const fields = {
           input: {
             type: "text",
             placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
-            default: ""
+            default: "",
           },
         },
         customerIdentifier: {
@@ -246,7 +250,7 @@ export const fields = {
           input: {
             type: "text",
             placeholder: "",
-            default: ""
+            default: "",
           },
         },
         fixedOption: {
@@ -261,7 +265,7 @@ export const fields = {
                 input: {
                   type: "text",
                   placeholder: "",
-                  default: ""
+                  default: "",
                 },
               },
               accountNumber: {
@@ -270,7 +274,7 @@ export const fields = {
                 input: {
                   type: "text",
                   placeholder: "",
-                  default: ""
+                  default: "",
                 },
               },
             },
@@ -282,7 +286,7 @@ export const fields = {
           input: {
             type: "text",
             placeholder: "",
-            default: ""
+            default: "",
           },
         },
         accountExpiry: {
@@ -318,7 +322,9 @@ export const fields = {
     required: false,
     enabled: true,
     label: "계좌이체 정보",
-    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "TRANSFER"),
+    hidden: computed(() =>
+      fieldSignals.payMethod?.valueSignal?.value !== "TRANSFER"
+    ),
     input: {
       type: "object",
       fields: {
@@ -337,7 +343,7 @@ export const fields = {
           input: {
             type: "text",
             placeholder: "",
-            default: ""
+            default: "",
           },
         },
         bankCode: {
@@ -356,7 +362,9 @@ export const fields = {
     required: false,
     enabled: true,
     label: "휴대폰 소액결제 정보",
-    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "MOBILE"),
+    hidden: computed(() =>
+      fieldSignals.payMethod?.valueSignal?.value !== "MOBILE"
+    ),
     input: {
       type: "object",
       fields: {
@@ -377,7 +385,7 @@ export const fields = {
             inputItem: {
               type: "text",
               default: "",
-              placeholder: "SKT | KT | LGU"
+              placeholder: "SKT | KT | LGU",
             },
             default: [],
           },
@@ -389,7 +397,9 @@ export const fields = {
     required: false,
     enabled: true,
     label: "상품권 정보",
-    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "GIFT_CERTIFICATE"),
+    hidden: computed(() =>
+      fieldSignals.payMethod?.valueSignal?.value !== "GIFT_CERTIFICATE"
+    ),
     input: {
       type: "object",
       fields: {
@@ -409,7 +419,9 @@ export const fields = {
     required: false,
     enabled: true,
     label: "간편결제 정보",
-    hidden: computed(() => fieldSignals.payMethod?.valueSignal?.value !== "EASY_PAY"),
+    hidden: computed(() =>
+      fieldSignals.payMethod?.valueSignal?.value !== "EASY_PAY"
+    ),
     input: {
       type: "object",
       fields: {
@@ -538,7 +550,7 @@ export const fields = {
           input: {
             type: "text",
             placeholder: "",
-            default: ""
+            default: "",
           },
         },
       },

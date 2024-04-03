@@ -11,7 +11,12 @@ export interface Field {
   input: Input;
   hidden?: Signal<boolean>;
 }
-export type Input = ObjectInput | TextInput | IntegerInput | ToggleInput | ArrayInput;
+export type Input =
+  | ObjectInput
+  | TextInput
+  | IntegerInput
+  | ToggleInput
+  | ArrayInput;
 interface InputBase<TType extends string> {
   type: TType;
 }
@@ -56,25 +61,34 @@ export function createFieldSignals(
   return Object.fromEntries(
     Object.entries(fields).map(([key, field]) => {
       const pKey = `${keyPrefix}.${key}`;
-      const enabledSignal = persisted(storage, `${pKey}.enabled`, field.enabled ?? false);
+      const enabledSignal = persisted(
+        storage,
+        `${pKey}.enabled`,
+        field.enabled ?? false,
+      );
       let valueSignal;
       if (field.input.type === "object") {
-        valueSignal = signal(createFieldSignals(storage, pKey, field.input.fields));
+        valueSignal = signal(
+          createFieldSignals(storage, pKey, field.input.fields),
+        );
       } else if (field.input.type === "array") {
         const inputItem = field.input.inputItem;
         const keySignals: Signal<string[]> = persisted(storage, pKey, []);
         const append = () => {
-          keySignals.value = [...keySignals.value, `${pKey}.${Math.random().toString(36).slice(2)}`];
-        }
+          keySignals.value = [
+            ...keySignals.value,
+            `${pKey}.${Math.random().toString(36).slice(2)}`,
+          ];
+        };
         const remove = (index: number) => {
           keySignals.value = keySignals.value.filter((_, i) => i !== index);
-        }
+        };
         const clear = () => {
           keySignals.value = [];
-        }
+        };
         const getKey = (index: number) => {
           return keySignals.value[index];
-        }
+        };
         const resize = (length: number) => {
           if (length < keySignals.value.length) {
             keySignals.value = keySignals.value.slice(0, length);
@@ -83,7 +97,7 @@ export function createFieldSignals(
               append();
             }
           }
-        }
+        };
         const valueSignal = computed(() => {
           const keys = keySignals.value;
           const signals: FieldSignal[] = [];
@@ -92,7 +106,9 @@ export function createFieldSignals(
             if (inputItem.type === "object") {
               signals.push({
                 enabledSignal: signal(true),
-                valueSignal: signal(createFieldSignals(storage, itemKey, inputItem.fields)),
+                valueSignal: signal(
+                  createFieldSignals(storage, itemKey, inputItem.fields),
+                ),
               });
             } else if (inputItem.type === "array") {
               throw new Error("Nested arrays are not supported.");
@@ -105,15 +121,18 @@ export function createFieldSignals(
           }
           return signals;
         });
-        return [key, {
-          enabledSignal,
-          valueSignal,
-          append,
-          remove,
-          clear,
-          resize,
-          getKey,
-        } satisfies FieldSignalArray];
+        return [
+          key,
+          {
+            enabledSignal,
+            valueSignal,
+            append,
+            remove,
+            clear,
+            resize,
+            getKey,
+          } satisfies FieldSignalArray,
+        ];
       } else {
         valueSignal = persisted(storage, pKey, field.input.default);
       }

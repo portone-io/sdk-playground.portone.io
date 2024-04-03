@@ -1,5 +1,10 @@
 import * as React from "react";
-import { ArrayInput, FieldSignal, FieldSignalArray, Input } from "../../state/fields";
+import {
+  ArrayInput,
+  FieldSignal,
+  FieldSignalArray,
+  Input,
+} from "../../state/fields";
 import { FieldInputProps } from "./input";
 import FieldInputObject from "./FieldInputObject";
 import FieldInputText from "./FieldInputText";
@@ -16,12 +21,19 @@ const FieldInputArray: React.FC<FieldInputProps<ArrayInput>> = ({
   return (
     <div className="flex flex-col items-start gap-2">
       {fieldSignals.map((itemSignal: FieldSignal, i: number) => (
-        <div key={fieldSignalArray.getKey(i)} className="flex items-start gap-2">
-          <FieldInput key={i} fieldInput={fieldInput.inputItem} fieldSignal={itemSignal} />
+        <div
+          key={fieldSignalArray.getKey(i)}
+          className="flex items-start gap-2"
+        >
+          <FieldInput
+            key={i}
+            fieldInput={fieldInput.inputItem}
+            fieldSignal={itemSignal}
+          />
           <button
             onClick={(e) => {
               e.preventDefault();
-              fieldSignalArray.remove(i)
+              fieldSignalArray.remove(i);
             }}
           >
             ➖
@@ -45,5 +57,7 @@ const fieldInputComponents: {
   text: FieldInputText,
   integer: FieldInputInteger,
   toggle: FieldInputToggle,
-  array: () => {throw new Error("Nested arrays are not supported.")},
+  array: () => {
+    throw new Error("Nested arrays are not supported.");
+  },
 };
