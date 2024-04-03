@@ -25,6 +25,13 @@ const FieldControl: React.FC<FieldControlProps> = (
       required={field.required}
       enabled={enabledSignal.value}
       onToggle={(value) => enabledSignal.value = value}
+      onClick={(e) => {
+        if (e.target instanceof HTMLInputElement) {
+          if (e.target.classList.contains("control-checkbox") && e.target.checked) {
+            enabledSignal.value = true;
+          }
+        }
+      }}
     >
       <FieldInput fieldInput={field.input} fieldSignal={fieldSignal} />
     </Control>
