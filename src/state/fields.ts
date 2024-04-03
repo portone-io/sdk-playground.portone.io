@@ -17,13 +17,15 @@ export type FieldType =
   | "text"
   | "integer"
   | "toggle"
-  | "array";
+  | "array"
+  | "enum";
 export type Input =
   | ObjectInput
   | TextInput
   | IntegerInput
   | ToggleInput
-  | ArrayInput;
+  | ArrayInput
+  | EnumInput;
 interface InputBase<TType extends FieldType> {
   type: TType;
 }
@@ -45,6 +47,11 @@ export interface ArrayInput extends InputBase<"array"> {
   inputItem: Input;
   default: any[];
 }
+export interface EnumInput extends InputBase<"enum"> {
+  default: string;
+  placeholder: string;
+  options: string[];
+}
 
 export interface FieldSignals {
   [key: string]: FieldSignal;
@@ -54,7 +61,8 @@ export type FieldSignal =
   | TextFieldSignal
   | IntegerFieldSignal
   | ToggleFieldSignal
-  | ArrayFieldSignal;
+  | ArrayFieldSignal
+  | EnumFieldSignal;
 interface FieldSignalBase<TType extends FieldType> {
   type: TType;
   enabledSignal: Signal<boolean>;
@@ -78,6 +86,9 @@ export interface ArrayFieldSignal extends FieldSignalBase<"array"> {
   clear: () => void;
   resize: (length: number) => void;
   getKey: (index: number) => string;
+}
+export interface EnumFieldSignal extends FieldSignalBase<"enum"> {
+  valueSignal: Signal<string>;
 }
 export function createFieldSignals(
   storage: Storage,
@@ -157,6 +168,13 @@ export function createFieldSignals(
           getKey,
         };
       })
+      .with({ type: "enum" }, (input): EnumFieldSignal => {
+        return {
+          type: "enum",
+          enabledSignal,
+          valueSignal: persisted(storage, key, input.default),
+        };
+      })
       .with({ type: P.union("integer", "text", "toggle") }, (input) => {
         return {
           type: input.type,
@@ -198,6 +216,9 @@ export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
       toggle: (input, fieldSignal) => {
         fieldSignal.valueSignal.value = input.default;
       },
+      enum: (input, fieldSignal) => {
+        fieldSignal.valueSignal.value = input.default;
+      },
     });
   }
 }
@@ -229,6 +250,7 @@ export type MatchFieldSignalTypeConfig<T> = {
   >;
   text: MatchFieldSignalTypeHandler<T, TextInput, TextFieldSignal>;
   toggle: MatchFieldSignalTypeHandler<T, ToggleInput, ToggleFieldSignal>;
+  enum: MatchFieldSignalTypeHandler<T, EnumInput, EnumFieldSignal>;
 };
 
 export function matchFieldSignalType<T>(
@@ -240,6 +262,7 @@ export function matchFieldSignalType<T>(
     integer,
     text,
     toggle,
+    enum: _enum,
   }: MatchFieldSignalTypeConfig<T>,
 ): T {
   return match([input, fieldSignal])
@@ -264,12 +287,17 @@ export function matchFieldSignalType<T>(
       ([input, fieldSignal]) => toggle(input, fieldSignal),
     )
     .with(
+      [{ type: "enum" }, { type: "enum" }],
+      ([input, fieldSignal]) => _enum(input, fieldSignal),
+    )
+    .with(
       P.union(
         [{ type: "object" }, { type: P._ }],
         [{ type: "array" }, { type: P._ }],
         [{ type: "integer" }, { type: P._ }],
         [{ type: "text" }, { type: P._ }],
         [{ type: "toggle" }, { type: P._ }],
+        [{ type: "enum" }, { type: P._ }],
       ),
       () => {
         throw new Error(
@@ -347,6 +375,7 @@ export function createConfigObjectSignal({
       integer: (_, fieldSignal) => fieldSignal.valueSignal.value,
       text: (_, fieldSignal) => fieldSignal.valueSignal.value,
       toggle: (_, fieldSignal) => fieldSignal.valueSignal.value,
+      enum: (_, fieldSignal) => fieldSignal.valueSignal.value,
     });
   }
 }

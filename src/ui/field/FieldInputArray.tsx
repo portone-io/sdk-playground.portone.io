@@ -10,6 +10,7 @@ import FieldInputObject from "./FieldInputObject";
 import FieldInputText from "./FieldInputText";
 import FieldInputInteger from "./FieldInputInteger";
 import FieldInputToggle from "./FieldInputToggle";
+import FieldInputEnum from "./FieldInputEnum";
 
 const FieldInputArray: React.FC<FieldInputProps<ArrayInput, ArrayFieldSignal>> =
   ({
@@ -57,7 +58,6 @@ const fieldInputComponents: {
   text: FieldInputText,
   integer: FieldInputInteger,
   toggle: FieldInputToggle,
-  array: () => {
-    throw new Error("Nested arrays are not supported.");
-  },
+  array: FieldInputArray,
+  enum: FieldInputEnum,
 };

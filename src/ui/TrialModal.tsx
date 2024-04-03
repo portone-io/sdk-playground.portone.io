@@ -147,6 +147,7 @@ function applyValueToSignal(
       [{ type: "integer" }, "number"],
       [{ type: "text" }, "string"],
       [{ type: "toggle" }, "boolean"],
+      [{ type: "enum" }, "string"],
       ([fieldSignal]) => {
         fieldSignal.valueSignal.value = value;
       },
@@ -157,6 +158,7 @@ function applyValueToSignal(
       [{ type: "integer" }, P.not("number")],
       [{ type: "text" }, P.not("string")],
       [{ type: "toggle" }, P.not("boolean")],
+      [{ type: "enum" }, P.not("string")],
       () => {
         console.error("Invalid value type");
       },
