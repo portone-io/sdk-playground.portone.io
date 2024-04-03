@@ -107,9 +107,17 @@ export const fields = {
     required: true,
     label: "결제 수단",
     input: {
-      type: "text",
+      type: "enum",
       placeholder: "CARD",
       default: "",
+      options: [
+        "CARD",
+        "VIRTUAL_ACCOUNT",
+        "TRANSFER",
+        "MOBILE",
+        "GIFT_CERTIFICATE",
+        "EASY_PAY",
+      ],
     },
   },
   card: {
