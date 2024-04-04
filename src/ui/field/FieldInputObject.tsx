@@ -13,7 +13,7 @@ const FieldInputObject: React.FC<
   fieldInput,
   fieldSignal,
 }) => {
-  const fieldSignals = fieldSignal.valueSignal.value as FieldSignals;
+  const fieldSignals = fieldSignal.valueSignal.value;
   return (
     <div className="flex flex-col gap-2">
       {Object.entries(fieldInput.fields).map(([key, field]) => (

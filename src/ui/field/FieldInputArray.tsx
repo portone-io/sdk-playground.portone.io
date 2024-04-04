@@ -6,11 +6,7 @@ import {
   Input,
 } from "../../state/fields";
 import { FieldInputProps } from "./input";
-import FieldInputObject from "./FieldInputObject";
-import FieldInputText from "./FieldInputText";
-import FieldInputInteger from "./FieldInputInteger";
-import FieldInputToggle from "./FieldInputToggle";
-import FieldInputEnum from "./FieldInputEnum";
+import { fieldInputComponents } from "./FieldControl";
 
 const FieldInputArray: React.FC<FieldInputProps<ArrayInput, ArrayFieldSignal>> =
   ({
@@ -50,14 +46,3 @@ const FieldInputArray: React.FC<FieldInputProps<ArrayInput, ArrayFieldSignal>> =
     );
   };
 export default FieldInputArray;
-
-const fieldInputComponents: {
-  [key in Input["type"]]: React.FC<FieldInputProps<any, any>>;
-} = {
-  object: FieldInputObject,
-  text: FieldInputText,
-  integer: FieldInputInteger,
-  toggle: FieldInputToggle,
-  array: FieldInputArray,
-  enum: FieldInputEnum,
-};

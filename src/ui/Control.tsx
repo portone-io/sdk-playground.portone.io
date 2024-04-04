@@ -17,6 +17,7 @@ export interface ControlProps extends React.HTMLAttributes<HTMLDivElement> {
   code: string;
   required?: boolean;
   enabled?: boolean;
+  radioGroup?: string;
   onToggle?: (enabled: boolean) => void;
 }
 const Control: React.FC<ControlProps> = ({
@@ -26,6 +27,7 @@ const Control: React.FC<ControlProps> = ({
   code,
   required,
   enabled,
+  radioGroup,
   onToggle,
   ...props
 }) => {
@@ -36,9 +38,10 @@ const Control: React.FC<ControlProps> = ({
           {required ? <RequiredIndicator /> : (
             <input
               className="control-checkbox"
-              type="checkbox"
+              type={radioGroup ? "radio" : "checkbox"}
+              name={radioGroup}
               checked={enabled}
-              onClick={() => onToggle?.(!enabled)}
+              onChange={(e) => onToggle?.(e.currentTarget.checked)}
             />
           )}
         </div>

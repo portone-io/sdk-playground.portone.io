@@ -18,14 +18,16 @@ export type FieldType =
   | "integer"
   | "toggle"
   | "array"
-  | "enum";
+  | "enum"
+  | "union";
 export type Input =
   | ObjectInput
   | TextInput
   | IntegerInput
   | ToggleInput
   | ArrayInput
-  | EnumInput;
+  | EnumInput
+  | UnionInput;
 interface InputBase<TType extends FieldType> {
   type: TType;
 }
@@ -52,6 +54,9 @@ export interface EnumInput extends InputBase<"enum"> {
   placeholder: string;
   options: string[];
 }
+export interface UnionInput extends InputBase<"union"> {
+  fields: Fields;
+}
 
 export interface FieldSignals {
   [key: string]: FieldSignal;
@@ -62,7 +67,8 @@ export type FieldSignal =
   | IntegerFieldSignal
   | ToggleFieldSignal
   | ArrayFieldSignal
-  | EnumFieldSignal;
+  | EnumFieldSignal
+  | UnionFieldSignal;
 interface FieldSignalBase<TType extends FieldType> {
   type: TType;
   enabledSignal: Signal<boolean>;
@@ -89,6 +95,10 @@ export interface ArrayFieldSignal extends FieldSignalBase<"array"> {
 }
 export interface EnumFieldSignal extends FieldSignalBase<"enum"> {
   valueSignal: Signal<string>;
+}
+export interface UnionFieldSignal extends FieldSignalBase<"union"> {
+  valueSignal: Signal<FieldSignals>;
+  activeKeySignal: Signal<string>;
 }
 export function createFieldSignals(
   storage: Storage,
@@ -118,6 +128,18 @@ export function createFieldSignals(
           type: "object",
           enabledSignal,
           valueSignal: signal(createFieldSignals(storage, key, input.fields)),
+        };
+      })
+      .with({ type: "union" }, (input): UnionFieldSignal => {
+        return {
+          type: "union",
+          enabledSignal,
+          valueSignal: signal(createFieldSignals(storage, key, input.fields)),
+          activeKeySignal: persisted(
+            storage,
+            `${key}.selectedKey`,
+            Object.keys(input.fields)[0],
+          ),
         };
       })
       .with({ type: "array" }, (input): ArrayFieldSignal => {
@@ -202,6 +224,9 @@ export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
       object: (input, fieldSignal) => {
         resetFieldSignals(input.fields, fieldSignal.valueSignal.value);
       },
+      union: (input, fieldSignal) => {
+        resetFieldSignals(input.fields, fieldSignal.valueSignal.value);
+      },
       array: (input, fieldSignal) => {
         for (const itemSignal of fieldSignal.valueSignal.value) {
           resetFieldSignal(field, input.inputItem, itemSignal);
@@ -238,6 +263,11 @@ export type MatchFieldSignalTypeConfig<T> = {
     ObjectInput,
     ObjectFieldSignal
   >;
+  union: MatchFieldSignalTypeHandler<
+    T,
+    UnionInput,
+    UnionFieldSignal
+  >;
   array: MatchFieldSignalTypeHandler<
     T,
     ArrayInput,
@@ -258,6 +288,7 @@ export function matchFieldSignalType<T>(
     input,
     fieldSignal,
     object,
+    union,
     array,
     integer,
     text,
@@ -269,6 +300,10 @@ export function matchFieldSignalType<T>(
     .with(
       [{ type: "object" }, { type: "object" }],
       ([input, fieldSignal]) => object(input, fieldSignal),
+    )
+    .with(
+      [{ type: "union" }, { type: "union" }],
+      ([input, fieldSignal]) => union(input, fieldSignal),
     )
     .with(
       [{ type: "array" }, { type: "array" }],
@@ -293,6 +328,7 @@ export function matchFieldSignalType<T>(
     .with(
       P.union(
         [{ type: "object" }, { type: P._ }],
+        [{ type: "union" }, { type: P._ }],
         [{ type: "array" }, { type: P._ }],
         [{ type: "integer" }, { type: P._ }],
         [{ type: "text" }, { type: P._ }],
@@ -368,6 +404,16 @@ export function createConfigObjectSignal({
       fieldSignal,
       object: (input, fieldSignal) =>
         getObject(input.fields, fieldSignal.valueSignal.value),
+      union: (input, fieldSignal) => {
+        const key = fieldSignal.activeKeySignal.value;
+        const selectedField = input.fields[key];
+        const selectedFieldSignal = fieldSignal.valueSignal.value[key];
+        return getFieldObject(
+          selectedField,
+          selectedField.input,
+          selectedFieldSignal,
+        );
+      },
       array: (input, fieldSignal) =>
         fieldSignal.valueSignal.value.map((itemSignal: FieldSignal) =>
           getFieldObject(field, input.inputItem, itemSignal)

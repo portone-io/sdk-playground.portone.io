@@ -233,7 +233,7 @@ export const fields = {
                 required: false,
                 label: "할부 개월 수 설정",
                 input: {
-                  type: "object",
+                  type: "union",
                   fields: {
                     fixedMonth: {
                       required: false,
@@ -350,7 +350,7 @@ export const fields = {
           required: false,
           label: "가상계좌 입금 만료기한",
           input: {
-            type: "object",
+            type: "union",
             fields: {
               validHours: {
                 required: false,
@@ -572,7 +572,7 @@ export const fields = {
                 required: false,
                 label: "할부 개월 수 설정",
                 input: {
-                  type: "object",
+                  type: "union",
                   fields: {
                     fixedMonth: {
                       required: false,

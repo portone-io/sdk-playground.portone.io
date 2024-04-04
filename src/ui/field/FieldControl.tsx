@@ -6,6 +6,7 @@ import FieldInputInteger from "./FieldInputInteger";
 import FieldInputObject from "./FieldInputObject";
 import FieldInputText from "./FieldInputText";
 import FieldInputToggle from "./FieldInputToggle";
+import FieldInputUnion from "./FieldInputUnion";
 import { FieldInputProps } from "./input";
 
 export interface FieldControlProps {
@@ -45,7 +46,7 @@ const FieldControl: React.FC<FieldControlProps> = (
 };
 export default FieldControl;
 
-const fieldInputComponents: {
+export const fieldInputComponents: {
   [key in Input["type"]]: React.FC<FieldInputProps<any, any>>;
 } = {
   object: FieldInputObject,
@@ -54,4 +55,5 @@ const fieldInputComponents: {
   toggle: FieldInputToggle,
   array: FieldInputArray,
   enum: FieldInputEnum,
-};
+  union: FieldInputUnion,
+} as const;

@@ -117,14 +117,18 @@ function applyValueToSignal(
 ) {
   fieldSignal.enabledSignal.value = true;
   match([fieldSignal, typeof value])
-    .with([{ type: "object" }, "object"], ([fieldSignal]) => {
-      if (value != null) {
-        applyFieldsToSignals(
-          Object.entries(value),
-          fieldSignal.valueSignal.value,
-        );
-      }
-    })
+    .with(
+      [{ type: "object" }, "object"],
+      [{ type: "union" }, "object"],
+      ([fieldSignal]) => {
+        if (value != null) {
+          applyFieldsToSignals(
+            Object.entries(value),
+            fieldSignal.valueSignal.value,
+          );
+        }
+      },
+    )
     .with([{ type: "array" }, "object"], ([fieldSignal]) => {
       if (Array.isArray(value)) {
         fieldSignal.resize(value.length);
@@ -154,6 +158,7 @@ function applyValueToSignal(
     )
     .with(
       [{ type: "object" }, P.not("object")],
+      [{ type: "union" }, P.not("object")],
       [{ type: "array" }, P.not("object")],
       [{ type: "integer" }, P.not("number")],
       [{ type: "text" }, P.not("string")],
