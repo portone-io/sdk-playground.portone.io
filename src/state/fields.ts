@@ -386,7 +386,7 @@ export function createConfigObjectSignal({
         continue;
       }
       const fieldSignal = fieldSignals[key];
-      let value = getFieldObject(field, field.input, fieldSignal);
+      const value = getFieldObject(field, field.input, fieldSignal);
       const enabled = fieldSignal.enabledSignal.value;
       if (field.required || enabled) {
         result[key] = value;
