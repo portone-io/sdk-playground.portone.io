@@ -8,7 +8,12 @@ import {
   resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
-import { sdkV2Signal } from "./v2";
+import {
+  countryOptions,
+  genderOptions,
+  sdkV2Signal,
+  windowTypeOptions,
+} from "./v2";
 
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
@@ -139,9 +144,10 @@ export const fields = {
                 required: false,
                 label: "국가",
                 input: {
-                  type: "text",
+                  type: "enum",
                   placeholder: "KR",
                   default: "",
+                  options: countryOptions,
                 },
               },
               addressLine1: {
@@ -196,9 +202,10 @@ export const fields = {
           required: false,
           label: "구매자 성별",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "OTHER",
             default: "",
+            options: genderOptions,
           },
         },
         birthYear: {
@@ -241,18 +248,20 @@ export const fields = {
           required: false,
           label: "PC에서의 창 유형",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "IFRAME",
             default: "",
+            options: windowTypeOptions,
           },
         },
         mobile: {
           required: false,
           label: "모바일에서의 창 유형",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "POPUP",
             default: "",
+            options: windowTypeOptions,
           },
         },
       },

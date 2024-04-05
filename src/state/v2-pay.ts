@@ -8,38 +8,21 @@ import {
   resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
-import { sdkV2Signal } from "./v2";
-
-import { Entity } from "https://esm.sh/@portone/browser-sdk/v2?exports=Entity";
-
-const cardCompanyOptions = Object.keys(Entity.CardCompany);
-const bankCodeOptions = Object.keys(Entity.Bank);
-const carrierOptions = Object.keys(Entity.Carrier);
-const giftCertificateTypeOptions = Object.keys(Entity.GiftCertificateType);
-const easyPayProviderOptions = Object.keys(Entity.EasyPayProvider);
-const currencyOptions = Object.keys(Entity.Currency);
-const countryOptions = Object.keys(Entity.Country);
-const genderOptions = Object.keys(Entity.Gender);
-const windowTypeOptions = Object.keys(Entity.WindowType);
-const payMethodOptions = [
-  "CARD",
-  "VIRTUAL_ACCOUNT",
-  "TRANSFER",
-  "MOBILE",
-  "GIFT_CERTIFICATE",
-  "EASY_PAY",
-  "PAYPAL",
-  "ALIPAY",
-];
-const productTypeOptions = [
-  "REAL",
-  "DIGITAL",
-];
-const cashReceiptTypeOptions = [
-  "PERSONAL",
-  "CORPORATE",
-  "ANONYMOUS",
-];
+import {
+  bankCodeOptions,
+  cardCompanyOptions,
+  carrierOptions,
+  cashReceiptTypeOptions,
+  countryOptions,
+  currencyOptions,
+  easyPayProviderOptions,
+  genderOptions,
+  giftCertificateTypeOptions,
+  payMethodOptions,
+  productTypeOptions,
+  sdkV2Signal,
+  windowTypeOptions,
+} from "./v2";
 
 export function reset() {
   resetFieldSignals(fields, fieldSignals);

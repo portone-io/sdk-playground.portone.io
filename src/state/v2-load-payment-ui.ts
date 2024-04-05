@@ -8,7 +8,7 @@ import {
   resetFieldSignals,
 } from "./fields";
 import persisted, { prefix } from "./persisted";
-import { sdkV2Signal } from "./v2";
+import { paymentUITypeOptions, sdkV2Signal } from "./v2";
 import { fields as v2PayFields } from "./v2-pay";
 import { pgUiModalOpenSignal } from "./v1-load-ui";
 
@@ -54,9 +54,10 @@ export const fields = {
     required: true,
     label: "PG 결제 UI 형식",
     input: {
-      type: "text",
+      type: "enum",
       placeholder: "PAYPAL_SPB",
       default: "",
+      options: paymentUITypeOptions,
     },
   },
   ...v2PayFields,
