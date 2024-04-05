@@ -1,6 +1,6 @@
 import * as React from "react";
 import { UnionFieldSignal, UnionInput } from "../../state/fields";
-import FieldControl from "./FieldControl";
+import FieldControl, { fieldInputComponents } from "./FieldControl";
 import { FieldInputProps } from "./input";
 import { batch } from "@preact/signals";
 import Control from "../Control";
@@ -26,27 +26,29 @@ const FieldInputUnion: React.FC<
   });
   return (
     <div className="flex flex-col gap-2">
-      {Object.entries(fieldInput.fields).map(([key, field]) => (
-        <Control
-          key={key}
-          code={key}
-          label={field.label}
-          required={field.required}
-          enabled={fieldSignals[key].enabledSignal.value}
-          onToggle={(value) => {
-            if (value === true) {
-              fieldSignal.activeKeySignal.value = key;
-            }
-          }}
-          radioGroup={radioGroup}
-        >
-          <FieldControl
+      {Object.entries(fieldInput.fields).map(([key, field]) => {
+        const FieldInput = fieldInputComponents[field.input.type];
+        return (
+          <Control
+            key={key}
             code={key}
-            field={field}
-            fieldSignal={fieldSignals[key]}
-          />
-        </Control>
-      ))}
+            label={field.label}
+            required={field.required}
+            enabled={fieldSignals[key].enabledSignal.value}
+            onToggle={(value) => {
+              if (value === true) {
+                fieldSignal.activeKeySignal.value = key;
+              }
+            }}
+            radioGroup={radioGroup}
+          >
+            <FieldInput
+              fieldInput={field.input}
+              fieldSignal={fieldSignals[key]}
+            />
+          </Control>
+        );
+      })}
     </div>
   );
 };
