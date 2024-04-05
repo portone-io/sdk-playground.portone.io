@@ -76,12 +76,21 @@ export const fields = {
       default: 0,
     },
   },
-  payMethod: {
+  currency: {
     required: true,
-    label: "결제 수단",
+    label: "결제 통화",
     input: {
       type: "text",
-      placeholder: "CARD",
+      placeholder: "KRW | USD | EUR | JPY",
+      default: "",
+    },
+  },
+  channelKey: {
+    required: true,
+    label: "결제 채널 키",
+    input: {
+      type: "text",
+      placeholder: "channel-key-aabcdeff-0000-1234-abcd-00001234abcd",
       default: "",
     },
   },
@@ -91,6 +100,15 @@ export const fields = {
     input: {
       type: "text",
       placeholder: "PRODUCT_TYPE_REAL | PRODUCT_TYPE_DIGITAL",
+      default: "",
+    },
+  },
+  payMethod: {
+    required: true,
+    label: "결제 수단",
+    input: {
+      type: "text",
+      placeholder: "CARD",
       default: "",
     },
   },
@@ -554,24 +572,6 @@ export const fields = {
           },
         },
       },
-    },
-  },
-  currency: {
-    required: true,
-    label: "결제 통화",
-    input: {
-      type: "text",
-      placeholder: "KRW | USD | EUR | JPY",
-      default: "",
-    },
-  },
-  channelKey: {
-    required: true,
-    label: "결제 채널 키",
-    input: {
-      type: "text",
-      placeholder: "channel-key-aabcdeff-0000-1234-abcd-00001234abcd",
-      default: "",
     },
   },
   customer: {
