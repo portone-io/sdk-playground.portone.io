@@ -48,7 +48,7 @@ export interface ToggleInput extends InputBase<"toggle"> {
 }
 export interface ArrayInput extends InputBase<"array"> {
 	inputItem: Input;
-	default: any[];
+	default: unknown[];
 }
 export interface EnumInput extends InputBase<"enum"> {
 	default: string;
@@ -319,7 +319,7 @@ export function matchFieldSignalType<T>({
 
 export interface JsonSignals {
 	jsonTextSignal: Signal<string>;
-	jsonValueSignal: ReadonlySignal<any>;
+	jsonValueSignal: ReadonlySignal<Record<string, unknown>>;
 }
 export function createJsonSignals(
 	storage: Storage,
@@ -341,7 +341,7 @@ export function createJsonSignals(
 interface CreateConfigObjectSignalConfig {
 	fields: Fields;
 	fieldSignals: FieldSignals;
-	jsonValueSignal: Signal<any>;
+	jsonValueSignal: Signal<Record<string, unknown>>;
 }
 export function createConfigObjectSignal({
 	fields,
@@ -352,8 +352,11 @@ export function createConfigObjectSignal({
 		...getObject(fields, fieldSignals),
 		...jsonValueSignal.value,
 	}));
-	function getObject(fields: Fields, fieldSignals: FieldSignals): any {
-		const result: any = {};
+	function getObject(
+		fields: Fields,
+		fieldSignals: FieldSignals,
+	): Record<string, unknown> {
+		const result: Record<string, unknown> = {};
 		for (const [key, field] of Object.entries(fields)) {
 			if (field.hidden?.value) {
 				continue;
@@ -371,7 +374,7 @@ export function createConfigObjectSignal({
 		field: Field,
 		input: Input,
 		fieldSignal: FieldSignal,
-	): any {
+	): unknown {
 		return matchFieldSignalType({
 			input,
 			fieldSignal,

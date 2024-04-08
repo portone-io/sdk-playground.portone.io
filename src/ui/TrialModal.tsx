@@ -101,11 +101,11 @@ const TrialModal: React.FC = () => {
 export default TrialModal;
 
 function applyFieldsToSignals(
-	fields: [string, any][],
+	fields: [string, unknown][],
 	signals: FieldSignals,
 	jsonTextSignal?: Signal<string>,
 ) {
-	const json: Record<string, any> = {};
+	const json: Record<string, unknown> = {};
 	for (const [field, value] of fields) {
 		const fieldSignal = signals[field];
 		if (!fieldSignal) {
@@ -117,56 +117,55 @@ function applyFieldsToSignals(
 	if (jsonTextSignal) jsonTextSignal.value = JSON.stringify(json, null, 2);
 }
 
-function applyValueToSignal(value: any, fieldSignal: FieldSignal) {
+function applyValueToSignal(value: unknown, fieldSignal: FieldSignal) {
 	fieldSignal.enabledSignal.value = true;
-	match([fieldSignal, typeof value])
+	match([fieldSignal, value])
 		.with(
-			[{ type: "object" }, "object"],
-			[{ type: "union" }, "object"],
-			([fieldSignal]) => {
-				if (value != null) {
-					applyFieldsToSignals(
-						Object.entries(value),
-						fieldSignal.valueSignal.value,
-					);
-				}
+			[{ type: "object" }, P.when(isObject)],
+			[{ type: "union" }, P.when(isObject)],
+			([fieldSignal, value]) => {
+				applyFieldsToSignals(
+					Object.entries(value),
+					fieldSignal.valueSignal.value,
+				);
 			},
 		)
-		.with([{ type: "array" }, "object"], ([fieldSignal]) => {
-			if (Array.isArray(value)) {
-				fieldSignal.resize(value.length);
-				fieldSignal.valueSignal.value = value.map((item) => {
-					if (item != null && typeof item === "object") {
-						const obj: Record<string, any> = {};
-						applyFieldsToSignals(Object.entries(item), obj);
-						return obj;
-					}
-					return item;
-				});
+		.with([{ type: "array" }, P.array(P._)], ([fieldSignal, value]) => {
+			fieldSignal.resize(value.length);
+			for (const [i, item] of value.entries()) {
+				applyValueToSignal(item, fieldSignal.valueSignal.value[i]);
 			}
 		})
 		.with(
-			[{ type: "integer" }, "number"],
-			[{ type: "text" }, "string"],
-			[{ type: "toggle" }, "boolean"],
-			[{ type: "enum" }, "string"],
-			([fieldSignal]) => {
+			P.union(
+				[{ type: "integer" }, P.number],
+				[{ type: "text" }, P.string],
+				[{ type: "toggle" }, P.boolean],
+				[{ type: "enum" }, P.string],
+			),
+			([fieldSignal, value]) => {
 				fieldSignal.valueSignal.value = value;
 			},
 		)
 		.with(
-			[{ type: "object" }, P.not("object")],
-			[{ type: "union" }, P.not("object")],
-			[{ type: "array" }, P.not("object")],
-			[{ type: "integer" }, P.not("number")],
-			[{ type: "text" }, P.not("string")],
-			[{ type: "toggle" }, P.not("boolean")],
-			[{ type: "enum" }, P.not("string")],
+			[{ type: "object" }, P._],
+			[{ type: "union" }, P._],
+			[{ type: "array" }, P._],
+			[{ type: "integer" }, P._],
+			[{ type: "text" }, P._],
+			[{ type: "toggle" }, P._],
+			[{ type: "enum" }, P._],
 			() => {
 				console.error("Invalid value type");
 			},
 		)
 		.exhaustive();
+
+	function isObject(
+		value: unknown,
+	): value is Record<string, unknown> | ArrayLike<unknown> {
+		return value != null && typeof value === "object";
+	}
 }
 
 const V1Trials: React.FC = () => {

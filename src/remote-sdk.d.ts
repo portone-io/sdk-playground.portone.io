@@ -2,15 +2,18 @@ declare module "https://cdn.iamport.kr/v1/iamport.esm.js" {
 	const IMP: {
 		init(userCode: string): void;
 		agency(userCode: string, tierCode: string): void;
-		request_pay(paymentRequest: any, callback: (response: any) => void): void;
+		request_pay(
+			paymentRequest: unknown,
+			callback: (response: unknown) => void,
+		): void;
 		certification(
-			certificationRequest: any,
-			callback: (response: any) => void,
+			certificationRequest: unknown,
+			callback: (response: unknown) => void,
 		): void;
 		loadUI(
 			uiType: string,
-			paymentRequest: any,
-			callback: (response: any) => void,
+			paymentRequest: unknown,
+			callback: (response: unknown) => void,
 		): void;
 		deinit(): void;
 	};
@@ -20,12 +23,12 @@ declare module "https://cdn.iamport.kr/v1/iamport.esm.js" {
 
 declare module "https://cdn.portone.io/v2/browser-sdk.esm.js" {
 	const PortOne: {
-		requestPayment(config: any): Promise<any>;
-		requestIdentityVerification(config: any): Promise<any>;
+		requestPayment(config: unknown): Promise<unknown>;
+		requestIdentityVerification(config: unknown): Promise<unknown>;
 		loadPaymentUI(
-			config: any,
+			config: unknown,
 			callbacks: Record<string, (value: unknown) => void>,
-		): Promise<any>;
+		): Promise<unknown>;
 	};
 	export const slots: Record<string, string>;
 	export default PortOne;
