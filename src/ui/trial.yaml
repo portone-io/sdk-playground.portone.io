@@ -465,3 +465,26 @@
     case:
       💳 카드결제:
         pay_method: card
+- label: 웰컴페이먼츠
+  icon: welcome
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: welcome.welcometst
+      name: 테스트 결제
+      amount: 1000
+      buyer_name: 포트원
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
+      🏧 계좌이체:
+        pay_method: trans
+      🏦 가상계좌 이체:
+        pay_method: vbank
+        buyer_email: buyer@example.com
+      📱 휴대폰 소액결제:
+        pay_method: phone
+      💸 문화상품권:
+        pay_method: culturegift
