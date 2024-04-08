@@ -7,7 +7,7 @@
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"preview": "vite preview",
-		"lint:ci": "biome ci ."
+		"lint:ci": "biome ci . --error-on-warnings"
 	},
 	"dependencies": {
 		"@babel/core": "^7.24.0",
