@@ -8,7 +8,21 @@ import {
   resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
-import { sdkV2Signal } from "./v2";
+import {
+  bankCodeOptions,
+  cardCompanyOptions,
+  carrierOptions,
+  cashReceiptTypeOptions,
+  countryOptions,
+  currencyOptions,
+  easyPayProviderOptions,
+  genderOptions,
+  giftCertificateTypeOptions,
+  payMethodOptions,
+  productTypeOptions,
+  sdkV2Signal,
+  windowTypeOptions,
+} from "./v2";
 
 export function reset() {
   resetFieldSignals(fields, fieldSignals);
@@ -80,9 +94,10 @@ export const fields = {
     required: true,
     label: "결제 통화",
     input: {
-      type: "text",
+      type: "enum",
       placeholder: "KRW | USD | EUR | JPY",
       default: "",
+      options: currencyOptions,
     },
   },
   channelKey: {
@@ -98,18 +113,20 @@ export const fields = {
     required: false,
     label: "상품 유형",
     input: {
-      type: "text",
+      type: "enum",
       placeholder: "PRODUCT_TYPE_REAL | PRODUCT_TYPE_DIGITAL",
       default: "",
+      options: productTypeOptions,
     },
   },
   payMethod: {
     required: true,
     label: "결제 수단",
     input: {
-      type: "text",
+      type: "enum",
       placeholder: "CARD",
       default: "",
+      options: payMethodOptions,
     },
   },
   card: {
@@ -126,9 +143,10 @@ export const fields = {
           required: false,
           label: "카드사 다이렉트 호출 시 필요한 카드사 식별 값",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "KOOKMIN_CARD",
             default: "",
+            options: cardCompanyOptions,
           },
         },
         availableCards: {
@@ -137,9 +155,10 @@ export const fields = {
           input: {
             type: "array",
             inputItem: {
-              type: "text",
-              default: "",
+              type: "enum",
               placeholder: "KOOKMIN_CARD",
+              default: "",
+              options: cardCompanyOptions,
             },
             default: [],
           },
@@ -170,9 +189,10 @@ export const fields = {
                         required: true,
                         label: "무이자 할부를 제공하는 카드사 식별 값",
                         input: {
-                          type: "text",
+                          type: "enum",
                           placeholder: "KOOKMIN_CARD",
                           default: "",
+                          options: cardCompanyOptions,
                         },
                       },
                       months: {
@@ -196,7 +216,7 @@ export const fields = {
                 required: false,
                 label: "할부 개월 수 설정",
                 input: {
-                  type: "object",
+                  type: "union",
                   fields: {
                     fixedMonth: {
                       required: false,
@@ -257,9 +277,10 @@ export const fields = {
           required: false,
           label: "현금영수증 발급 유형",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
             default: "",
+            options: cashReceiptTypeOptions,
           },
         },
         customerIdentifier: {
@@ -302,16 +323,17 @@ export const fields = {
           required: false,
           label: "가상계좌 발급 은행 코드",
           input: {
-            type: "text",
-            placeholder: "",
+            type: "enum",
+            placeholder: "BANK_OF_KOREA | KOREA_DEVELOPMENT_BANK",
             default: "",
+            options: bankCodeOptions,
           },
         },
         accountExpiry: {
           required: false,
           label: "가상계좌 입금 만료기한",
           input: {
-            type: "object",
+            type: "union",
             fields: {
               validHours: {
                 required: false,
@@ -350,9 +372,10 @@ export const fields = {
           required: false,
           label: "현금영수증 발급 유형",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
             default: "",
+            options: cashReceiptTypeOptions,
           },
         },
         customerIdentifier: {
@@ -368,9 +391,10 @@ export const fields = {
           required: false,
           label: "계좌이체 은행 코드",
           input: {
-            type: "text",
-            placeholder: "",
+            type: "enum",
+            placeholder: "BANK_OF_KOREA | KOREA_DEVELOPMENT_BANK",
             default: "",
+            options: bankCodeOptions,
           },
         },
       },
@@ -390,9 +414,10 @@ export const fields = {
           required: false,
           label: "소액결제 바로 호출을 위한 휴대폰 통신사",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "SKT | KT | LGU",
             default: "",
+            options: carrierOptions,
           },
         },
         availableCarriers: {
@@ -401,9 +426,10 @@ export const fields = {
           input: {
             type: "array",
             inputItem: {
-              type: "text",
-              default: "",
+              type: "enum",
               placeholder: "SKT | KT | LGU",
+              default: "",
+              options: carrierOptions,
             },
             default: [],
           },
@@ -425,9 +451,10 @@ export const fields = {
           required: false,
           label: "상품권 유형",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "BOOKNLIFE | SMART_MUNSANG | CULTURELAND | HAPPYMONEY",
             default: "",
+            options: giftCertificateTypeOptions,
           },
         },
       },
@@ -447,9 +474,10 @@ export const fields = {
           required: false,
           label: "간편결제 수단",
           input: {
-            type: "text",
-            placeholder: "",
+            type: "enum",
+            placeholder: "PAYCO | SAMSUNGPAY | SSGPAY | KAKAOPAY | NAVERPAY",
             default: "",
+            options: easyPayProviderOptions,
           },
         },
         useFreeInterestFromMall: {
@@ -474,9 +502,10 @@ export const fields = {
           input: {
             type: "array",
             inputItem: {
-              type: "text",
-              default: "",
+              type: "enum",
               placeholder: "KOOKMIN_CARD",
+              default: "",
+              options: cardCompanyOptions,
             },
             default: [],
           },
@@ -499,9 +528,10 @@ export const fields = {
                         required: true,
                         label: "무이자 할부를 제공하는 카드사 식별 값",
                         input: {
-                          type: "text",
+                          type: "enum",
                           placeholder: "KOOKMIN_CARD",
                           default: "",
+                          options: cardCompanyOptions,
                         },
                       },
                       months: {
@@ -525,7 +555,7 @@ export const fields = {
                 required: false,
                 label: "할부 개월 수 설정",
                 input: {
-                  type: "object",
+                  type: "union",
                   fields: {
                     fixedMonth: {
                       required: false,
@@ -557,9 +587,10 @@ export const fields = {
           required: false,
           label: "현금영수증 발급 유형",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "PERSONAL | CORPORATE | ANONYMOUS",
             default: "",
+            options: cashReceiptTypeOptions,
           },
         },
         customerIdentifier: {
@@ -645,9 +676,10 @@ export const fields = {
                 required: false,
                 label: "국가",
                 input: {
-                  type: "text",
+                  type: "enum",
                   placeholder: "KR",
                   default: "",
+                  options: countryOptions,
                 },
               },
               addressLine1: {
@@ -702,9 +734,10 @@ export const fields = {
           required: false,
           label: "구매자 성별",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "OTHER",
             default: "",
+            options: genderOptions,
           },
         },
         birthYear: {
@@ -747,18 +780,20 @@ export const fields = {
           required: false,
           label: "PC에서의 창 유형",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "IFRAME",
             default: "",
+            options: windowTypeOptions,
           },
         },
         mobile: {
           required: false,
           label: "모바일에서의 창 유형",
           input: {
-            type: "text",
+            type: "enum",
             placeholder: "REDIRECTION",
             default: "",
+            options: windowTypeOptions,
           },
         },
       },

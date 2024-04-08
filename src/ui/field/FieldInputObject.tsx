@@ -1,13 +1,19 @@
 import * as React from "react";
-import { FieldSignals, ObjectInput } from "../../state/fields";
+import {
+  FieldSignals,
+  ObjectFieldSignal,
+  ObjectInput,
+} from "../../state/fields";
 import FieldControl from "./FieldControl";
 import { FieldInputProps } from "./input";
 
-const FieldInputObject: React.FC<FieldInputProps<ObjectInput>> = ({
+const FieldInputObject: React.FC<
+  FieldInputProps<ObjectInput, ObjectFieldSignal>
+> = ({
   fieldInput,
   fieldSignal,
 }) => {
-  const fieldSignals = fieldSignal.valueSignal.value as FieldSignals;
+  const fieldSignals = fieldSignal.valueSignal.value;
   return (
     <div className="flex flex-col gap-2">
       {Object.entries(fieldInput.fields).map(([key, field]) => (

@@ -37,7 +37,8 @@ import {
   jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
 } from "../state/v2-load-payment-ui";
 import _trialData from "./trial.yaml";
-import { FieldSignalArray, FieldSignals } from "../state/fields";
+import { ArrayFieldSignal, FieldSignal, FieldSignals } from "../state/fields";
+import { match, P } from "ts-pattern";
 
 interface TrialDataItem {
   label: string;
@@ -100,35 +101,74 @@ function applyFieldsToSignals(
 ) {
   const json: Record<string, any> = {};
   for (const [field, value] of fields) {
-    if (!signals[field]) {
+    const fieldSignal = signals[field];
+    if (!fieldSignal) {
       if (jsonTextSignal) json[field] = value;
       continue;
     }
-    signals[field].enabledSignal.value = true;
-    if (value != null && typeof value === "object") {
-      applyFieldsToSignals(
-        Object.entries(value),
-        signals[field].valueSignal.value,
-      );
-    } else if (Array.isArray(value)) {
-      const signal = signals[field] as FieldSignalArray;
-      signal.resize(value.length);
-      signal.valueSignal.value = value.map((item) => {
-        if (item != null && typeof item === "object") {
-          const obj: Record<string, any> = {};
-          applyFieldsToSignals(Object.entries(item), obj);
-          return obj;
-        } else if (Array.isArray(item)) {
-          throw new Error("Nested arrays are not supported.");
-        } else {
-          return item;
-        }
-      });
-    } else {
-      signals[field].valueSignal.value = value;
-    }
+    applyValueToSignal(value, fieldSignal);
   }
   if (jsonTextSignal) jsonTextSignal.value = JSON.stringify(json, null, 2);
+}
+
+function applyValueToSignal(
+  value: any,
+  fieldSignal: FieldSignal,
+) {
+  fieldSignal.enabledSignal.value = true;
+  match([fieldSignal, typeof value])
+    .with(
+      [{ type: "object" }, "object"],
+      [{ type: "union" }, "object"],
+      ([fieldSignal]) => {
+        if (value != null) {
+          applyFieldsToSignals(
+            Object.entries(value),
+            fieldSignal.valueSignal.value,
+          );
+        }
+      },
+    )
+    .with([{ type: "array" }, "object"], ([fieldSignal]) => {
+      if (Array.isArray(value)) {
+        fieldSignal.resize(value.length);
+        fieldSignal.valueSignal.value = value.map((item) => {
+          if (item != null && typeof item === "object") {
+            const obj: Record<string, any> = {};
+            applyFieldsToSignals(Object.entries(item), obj);
+            return obj;
+          } else if (Array.isArray(item)) {
+            for (const [key, value] of item.entries()) {
+              applyValueToSignal(value, fieldSignal.valueSignal.value[key]);
+            }
+          } else {
+            return item;
+          }
+        });
+      }
+    })
+    .with(
+      [{ type: "integer" }, "number"],
+      [{ type: "text" }, "string"],
+      [{ type: "toggle" }, "boolean"],
+      [{ type: "enum" }, "string"],
+      ([fieldSignal]) => {
+        fieldSignal.valueSignal.value = value;
+      },
+    )
+    .with(
+      [{ type: "object" }, P.not("object")],
+      [{ type: "union" }, P.not("object")],
+      [{ type: "array" }, P.not("object")],
+      [{ type: "integer" }, P.not("number")],
+      [{ type: "text" }, P.not("string")],
+      [{ type: "toggle" }, P.not("boolean")],
+      [{ type: "enum" }, P.not("string")],
+      () => {
+        console.error("Invalid value type");
+      },
+    )
+    .exhaustive();
 }
 
 const V1Trials: React.FC = () => {

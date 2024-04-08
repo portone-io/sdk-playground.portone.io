@@ -4,6 +4,8 @@ import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
 
+import { Entity } from "https://esm.sh/@portone/browser-sdk/v2?exports=Entity";
+
 export function reset() {
   checkoutServerSignal.value = defaultCheckoutServer;
 }
@@ -58,3 +60,37 @@ async function loadSdkV2(
     }
   }
 }
+
+export const cardCompanyOptions = Object.keys(Entity.CardCompany);
+export const bankCodeOptions = Object.keys(Entity.Bank);
+export const carrierOptions = Object.keys(Entity.Carrier);
+export const giftCertificateTypeOptions = Object.keys(
+  Entity.GiftCertificateType,
+);
+export const paymentUITypeOptions = Object.keys(Entity.PaymentUIType);
+export const easyPayProviderOptions = Object.keys(Entity.EasyPayProvider);
+export const currencyOptions = Object.keys(Entity.Currency);
+export const countryOptions = Object.keys(Entity.Country);
+export const genderOptions = Object.keys(Entity.Gender);
+export const windowTypeOptions = Object.keys(Entity.WindowType);
+
+// TODO: browser-sdk/v2 에서 export되지 않아서 임시로 추가한 값들 (추후 수정 필요)
+export const payMethodOptions = [
+  "CARD",
+  "VIRTUAL_ACCOUNT",
+  "TRANSFER",
+  "MOBILE",
+  "GIFT_CERTIFICATE",
+  "EASY_PAY",
+  "PAYPAL",
+  "ALIPAY",
+];
+export const productTypeOptions = [
+  "REAL",
+  "DIGITAL",
+];
+export const cashReceiptTypeOptions = [
+  "PERSONAL",
+  "CORPORATE",
+  "ANONYMOUS",
+];

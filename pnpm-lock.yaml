@@ -56,6 +56,9 @@ dependencies:
   tailwindcss:
     specifier: 3.4.1
     version: 3.4.1
+  ts-pattern:
+    specifier: ^5.1.0
+    version: 5.1.0
   typescript:
     specifier: ^5.4.2
     version: 5.4.2
@@ -2056,6 +2059,10 @@ packages:
 
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
+    dev: false
+
+  /ts-pattern@5.1.0:
+    resolution: {integrity: sha512-sULbgZDTXrcr6WMeuR8gPb+dvNN/fNpxE8GHfosFHPJRPuxHVNtGcEiiNuQa6nxu40/dY6xYdTJmc7MG3w8B5g==}
     dev: false
 
   /typescript@5.4.2:

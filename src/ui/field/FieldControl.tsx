@@ -1,10 +1,12 @@
 import { Field, FieldSignal, Input } from "../../state/fields";
 import Control from "../Control";
 import FieldInputArray from "./FieldInputArray";
+import FieldInputEnum from "./FieldInputEnum";
 import FieldInputInteger from "./FieldInputInteger";
 import FieldInputObject from "./FieldInputObject";
 import FieldInputText from "./FieldInputText";
 import FieldInputToggle from "./FieldInputToggle";
+import FieldInputUnion from "./FieldInputUnion";
 import { FieldInputProps } from "./input";
 
 export interface FieldControlProps {
@@ -44,12 +46,14 @@ const FieldControl: React.FC<FieldControlProps> = (
 };
 export default FieldControl;
 
-const fieldInputComponents: {
-  [key in Input["type"]]: React.FC<FieldInputProps<any>>;
+export const fieldInputComponents: {
+  [key in Input["type"]]: React.FC<FieldInputProps<any, any>>;
 } = {
   object: FieldInputObject,
   text: FieldInputText,
   integer: FieldInputInteger,
   toggle: FieldInputToggle,
   array: FieldInputArray,
-};
+  enum: FieldInputEnum,
+  union: FieldInputUnion,
+} as const;

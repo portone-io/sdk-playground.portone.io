@@ -33,3 +33,24 @@ declare module "https://cdn.portone.io/v2/browser-sdk.esm.js" {
   export const slots: Record<string, string>;
   export default PortOne;
 }
+
+declare module "https://esm.sh/@portone/browser-sdk/v2?exports=Entity" {
+  export const Entity: {
+    Bank: Record<string, string>;
+    BillingKeyAndPayMethod: Record<string, string>;
+    BillingKeyMethod: Record<string, string>;
+    CardCompany: Record<string, string>;
+    Carrier: Record<string, string>;
+    Country: Record<string, string>;
+    Currency: Record<string, string>;
+    EasyPayProvider: Record<string, string>;
+    Gender: Record<string, string>;
+    GiftCertificateType: Record<string, string>;
+    IssueBillingKeyUIType: Record<string, string>;
+    Locale: Record<string, string>;
+    PaymentUIType: Record<string, string>;
+    PgProvider: Record<string, string>;
+    TransactionType: Record<string, string>;
+    WindowType: Record<string, string>;
+  };
+}
