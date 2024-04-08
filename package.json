@@ -1,33 +1,37 @@
 {
-  "name": "@portone/sdk-playground",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@babel/core": "^7.24.0",
-    "@codemirror/lang-html": "^6.4.8",
-    "@codemirror/lang-javascript": "^6.2.2",
-    "@codemirror/lang-json": "^6.0.1",
-    "@codemirror/view": "^6.26.0",
-    "@preact/preset-vite": "^2.8.2",
-    "@preact/signals": "^1.2.2",
-    "@rollup/plugin-yaml": "^4.1.2",
-    "@types/jquery": "^3.5.29",
-    "@types/react": "^18.2.66",
-    "@uiw/react-codemirror": "^4.21.24",
-    "autoprefixer": "10.4.18",
-    "error-stack-parser-es": "^0.1.1",
-    "jquery": "^3.7.1",
-    "postcss": "8.4.36",
-    "preact": "^10.19.6",
-    "tailwindcss": "3.4.1",
-    "ts-pattern": "^5.1.0",
-    "typescript": "^5.4.2",
-    "vite": "^5.1.6"
-  }
+	"name": "@portone/sdk-playground",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview",
+		"lint:ci": "biome ci . --error-on-warnings"
+	},
+	"dependencies": {
+		"@babel/core": "^7.24.0",
+		"@codemirror/lang-html": "^6.4.8",
+		"@codemirror/lang-javascript": "^6.2.2",
+		"@codemirror/lang-json": "^6.0.1",
+		"@codemirror/view": "^6.26.0",
+		"@preact/preset-vite": "^2.8.2",
+		"@preact/signals": "^1.2.2",
+		"@rollup/plugin-yaml": "^4.1.2",
+		"@types/jquery": "^3.5.29",
+		"@types/react": "^18.2.66",
+		"@uiw/react-codemirror": "^4.21.24",
+		"autoprefixer": "10.4.18",
+		"error-stack-parser-es": "^0.1.1",
+		"jquery": "^3.7.1",
+		"postcss": "8.4.36",
+		"preact": "^10.19.6",
+		"tailwindcss": "3.4.1",
+		"ts-pattern": "^5.1.0",
+		"typescript": "^5.4.2",
+		"vite": "^5.1.6"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.6.4"
+	}
 }
