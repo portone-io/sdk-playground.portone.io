@@ -1,6 +1,6 @@
-import type * as React from "react";
-import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
+import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
+import type * as React from "react";
 
 interface HtmlEditorProps extends ReactCodeMirrorProps {}
 const HtmlEditor: React.FC<HtmlEditorProps> = (props) => {

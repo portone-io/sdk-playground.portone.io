@@ -1,16 +1,16 @@
 import { computed, effect } from "@preact/signals";
 import { toJs } from "./code";
 import {
+	type Fields,
 	createConfigObjectSignal,
 	createFieldSignals,
 	createJsonSignals,
-	type Fields,
 	resetFieldSignals,
 } from "./fields";
 import persisted, { prefix } from "./persisted";
+import { pgUiModalOpenSignal } from "./v1-load-ui";
 import { paymentUITypeOptions, sdkV2Signal } from "./v2";
 import { fields as v2PayFields } from "./v2-pay";
-import { pgUiModalOpenSignal } from "./v1-load-ui";
 
 export function reset() {
 	resetFieldSignals(fields, fieldSignals);

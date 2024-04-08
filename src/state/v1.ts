@@ -1,8 +1,8 @@
 import {
-	computed,
-	effect,
 	type ReadonlySignal,
 	type Signal,
+	computed,
+	effect,
 	signal,
 } from "@preact/signals";
 import type { SdkV1, SdkV1Version } from "../sdk";

@@ -5,8 +5,8 @@ import {
 	type FieldSignal,
 	Input,
 } from "../../state/fields";
-import type { FieldInputProps } from "./input";
 import { fieldInputComponents } from "./FieldControl";
+import type { FieldInputProps } from "./input";
 
 const FieldInputArray: React.FC<FieldInputProps<ArrayInput, ArrayFieldSignal>> =
 	({ fieldInput, fieldSignal }) => {

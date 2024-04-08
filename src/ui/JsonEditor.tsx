@@ -1,6 +1,6 @@
-import * as React from "react";
-import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
+import CodeMirror, { type ReactCodeMirrorProps } from "@uiw/react-codemirror";
+import * as React from "react";
 
 interface JsonEditorProps extends ReactCodeMirrorProps {
 	onReset?: () => void;

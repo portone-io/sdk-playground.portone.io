@@ -1,27 +1,27 @@
+import { EditorView } from "@codemirror/view";
 import { computed } from "@preact/signals";
 import type * as React from "react";
-import { EditorView } from "@codemirror/view";
 import { type SdkVersion, sdkVersions } from "./sdk";
 import {
 	appModeSignal,
 	changeSdkVersion,
 	modeFnKeysPerVersion,
-	modeFns,
 	modeFnSignal,
+	modeFns,
 	playFnSignal,
 	playResultSignal,
 	sdkVersionSignal,
 	waitingSignal,
 } from "./state/app";
 import type { ModeFnKey } from "./state/app";
-import JsonEditor from "./ui/JsonEditor";
-import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
-import { accountSignals as v1PayAccountSignals } from "./state/v1-pay";
 import { accountSignals as v1CertAccountSignals } from "./state/v1-cert";
 import { accountSignals as v1LoadUiAccountSignals } from "./state/v1-load-ui";
-import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
-import { fieldSignals as v2LoadPaymentUiFieldSignals } from "./state/v2-load-payment-ui";
+import { accountSignals as v1PayAccountSignals } from "./state/v1-pay";
 import { fieldSignals as v2IdentityVerificationFieldSignals } from "./state/v2-identity-verification";
+import { fieldSignals as v2LoadPaymentUiFieldSignals } from "./state/v2-load-payment-ui";
+import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
+import JsonEditor from "./ui/JsonEditor";
+import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
 
 export const showTrialSignal = computed(() => {
 	const modeFn = modeFnSignal.value;

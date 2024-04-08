@@ -1,7 +1,7 @@
 import { computed, signal } from "@preact/signals";
 import type { ReadonlySignal, Signal } from "@preact/signals";
+import { P, match } from "ts-pattern";
 import persisted from "./persisted";
-import { match, P } from "ts-pattern";
 
 export interface Fields {
 	[key: string]: Field;

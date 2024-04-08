@@ -1,5 +1,5 @@
 import type * as React from "react";
-import type { Fields, FieldSignals } from "../../state/fields";
+import type { FieldSignals, Fields } from "../../state/fields";
 import FieldControl from "./FieldControl";
 
 interface FieldControlsProps {

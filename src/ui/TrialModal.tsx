@@ -1,48 +1,48 @@
 import { type Signal, signal } from "@preact/signals";
 import type * as React from "react";
-import Modal from "./Modal";
+import { P, match } from "ts-pattern";
 import { appModeSignal } from "../state/app";
-import {
-	accountSignals as v1CertAccountSignals,
-	fields as v1CertFields,
-	fieldSignals as v1CertFieldSignals,
-	jsonTextSignal as v1CertJsonTextSignal,
-} from "../state/v1-cert";
-import {
-	accountSignals as v1PayAccountSignals,
-	fields as v1PayFields,
-	fieldSignals as v1PayFieldSignals,
-	jsonTextSignal as v1PayJsonTextSignal,
-} from "../state/v1-pay";
-import {
-	accountSignals as v1LoadUiAccountSignals,
-	fields as v1LoadUiFields,
-	fieldSignals as v1LoadUiFieldSignals,
-	jsonTextSignal as v1LoadUiJsonTextSignal,
-	uiTypeSignal as v1LoadUiUiTypeSignal,
-} from "../state/v1-load-ui";
-import {
-	fields as v2PayFields,
-	fieldSignals as v2PayFieldSignals,
-	jsonTextSignal as v2PayJsonTextSignal,
-} from "../state/v2-pay";
-import {
-	type fields as v2IdentityVerificationFields,
-	fieldSignals as v2IdentityVerificationFieldSignals,
-	jsonTextSignal as v2IdentityVerificationJsonTextSignal,
-} from "../state/v2-identity-verification";
-import {
-	fields as v2LoadPaymentUiFields,
-	fieldSignals as v2LoadPaymentUiFieldSignals,
-	jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
-} from "../state/v2-load-payment-ui";
-import _trialData from "./trial.yaml";
 import {
 	ArrayFieldSignal,
 	type FieldSignal,
 	type FieldSignals,
 } from "../state/fields";
-import { match, P } from "ts-pattern";
+import {
+	accountSignals as v1CertAccountSignals,
+	fieldSignals as v1CertFieldSignals,
+	fields as v1CertFields,
+	jsonTextSignal as v1CertJsonTextSignal,
+} from "../state/v1-cert";
+import {
+	accountSignals as v1LoadUiAccountSignals,
+	fieldSignals as v1LoadUiFieldSignals,
+	fields as v1LoadUiFields,
+	jsonTextSignal as v1LoadUiJsonTextSignal,
+	uiTypeSignal as v1LoadUiUiTypeSignal,
+} from "../state/v1-load-ui";
+import {
+	accountSignals as v1PayAccountSignals,
+	fieldSignals as v1PayFieldSignals,
+	fields as v1PayFields,
+	jsonTextSignal as v1PayJsonTextSignal,
+} from "../state/v1-pay";
+import {
+	fieldSignals as v2IdentityVerificationFieldSignals,
+	type fields as v2IdentityVerificationFields,
+	jsonTextSignal as v2IdentityVerificationJsonTextSignal,
+} from "../state/v2-identity-verification";
+import {
+	fieldSignals as v2LoadPaymentUiFieldSignals,
+	fields as v2LoadPaymentUiFields,
+	jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
+} from "../state/v2-load-payment-ui";
+import {
+	fieldSignals as v2PayFieldSignals,
+	fields as v2PayFields,
+	jsonTextSignal as v2PayJsonTextSignal,
+} from "../state/v2-pay";
+import Modal from "./Modal";
+import _trialData from "./trial.yaml";
 
 interface TrialDataItem {
 	label: string;

@@ -1,10 +1,10 @@
 import { computed } from "@preact/signals";
 import { toJs } from "./code";
 import {
+	type Fields,
 	createConfigObjectSignal,
 	createFieldSignals,
 	createJsonSignals,
-	type Fields,
 	resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";

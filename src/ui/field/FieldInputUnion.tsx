@@ -1,9 +1,9 @@
+import { batch } from "@preact/signals";
 import type * as React from "react";
 import type { UnionFieldSignal, UnionInput } from "../../state/fields";
+import Control from "../Control";
 import FieldControl, { fieldInputComponents } from "./FieldControl";
 import type { FieldInputProps } from "./input";
-import { batch } from "@preact/signals";
-import Control from "../Control";
 
 const FieldInputUnion: React.FC<FieldInputProps<UnionInput, UnionFieldSignal>> =
 	({ fieldInput, fieldSignal }) => {
