@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"lint:ci": "biome ci ."
 	},
 	"dependencies": {
 		"@babel/core": "^7.24.0",
