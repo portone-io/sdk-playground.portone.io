@@ -1,24 +1,24 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "warn"
-      },
-      "a11y": {
-        "useKeyWithClickEvents": "off"
-      }
-    }
-  },
-  "formatter": {
-    "indentStyle": "space"
-  },
-  "files": {
-    "include": ["src/**/*"]
-  }
+	"$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noExplicitAny": "warn"
+			},
+			"a11y": {
+				"useKeyWithClickEvents": "off"
+			}
+		}
+	},
+	"formatter": {
+		"indentStyle": "tab"
+	},
+	"files": {
+		"ignore": ["node_modules", "dist", ".vscode"]
+	}
 }
