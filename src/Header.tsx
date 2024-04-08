@@ -1,7 +1,7 @@
 import { computed } from "@preact/signals";
-import * as React from "react";
+import type * as React from "react";
 import { EditorView } from "@codemirror/view";
-import { SdkVersion, sdkVersions } from "./sdk";
+import { type SdkVersion, sdkVersions } from "./sdk";
 import {
   appModeSignal,
   changeSdkVersion,
@@ -13,6 +13,7 @@ import {
   sdkVersionSignal,
   waitingSignal,
 } from "./state/app";
+import type { ModeFnKey } from "./state/app";
 import JsonEditor from "./ui/JsonEditor";
 import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
 import { accountSignals as v1PayAccountSignals } from "./state/v1-pay";
@@ -61,9 +62,7 @@ const Header: React.FC = () => {
             <span className="ml-2">SDK 놀이터</span>
           </h1>
           <div>
-            <span>
-              SDK 버전
-            </span>
+            <span>SDK 버전</span>
             <select
               className="ml-2"
               onChange={(e) => {
@@ -80,7 +79,7 @@ const Header: React.FC = () => {
               onChange={(e) => {
                 appModeSignal.value = {
                   ...appModeSignal.value,
-                  fn: e.target.value as any,
+                  fn: e.target.value as ModeFnKey,
                 };
               }}
             >
@@ -104,13 +103,16 @@ const Header: React.FC = () => {
               <div className="sm:hidden absolute -top-2 left-1/2 sm:right-12 w-0 h-0 border-[0.25rem] border-transparent border-l-black border-b-black" />
               <div className="relative p-2 bg-black">
                 <button
+                  type="button"
                   className="absolute right-2"
-                  onClick={() => playResultSignal.value = undefined}
+                  onClick={() => {
+                    playResultSignal.value = undefined;
+                  }}
                 >
                   close
                 </button>
                 {playResult.success ? "실행 성공" : "실행 실패"}
-                {(playResult.response != null) && (
+                {playResult.response != null && (
                   <JsonEditor
                     className="text-black"
                     value={JSON.stringify(playResult.response, null, 2)}
@@ -118,7 +120,7 @@ const Header: React.FC = () => {
                     readOnly
                   />
                 )}
-                {(playResult.errorStack != null) && (
+                {playResult.errorStack != null && (
                   <div className="flex flex-col font-mono bg-white text-black whitespace-nowrap overflow-auto px-1">
                     {playResult.errorStack}
                   </div>
@@ -138,10 +140,13 @@ const PlayButton: React.FC = () => {
   const waiting = waitingSignal.value;
   const play = playFnSignal.value;
   const showTrial = showTrialSignal.value;
-  const openTrialModal = () => trialModalOpenSignal.value = true;
+  const openTrialModal = () => {
+    trialModalOpenSignal.value = true;
+  };
   const doBounce = showTrial && !trialModalOpenSignal.value;
   return (
     <button
+      type="button"
       className={`mt-4 sm:mt-0 inline-flex items-center justify-center sm:w-24 h-12 rounded-lg bg-orange-700 text-white font-bold ${
         doBounce ? "bounce" : ""
       }`}
@@ -154,12 +159,8 @@ const PlayButton: React.FC = () => {
 
 const WaitingIndicator: React.FC = () => {
   return (
-    <svg
-      className="waiting"
-      width="1rem"
-      height="1rem"
-      viewBox="0 0 30 30"
-    >
+    <svg className="waiting" width="1rem" height="1rem" viewBox="0 0 30 30">
+      <title>로딩 중...</title>
       <circle
         cx="15"
         cy="15"
@@ -182,6 +183,7 @@ const Logo: React.FC<LogoProps> = (props) => {
       className="fill-black"
       {...props}
     >
+      <title>포트원 로고</title>
       <path d="m43.9921 10.9461v-2.96172h-2.3712s-.001 2.96172 0 2.96172c-.3821.0049-2.0076 0-2.1894 0-4.6597 0-6.1355 1.7608-6.1491 1.9259.0029-.033-.0049-1.3234-.0049-1.9249h-2.3556v11.9121h2.3566l.0019-7.4141c.0282-1.2224 1.0053-2.0697 2.0698-2.3204.6358-.1497 1.3261-.2488 1.9794-.2497 1.6129-.002 2.6774-.003 4.2903-.0039v5.3171c0 1.5499-.0515 3.3213 1.5059 4.1832.6164.3411 1.3271.4305 2.0212.4596.1507.0068 2.6084.0408 2.6084.0272v-.0038l2.3041.0038v-1.9443c-1.6294 0-2.797.1001-4.4215-.0136-.4774-.0331-.9771-.1817-1.2814-.551-.488-.5937-.3665-1.5518-.3665-2.267v-5.2112h5.8711l2.4558-1.9259h-8.3269z" />
       <path d="m23.0485 10.7422h-.5512c-3.7274 0-6.6926 2.8685-6.6926 6.1664 0 3.297 2.6473 6.1665 6.6926 6.1665h.5512c4.2641 0 6.6926-2.8685 6.6926-6.1665 0-3.297-2.938-6.1664-6.6926-6.1664zm4.335 6.1664c0 2.2388-1.607 4.2551-4.4283 4.2551h-.3646c-2.6764 0-4.4283-2.0172-4.4283-4.2551 0-2.2388 1.9619-4.2551 4.4283-4.2551h.3646c2.4849 0 4.4283 2.0173 4.4283 4.2551z" />
       <path d="m15.7603 10.6325c-.246-2.12026-1.3951-3.42428-3.4047-4.11225-.9051-.309-1.8394-.44018-2.79212-.44213h-9.56348v16.79978h2.32452v-6.3724h.44624c2.0698 0 4.14058.033 6.21038.0194.63679-.0039 1.27646-.0418 1.91036-.1127.8701-.0972 1.7033-.3459 2.4713-.7774 1.7714-.996 2.6522-2.8062 2.3975-5.0013zm-4.3312 3.7061c-.592.2002-1.2269.2439-1.84423.2546-2.25452.0388-4.66459.0155-6.92008.0145-.09625 0-.1925-.0145-.30819-.0243v-6.58616h.33833c2.26618 0 4.68695-.02624 6.95313.01652.62614.01166 1.27454.14673 1.86954.36827 1.2648.47128 1.9415 1.51781 1.9269 2.95107-.0146 1.441-.734 2.5702-2.0163 3.0045z" />

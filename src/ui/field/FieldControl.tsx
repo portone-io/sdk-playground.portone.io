@@ -1,4 +1,4 @@
-import { Field, FieldSignal, Input } from "../../state/fields";
+import type { Field, FieldSignal, Input } from "../../state/fields";
 import Control from "../Control";
 import FieldInputArray from "./FieldInputArray";
 import FieldInputEnum from "./FieldInputEnum";
@@ -7,16 +7,18 @@ import FieldInputObject from "./FieldInputObject";
 import FieldInputText from "./FieldInputText";
 import FieldInputToggle from "./FieldInputToggle";
 import FieldInputUnion from "./FieldInputUnion";
-import { FieldInputProps } from "./input";
+import type { FieldInputProps } from "./input";
 
 export interface FieldControlProps {
   code: string;
   field: Field;
   fieldSignal: FieldSignal;
 }
-const FieldControl: React.FC<FieldControlProps> = (
-  { code, field, fieldSignal },
-) => {
+const FieldControl: React.FC<FieldControlProps> = ({
+  code,
+  field,
+  fieldSignal,
+}) => {
   const { enabledSignal } = fieldSignal;
   const FieldInput = fieldInputComponents[field.input.type];
   const hidden = field.hidden?.value;
@@ -27,7 +29,9 @@ const FieldControl: React.FC<FieldControlProps> = (
         code={code}
         required={field.required}
         enabled={enabledSignal.value}
-        onToggle={(value) => enabledSignal.value = value}
+        onToggle={(value) => {
+          enabledSignal.value = value;
+        }}
         onClick={(e) => {
           if (e.target instanceof HTMLInputElement) {
             if (
@@ -47,6 +51,7 @@ const FieldControl: React.FC<FieldControlProps> = (
 export default FieldControl;
 
 export const fieldInputComponents: {
+  // biome-ignore lint/suspicious/noExplicitAny: any is required here
   [key in Input["type"]]: React.FC<FieldInputProps<any, any>>;
 } = {
   object: FieldInputObject,

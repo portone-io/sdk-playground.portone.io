@@ -5,9 +5,9 @@ import {
   createConfigObjectSignal,
   createFieldSignals,
   createJsonSignals,
-  Fields,
   resetFieldSignals,
 } from "./fields";
+import type { Fields } from "./fields";
 import { prefix } from "./persisted";
 import { createAccountSignals, sdkV1Signal } from "./v1";
 
@@ -38,26 +38,22 @@ export const codePreviewSignal = computed<string>(() => {
   const accountCodePreview = accountSignals.codePreviewSignal.value;
   const configObject = configObjectSignal.value;
   return [
-    ...(
-      version === "1.3.0"
-        ? [
-          `<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`,
-        ]
-        : [
+    ...(version === "1.3.0"
+      ? [`<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`]
+      : [
           `<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>`,
           `<script src="https://cdn.iamport.kr/js/iamport.payment-${version}.js"></script>`,
-        ]
-    ),
-    ``,
+        ]),
+    "",
     `<button onclick="requestCert()">인증하기</button>`,
-    ``,
-    `<script>`,
+    "",
+    "<script>",
     accountCodePreview,
-    ``,
-    `function requestCert() {`,
+    "",
+    "function requestCert() {",
     `  IMP.certification(${toJs(configObject, "  ", 1)});`,
-    `}`,
-    `</script>`,
+    "}",
+    "</script>",
   ].join("\n");
 });
 

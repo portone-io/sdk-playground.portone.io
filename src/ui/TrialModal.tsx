@@ -1,5 +1,5 @@
-import { Signal, signal } from "@preact/signals";
-import * as React from "react";
+import { type Signal, signal } from "@preact/signals";
+import type * as React from "react";
 import Modal from "./Modal";
 import { appModeSignal } from "../state/app";
 import {
@@ -27,7 +27,7 @@ import {
   jsonTextSignal as v2PayJsonTextSignal,
 } from "../state/v2-pay";
 import {
-  fields as v2IdentityVerificationFields,
+  type fields as v2IdentityVerificationFields,
   fieldSignals as v2IdentityVerificationFieldSignals,
   jsonTextSignal as v2IdentityVerificationJsonTextSignal,
 } from "../state/v2-identity-verification";
@@ -37,7 +37,11 @@ import {
   jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
 } from "../state/v2-load-payment-ui";
 import _trialData from "./trial.yaml";
-import { ArrayFieldSignal, FieldSignal, FieldSignals } from "../state/fields";
+import {
+  ArrayFieldSignal,
+  type FieldSignal,
+  type FieldSignals,
+} from "../state/fields";
 import { match, P } from "ts-pattern";
 
 interface TrialDataItem {
@@ -45,27 +49,27 @@ interface TrialDataItem {
   icon: string;
   "v1-cert": {
     account: { userCode: string };
-    field: Record<keyof typeof v1CertFields, any>;
+    field: Record<keyof typeof v1CertFields, unknown>;
   };
   "v1-pay": {
     account: { userCode: string };
-    field: Record<keyof typeof v1PayFields, any>;
-    case: Record<string, Record<keyof typeof v1PayFields, any>>;
+    field: Record<keyof typeof v1PayFields, unknown>;
+    case: Record<string, Record<keyof typeof v1PayFields, unknown>>;
   };
   "v1-load-ui": {
     account: { userCode: string };
     uiType: string;
-    field: Record<keyof typeof v1LoadUiFields, any>;
+    field: Record<keyof typeof v1LoadUiFields, unknown>;
   };
   "v2-pay": {
-    field: Record<keyof typeof v2PayFields, any>;
-    case: Record<string, Record<keyof typeof v2PayFields, any>>;
+    field: Record<keyof typeof v2PayFields, unknown>;
+    case: Record<string, Record<keyof typeof v2PayFields, unknown>>;
   };
   "v2-identity-verification": {
-    field: Record<keyof typeof v2IdentityVerificationFields, any>;
+    field: Record<keyof typeof v2IdentityVerificationFields, unknown>;
   };
   "v2-load-payment-ui": {
-    field: Record<keyof typeof v2LoadPaymentUiFields, any>;
+    field: Record<keyof typeof v2LoadPaymentUiFields, unknown>;
   };
 }
 const trialData = _trialData as TrialDataItem[];
@@ -85,7 +89,9 @@ const TrialModal: React.FC = () => {
         </div>
       }
       description="원하는 항목을 선택하면 입력칸이 자동으로 채워집니다"
-      onClose={() => trialModalOpenSignal.value = false}
+      onClose={() => {
+        trialModalOpenSignal.value = false;
+      }}
     >
       {trialVersion === "v1" ? <V1Trials /> : <V2Trials />}
     </Modal>
@@ -111,10 +117,7 @@ function applyFieldsToSignals(
   if (jsonTextSignal) jsonTextSignal.value = JSON.stringify(json, null, 2);
 }
 
-function applyValueToSignal(
-  value: any,
-  fieldSignal: FieldSignal,
-) {
+function applyValueToSignal(value: any, fieldSignal: FieldSignal) {
   fieldSignal.enabledSignal.value = true;
   match([fieldSignal, typeof value])
     .with(
@@ -137,13 +140,8 @@ function applyValueToSignal(
             const obj: Record<string, any> = {};
             applyFieldsToSignals(Object.entries(item), obj);
             return obj;
-          } else if (Array.isArray(item)) {
-            for (const [key, value] of item.entries()) {
-              applyValueToSignal(value, fieldSignal.valueSignal.value[key]);
-            }
-          } else {
-            return item;
           }
+          return item;
         });
       }
     })
@@ -176,18 +174,19 @@ const V1Trials: React.FC = () => {
     <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
       <Group>본인인증</Group>
       <div className="grid sm:grid-cols-2 gap-2">
-        {trialData.filter((item) => "v1-cert" in item).map(
-          (item, index) => (
+        {trialData
+          .filter((item) => "v1-cert" in item)
+          .map((item) => (
             <CertPreset
-              key={index}
+              key={`${item.label}-${Math.random().toString(36).slice(2)}`}
               icon={item.icon}
               handler={() => {
                 trialModalOpenSignal.value = false;
                 appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-cert" };
                 v1CertAccountSignals.userCodeSignal.value =
                   item["v1-cert"].account.userCode;
-                v1CertFieldSignals.merchant_uid.valueSignal.value = v1CertFields
-                  .merchant_uid.input.generate();
+                v1CertFieldSignals.merchant_uid.valueSignal.value =
+                  v1CertFields.merchant_uid.input.generate();
                 const fields = Object.entries(item["v1-cert"].field);
                 applyFieldsToSignals(
                   fields,
@@ -198,15 +197,15 @@ const V1Trials: React.FC = () => {
             >
               {item.label}
             </CertPreset>
-          ),
-        )}
+          ))}
       </div>
       <Group>PG 제공 UI</Group>
       <div className="grid sm:grid-cols-2 gap-2">
-        {trialData.filter((item) => "v1-load-ui" in item).map(
-          (item, index) => (
+        {trialData
+          .filter((item) => "v1-load-ui" in item)
+          .map((item) => (
             <LoadUiPreset
-              key={index}
+              key={`${item.label}-${Math.random().toString(36).slice(2)}`}
               icon={item.icon}
               handler={() => {
                 trialModalOpenSignal.value = false;
@@ -229,42 +228,41 @@ const V1Trials: React.FC = () => {
             >
               {item.label}
             </LoadUiPreset>
-          ),
-        )}
+          ))}
       </div>
       <Group>결제</Group>
       <div className="grid sm:grid-cols-2 gap-2">
-        {trialData.filter((item) => "v1-pay" in item).map(
-          (item, index) => (
+        {trialData
+          .filter((item) => "v1-pay" in item)
+          .map((item) => (
             <PayPreset
-              key={index}
+              key={`${item.label}-${Math.random().toString(36).slice(2)}`}
               name={item.label}
               icon={item.icon}
-              cases={Object.entries(item["v1-pay"].case).map((
-                [label, caseFields],
-              ) => ({
-                label,
-                handler() {
-                  trialModalOpenSignal.value = false;
-                  appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-                  v1PayAccountSignals.userCodeSignal.value =
-                    item["v1-pay"].account.userCode;
-                  v1PayFieldSignals.merchant_uid.valueSignal.value = v1PayFields
-                    .merchant_uid.input.generate();
-                  const fields = [
-                    ...Object.entries(item["v1-pay"].field),
-                    ...Object.entries(caseFields),
-                  ];
-                  applyFieldsToSignals(
-                    fields,
-                    v1PayFieldSignals,
-                    v1PayJsonTextSignal,
-                  );
-                },
-              }))}
+              cases={Object.entries(item["v1-pay"].case).map(
+                ([label, caseFields]) => ({
+                  label,
+                  handler() {
+                    trialModalOpenSignal.value = false;
+                    appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
+                    v1PayAccountSignals.userCodeSignal.value =
+                      item["v1-pay"].account.userCode;
+                    v1PayFieldSignals.merchant_uid.valueSignal.value =
+                      v1PayFields.merchant_uid.input.generate();
+                    const fields = [
+                      ...Object.entries(item["v1-pay"].field),
+                      ...Object.entries(caseFields),
+                    ];
+                    applyFieldsToSignals(
+                      fields,
+                      v1PayFieldSignals,
+                      v1PayJsonTextSignal,
+                    );
+                  },
+                }),
+              )}
             />
-          ),
-        )}
+          ))}
       </div>
     </div>
   );
@@ -275,10 +273,11 @@ const V2Trials: React.FC = () => {
     <div className="px-4 pb-4 h-full flex flex-col gap-2 overflow-y-scroll">
       <Group>PG 결제 UI</Group>
       <div className="grid sm:grid-cols-2 gap-2">
-        {trialData.filter((item) => "v2-load-payment-ui" in item).map(
-          (item, index) => (
+        {trialData
+          .filter((item) => "v2-load-payment-ui" in item)
+          .map((item) => (
             <LoadUiPreset
-              key={index}
+              key={`${item.label}-${Math.random().toString(36).slice(2)}`}
               icon={item.icon}
               handler={() => {
                 trialModalOpenSignal.value = false;
@@ -298,40 +297,39 @@ const V2Trials: React.FC = () => {
             >
               {item.label}
             </LoadUiPreset>
-          ),
-        )}
+          ))}
       </div>
       <Group>결제</Group>
       <div className="grid sm:grid-cols-2 gap-2">
-        {trialData.filter((item) => "v2-pay" in item).map(
-          (item, index) => (
+        {trialData
+          .filter((item) => "v2-pay" in item)
+          .map((item) => (
             <PayPreset
-              key={index}
+              key={`${item.label}-${Math.random().toString(36).slice(2)}`}
               name={item.label}
               icon={item.icon}
-              cases={Object.entries(item["v2-pay"].case).map((
-                [label, caseFields],
-              ) => ({
-                label,
-                handler() {
-                  trialModalOpenSignal.value = false;
-                  appModeSignal.value = { sdkVersion: "2.0.0", fn: "v2-pay" };
-                  v2PayFieldSignals.paymentId.valueSignal.value = v2PayFields
-                    .paymentId.input.generate();
-                  const fields = [
-                    ...Object.entries(item["v2-pay"].field),
-                    ...Object.entries(caseFields),
-                  ];
-                  applyFieldsToSignals(
-                    fields,
-                    v2PayFieldSignals,
-                    v2PayJsonTextSignal,
-                  );
-                },
-              }))}
+              cases={Object.entries(item["v2-pay"].case).map(
+                ([label, caseFields]) => ({
+                  label,
+                  handler() {
+                    trialModalOpenSignal.value = false;
+                    appModeSignal.value = { sdkVersion: "2.0.0", fn: "v2-pay" };
+                    v2PayFieldSignals.paymentId.valueSignal.value =
+                      v2PayFields.paymentId.input.generate();
+                    const fields = [
+                      ...Object.entries(item["v2-pay"].field),
+                      ...Object.entries(caseFields),
+                    ];
+                    applyFieldsToSignals(
+                      fields,
+                      v2PayFieldSignals,
+                      v2PayJsonTextSignal,
+                    );
+                  },
+                }),
+              )}
             />
-          ),
-        )}
+          ))}
       </div>
     </div>
   );
@@ -368,16 +366,18 @@ interface SingularPresetProps {
   buttonChildren: React.ReactNode;
   handler: () => void;
 }
-const SingularPreset: React.FC<SingularPresetProps> = (
-  { icon, children, buttonChildren, handler },
-) => {
+const SingularPreset: React.FC<SingularPresetProps> = ({
+  icon,
+  children,
+  buttonChildren,
+  handler,
+}) => {
   return (
     <div className="p-4 flex gap-2 items-center text-sm break-all rounded bg-slate-100">
-      <img className="h-8" src={`/pg/${icon}.png`} />
-      <span className="flex-1 text-lg">
-        {children}
-      </span>
+      <img className="h-8" src={`/pg/${icon}.png`} aria-label="PG 아이콘" />
+      <span className="flex-1 text-lg">{children}</span>
       <button
+        type="button"
         className="basis-1/2 flex gap-2 text-slate-800 text-[1.05rem] px-4 py-2 rounded bg-white shadow hover:translate-x-0.5 transition-transform cursor-pointer"
         onClick={handler}
       >
@@ -392,9 +392,7 @@ interface CertPresetProps {
   children: React.ReactNode;
   handler: () => void;
 }
-const CertPreset: React.FC<CertPresetProps> = (
-  { icon, children, handler },
-) => {
+const CertPreset: React.FC<CertPresetProps> = ({ icon, children, handler }) => {
   return (
     <SingularPreset
       icon={icon}
@@ -411,9 +409,11 @@ interface LoadUiPresetProps {
   children: React.ReactNode;
   handler: () => void;
 }
-const LoadUiPreset: React.FC<LoadUiPresetProps> = (
-  { icon, children, handler },
-) => {
+const LoadUiPreset: React.FC<LoadUiPresetProps> = ({
+  icon,
+  children,
+  handler,
+}) => {
   return (
     <SingularPreset
       icon={icon}
@@ -433,19 +433,18 @@ interface PayPresetProps {
     handler: () => void;
   }[];
 }
-const PayPreset: React.FC<PayPresetProps> = (
-  { name, icon, cases },
-) => {
+const PayPreset: React.FC<PayPresetProps> = ({ name, icon, cases }) => {
   return (
     <div className="px-4 py-4 flex flex-col gap-4 items-stretch text-sm break-all rounded bg-slate-100">
       <div className="flex gap-2">
-        <img className="h-8" src={`/pg/${icon}.png`} />
+        <img className="h-8" src={`/pg/${icon}.png`} aria-label="PG 아이콘" />
         <span className="text-lg">{name}</span>
       </div>
       <div className="flex flex-col items-stretch gap-1.5">
         {cases.map(({ label, handler }, i) => (
           <button
-            key={i}
+            type="button"
+            key={`${label}-${Math.random().toString(36).slice(2)}`}
             className="flex gap-2 text-slate-800 text-[1.05rem] px-4 py-2 rounded bg-white shadow hover:translate-x-0.5 transition-transform cursor-pointer"
             onClick={handler}
           >

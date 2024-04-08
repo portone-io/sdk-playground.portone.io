@@ -5,7 +5,7 @@ import {
   type Signal,
   signal,
 } from "@preact/signals";
-import { type SdkV1, SdkV1Version } from "../sdk";
+import type { SdkV1, SdkV1Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
@@ -83,42 +83,34 @@ async function loadSdkV1(
       return { IMP, cleanUp };
     }
     case "1.2.1": {
-      const { IMP } = await loadLegacySdk(
-        "iamport.payment-1.2.1.js",
-      );
+      const { IMP } = await loadLegacySdk("iamport.payment-1.2.1.js");
       IMP.slots.CORE_SERVER = CORE_SERVER;
       return { IMP, cleanUp: () => IMP.style.remove() };
     }
     case "1.2.0": {
-      const { IMP } = await loadLegacySdk(
-        "iamport.payment-1.2.0.js",
-      );
+      const { IMP } = await loadLegacySdk("iamport.payment-1.2.0.js");
       IMP.slots.CORE_SERVER = CORE_SERVER;
       return { IMP, cleanUp: () => IMP.style.remove() };
     }
     case "1.1.8": {
-      const { IMP } = await loadLegacySdk(
-        "iamport.payment-1.1.8.js",
-      );
+      const { IMP } = await loadLegacySdk("iamport.payment-1.1.8.js");
       IMP.slots.CORE_SERVER = CORE_SERVER;
       return { IMP, cleanUp: () => IMP.style.remove() };
     }
     case "1.1.7": {
-      const { IMP } = await loadLegacySdk(
-        "iamport.payment-1.1.7.js",
-      );
+      const { IMP } = await loadLegacySdk("iamport.payment-1.1.7.js");
       IMP.slots.CORE_SERVER = CORE_SERVER;
       return { IMP, cleanUp: () => IMP.style.remove() };
     }
   }
 }
 
-async function loadLegacySdk(
-  filename: string,
-) {
-  const jQueryInjection = window.jQuery || import("jquery").then((module) => {
-    window.jQuery = module.default;
-  });
+async function loadLegacySdk(filename: string) {
+  const jQueryInjection =
+    window.jQuery ||
+    import("jquery").then((module) => {
+      window.jQuery = module.default;
+    });
   const response = await fetch(`https://cdn.iamport.kr/js/${filename}`);
   const script = await response.text();
   // 1. replace polyfill modules and module assignment to `window.IMP` with `export default` and additional argument `out` added
@@ -162,19 +154,9 @@ export interface AccountSignals {
   reset: () => void;
   impInit: (sdkV1: SdkV1) => void;
 }
-export function createAccountSignals(
-  keyPrefix: string,
-): AccountSignals {
-  const userCodeSignal = persisted(
-    localStorage,
-    `${keyPrefix}.userCode`,
-    "",
-  );
-  const tierCodeSignal = persisted(
-    localStorage,
-    `${keyPrefix}.tierCode`,
-    "",
-  );
+export function createAccountSignals(keyPrefix: string): AccountSignals {
+  const userCodeSignal = persisted(localStorage, `${keyPrefix}.userCode`, "");
+  const tierCodeSignal = persisted(localStorage, `${keyPrefix}.tierCode`, "");
   const tierCodeEnabledSignal = persisted(
     localStorage,
     `${keyPrefix}.tierCode.enabled`,
@@ -185,12 +167,11 @@ export function createAccountSignals(
     const tierCode = tierCodeSignal.value;
     const tierCodeEnabled = tierCodeEnabledSignal.value;
     if (tierCodeEnabled && tierCode) {
-      return `IMP.agency(${JSON.stringify(userCode)}, ${
-        JSON.stringify(tierCode)
-      });`;
-    } else {
-      return `IMP.init(${JSON.stringify(userCode)});`;
+      return `IMP.agency(${JSON.stringify(userCode)}, ${JSON.stringify(
+        tierCode,
+      )});`;
     }
+    return `IMP.init(${JSON.stringify(userCode)});`;
   });
   return {
     userCodeSignal,

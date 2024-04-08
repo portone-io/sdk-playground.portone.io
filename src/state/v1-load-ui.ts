@@ -53,15 +53,15 @@ export const codePreviewSignal = computed<string>(() => {
   const configObject = configObjectSignal.value;
   return [
     `<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`,
-    ``,
+    "",
     `<div class="portone-ui-container" data-portone-ui-type=${uiTypeRepr}>`,
-    `  <!-- 여기에 PG사 전용 버튼이 그려집니다 -->`,
-    `</div>`,
-    ``,
-    `<script>`,
+    "  <!-- 여기에 PG사 전용 버튼이 그려집니다 -->",
+    "</div>",
+    "",
+    "<script>",
     accountCodePreview,
     `IMP.loadUI(${uiTypeRepr}, ${toJs(configObject)});`,
-    `</script>`,
+    "</script>",
   ].join("\n");
 });
 

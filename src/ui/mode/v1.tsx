@@ -20,7 +20,7 @@ export const ForQa = () => {
           페이지를 새로고침 해주세요.
         </p>
       </label>
-      {(version === "1.3.0") && (
+      {version === "1.3.0" && (
         <label>
           <div>Checkout API URL</div>
           <input

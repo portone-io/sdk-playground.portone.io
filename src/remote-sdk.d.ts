@@ -2,10 +2,7 @@ declare module "https://cdn.iamport.kr/v1/iamport.esm.js" {
   const IMP: {
     init(userCode: string): void;
     agency(userCode: string, tierCode: string): void;
-    request_pay(
-      paymentRequest: any,
-      callback: (response: any) => void,
-    ): void;
+    request_pay(paymentRequest: any, callback: (response: any) => void): void;
     certification(
       certificationRequest: any,
       callback: (response: any) => void,
@@ -27,7 +24,7 @@ declare module "https://cdn.portone.io/v2/browser-sdk.esm.js" {
     requestIdentityVerification(config: any): Promise<any>;
     loadPaymentUI(
       config: any,
-      callbacks: Record<string, Function>,
+      callbacks: Record<string, (value: unknown) => void>,
     ): Promise<any>;
   };
   export const slots: Record<string, string>;

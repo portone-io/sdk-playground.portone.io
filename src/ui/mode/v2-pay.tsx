@@ -1,5 +1,5 @@
 import { signal, useSignal } from "@preact/signals";
-import * as React from "react";
+import type * as React from "react";
 import { checkoutServerSignal, reset as resetV2 } from "../../state/v2";
 import {
   codePreviewSignal,
@@ -29,7 +29,8 @@ const View: React.FC = () => {
     <>
       <p className="mb-4 text-xs text-slate-500">
         PG가 콘솔에서 테스트로 설정된 경우, 승인된 결제 건은 매일
-        자정(23:00~23:50분 사이)에 자동으로 취소됩니다.<br />
+        자정(23:00~23:50분 사이)에 자동으로 취소됩니다.
+        <br />
         "<RequiredIndicator />" 표시는 필수입력 항목을 의미합니다. 상황에 따라서
         필수입력 표시가 아니어도 입력이 필요할 수 있습니다.
       </p>
@@ -47,8 +48,12 @@ const View: React.FC = () => {
             <JsonEditor
               key={resetCountSignal.value}
               value={jsonTextSignal.value}
-              onChange={(json) => jsonTextSignal.value = json}
-              onReset={() => isJsonOpen.value = true}
+              onChange={(json) => {
+                jsonTextSignal.value = json;
+              }}
+              onReset={() => {
+                isJsonOpen.value = true;
+              }}
             />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">

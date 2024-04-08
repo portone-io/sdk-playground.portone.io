@@ -1,5 +1,5 @@
-import * as React from "react";
-import { ModeFnKey, modeFnSignal } from "../../state/app";
+import type * as React from "react";
+import { type ModeFnKey, modeFnSignal } from "../../state/app";
 import V1Cert from "./v1-cert";
 import V1Pay from "./v1-pay";
 import V1LoadUi from "./v1-load-ui";
@@ -16,5 +16,5 @@ const modeViewTable: { [key in ModeFnKey]: React.ReactElement } = {
   "v2-load-payment-ui": <V2LoadPaymentUi />,
 };
 
-const Mode: React.FC = () => (modeViewTable[modeFnSignal.value] || null);
+const Mode: React.FC = () => modeViewTable[modeFnSignal.value] || null;
 export default Mode;

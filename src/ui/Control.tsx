@@ -1,16 +1,15 @@
-import * as React from "react";
+import type * as React from "react";
 
-export const RequiredIndicator: React.FC<
-  React.HTMLAttributes<HTMLDivElement>
-> = ({ className = "", ...props }) => {
-  return (
-    <div
-      aria-label="필수"
-      className={`w-2 h-2 inline-block bg-orange-700 rounded ${className}`}
-      {...props}
-    />
-  );
-};
+export const RequiredIndicator: React.FC<React.HTMLAttributes<HTMLDivElement>> =
+  ({ className = "", ...props }) => {
+    return (
+      <div
+        aria-label="필수"
+        className={`w-2 h-2 inline-block bg-orange-700 rounded ${className}`}
+        {...props}
+      />
+    );
+  };
 
 export interface ControlProps extends React.HTMLAttributes<HTMLDivElement> {
   label: React.ReactNode;
@@ -36,7 +35,9 @@ const Control: React.FC<ControlProps> = ({
     <div className={`flex flex-row ${className || ""} gap-1`} {...props}>
       <label className="basis-4 shrink-0 flex items-center justify-center">
         <div className="w-full h-full py-1 flex flex-col items-center justify-start bg-orange-50 rounded">
-          {required ? <RequiredIndicator /> : (
+          {required ? (
+            <RequiredIndicator />
+          ) : (
             <input
               id={inputId}
               className="control-checkbox"
@@ -50,7 +51,7 @@ const Control: React.FC<ControlProps> = ({
       </label>
       <div
         className={`flex-1 flex flex-col ${
-          (required || enabled) ? "" : "opacity-50"
+          required || enabled ? "" : "opacity-50"
         }`}
       >
         <label className="inline-flex flex-wrap" htmlFor={inputId}>
@@ -61,9 +62,7 @@ const Control: React.FC<ControlProps> = ({
             </code>
           </div>
         </label>
-        <div>
-          {children}
-        </div>
+        <div>{children}</div>
       </div>
     </div>
   );

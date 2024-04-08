@@ -1,4 +1,5 @@
-import { effect, Signal, signal } from "@preact/signals";
+import { effect, signal } from "@preact/signals";
+import type { Signal } from "@preact/signals";
 
 // sp는 sdk-playground의 이니셜
 // 하위호환 깰 때마다 숫자 1씩 올리기

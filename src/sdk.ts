@@ -8,15 +8,10 @@ export const sdkV1Versions = [
 ] as const;
 
 export type SdkV2Version = (typeof sdkV2Versions)[number];
-export const sdkV2Versions = [
-  "2.0.0",
-] as const;
+export const sdkV2Versions = ["2.0.0"] as const;
 
 export type SdkVersion = (typeof sdkVersions)[number];
-export const sdkVersions = [
-  ...sdkV2Versions,
-  ...sdkV1Versions,
-] as const;
+export const sdkVersions = [...sdkV2Versions, ...sdkV1Versions] as const;
 
 export type MajorVersion = (typeof majorVersions)[number];
 export const majorVersions = ["v1", "v2"] as const;
@@ -31,17 +26,17 @@ export interface SdkV1 {
     init(userCode: string): void;
     agency(userCode: string, tierCode: string): void;
     request_pay(
-      paymentRequest: any,
-      callback: (response: any) => void,
+      paymentRequest: unknown,
+      callback: (response: unknown) => void,
     ): void;
     certification(
-      certificationRequest: any,
-      callback: (response: any) => void,
+      certificationRequest: unknown,
+      callback: (response: unknown) => void,
     ): void;
     loadUI(
       uiType: string,
-      paymentRequest: any,
-      callback: (response: any) => void,
+      paymentRequest: unknown,
+      callback: (response: unknown) => void,
     ): void;
     // communicate, close, naver_zzim
   };
@@ -55,12 +50,12 @@ export interface InitSdkV2Config {
 export type InitSdkV2Fn = (config: InitSdkV2Config) => SdkV2;
 export interface SdkV2 {
   PortOne: {
-    requestPayment(config: any): Promise<any>;
-    requestIdentityVerification(config: any): Promise<any>;
+    requestPayment(config: unknown): Promise<unknown>;
+    requestIdentityVerification(config: unknown): Promise<unknown>;
     loadPaymentUI(
-      config: any,
-      callbacks: Record<string, Function>,
-    ): Promise<any>;
+      config: unknown,
+      callbacks: Record<string, (value: unknown) => void>,
+    ): Promise<unknown>;
   };
   cleanUp: () => void;
 }

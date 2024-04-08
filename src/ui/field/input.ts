@@ -1,4 +1,4 @@
-import { FieldSignal, Input } from "../../state/fields";
+import type { FieldSignal, Input } from "../../state/fields";
 
 export interface FieldInputProps<
   TInput extends Input,

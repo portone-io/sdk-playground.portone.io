@@ -1,4 +1,5 @@
-import { computed, ReadonlySignal, Signal, signal } from "@preact/signals";
+import { computed, signal } from "@preact/signals";
+import type { ReadonlySignal, Signal } from "@preact/signals";
 import persisted from "./persisted";
 import { match, P } from "ts-pattern";
 
@@ -251,79 +252,51 @@ export type MatchFieldSignalTypeHandler<
   T,
   Input extends InputBase<FieldType>,
   FieldSignal extends FieldSignalBase<FieldType>,
-> = (
-  input: Input,
-  fieldSignal: FieldSignal,
-) => T;
+> = (input: Input, fieldSignal: FieldSignal) => T;
 export type MatchFieldSignalTypeConfig<T> = {
   input: Input;
   fieldSignal: FieldSignal;
-  object: MatchFieldSignalTypeHandler<
-    T,
-    ObjectInput,
-    ObjectFieldSignal
-  >;
-  union: MatchFieldSignalTypeHandler<
-    T,
-    UnionInput,
-    UnionFieldSignal
-  >;
-  array: MatchFieldSignalTypeHandler<
-    T,
-    ArrayInput,
-    ArrayFieldSignal
-  >;
-  integer: MatchFieldSignalTypeHandler<
-    T,
-    IntegerInput,
-    IntegerFieldSignal
-  >;
+  object: MatchFieldSignalTypeHandler<T, ObjectInput, ObjectFieldSignal>;
+  union: MatchFieldSignalTypeHandler<T, UnionInput, UnionFieldSignal>;
+  array: MatchFieldSignalTypeHandler<T, ArrayInput, ArrayFieldSignal>;
+  integer: MatchFieldSignalTypeHandler<T, IntegerInput, IntegerFieldSignal>;
   text: MatchFieldSignalTypeHandler<T, TextInput, TextFieldSignal>;
   toggle: MatchFieldSignalTypeHandler<T, ToggleInput, ToggleFieldSignal>;
   enum: MatchFieldSignalTypeHandler<T, EnumInput, EnumFieldSignal>;
 };
 
-export function matchFieldSignalType<T>(
-  {
-    input,
-    fieldSignal,
-    object,
-    union,
-    array,
-    integer,
-    text,
-    toggle,
-    enum: _enum,
-  }: MatchFieldSignalTypeConfig<T>,
-): T {
+export function matchFieldSignalType<T>({
+  input,
+  fieldSignal,
+  object,
+  union,
+  array,
+  integer,
+  text,
+  toggle,
+  enum: _enum,
+}: MatchFieldSignalTypeConfig<T>): T {
   return match([input, fieldSignal])
-    .with(
-      [{ type: "object" }, { type: "object" }],
-      ([input, fieldSignal]) => object(input, fieldSignal),
+    .with([{ type: "object" }, { type: "object" }], ([input, fieldSignal]) =>
+      object(input, fieldSignal),
     )
-    .with(
-      [{ type: "union" }, { type: "union" }],
-      ([input, fieldSignal]) => union(input, fieldSignal),
+    .with([{ type: "union" }, { type: "union" }], ([input, fieldSignal]) =>
+      union(input, fieldSignal),
     )
-    .with(
-      [{ type: "array" }, { type: "array" }],
-      ([input, fieldSignal]) => array(input, fieldSignal),
+    .with([{ type: "array" }, { type: "array" }], ([input, fieldSignal]) =>
+      array(input, fieldSignal),
     )
-    .with(
-      [{ type: "integer" }, { type: "integer" }],
-      ([input, fieldSignal]) => integer(input, fieldSignal),
+    .with([{ type: "integer" }, { type: "integer" }], ([input, fieldSignal]) =>
+      integer(input, fieldSignal),
     )
-    .with(
-      [{ type: "text" }, { type: "text" }],
-      ([input, fieldSignal]) => text(input, fieldSignal),
+    .with([{ type: "text" }, { type: "text" }], ([input, fieldSignal]) =>
+      text(input, fieldSignal),
     )
-    .with(
-      [{ type: "toggle" }, { type: "toggle" }],
-      ([input, fieldSignal]) => toggle(input, fieldSignal),
+    .with([{ type: "toggle" }, { type: "toggle" }], ([input, fieldSignal]) =>
+      toggle(input, fieldSignal),
     )
-    .with(
-      [{ type: "enum" }, { type: "enum" }],
-      ([input, fieldSignal]) => _enum(input, fieldSignal),
+    .with([{ type: "enum" }, { type: "enum" }], ([input, fieldSignal]) =>
+      _enum(input, fieldSignal),
     )
     .with(
       P.union(
@@ -351,7 +324,7 @@ export interface JsonSignals {
 export function createJsonSignals(
   storage: Storage,
   key: string,
-  initialJsonText: string = "{}",
+  initialJsonText = "{}",
 ): JsonSignals {
   const jsonTextSignal = persisted(storage, key, initialJsonText);
   const jsonValueSignal = computed(() => {
@@ -416,7 +389,7 @@ export function createConfigObjectSignal({
       },
       array: (input, fieldSignal) =>
         fieldSignal.valueSignal.value.map((itemSignal: FieldSignal) =>
-          getFieldObject(field, input.inputItem, itemSignal)
+          getFieldObject(field, input.inputItem, itemSignal),
         ),
       integer: (_, fieldSignal) => fieldSignal.valueSignal.value,
       text: (_, fieldSignal) => fieldSignal.valueSignal.value,

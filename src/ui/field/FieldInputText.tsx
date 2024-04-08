@@ -1,6 +1,6 @@
-import * as React from "react";
-import { TextFieldSignal, TextInput } from "../../state/fields";
-import { FieldInputProps } from "./input";
+import type * as React from "react";
+import type { TextFieldSignal, TextInput } from "../../state/fields";
+import type { FieldInputProps } from "./input";
 
 const FieldInputText: React.FC<FieldInputProps<TextInput, TextFieldSignal>> = ({
   fieldInput,
@@ -22,6 +22,7 @@ const FieldInputText: React.FC<FieldInputProps<TextInput, TextFieldSignal>> = ({
       />
       {generate && (
         <button
+          type="button"
           className="ml-1"
           title="자동 생성"
           onClick={() => {

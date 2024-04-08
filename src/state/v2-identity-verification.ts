@@ -4,7 +4,7 @@ import {
   createConfigObjectSignal,
   createFieldSignals,
   createJsonSignals,
-  Fields,
+  type Fields,
   resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
@@ -33,14 +33,14 @@ export const codePreviewSignal = computed<string>(() => {
   const configObject = configObjectSignal.value;
   return [
     `<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>`,
-    ``,
+    "",
     `<button onclick="requestIdentityVerification()">본인 인증하기</button>`,
-    ``,
-    `<script>`,
-    `function requestIdentityVerification() {`,
+    "",
+    "<script>",
+    "function requestIdentityVerification() {",
     `  PortOne.requestIdentityVerification(${toJs(configObject, "  ", 1)});`,
-    `}`,
-    `</script>`,
+    "}",
+    "</script>",
   ].join("\n");
 });
 

@@ -1,7 +1,8 @@
-import { computed, Signal, signal } from "@preact/signals";
+import { computed, signal } from "@preact/signals";
+import type { Signal } from "@preact/signals";
 import { parse as parseErrorStack } from "error-stack-parser-es";
 import type { ReactNode } from "react";
-import { MajorVersion, SdkVersion } from "../sdk";
+import type { MajorVersion, SdkVersion } from "../sdk";
 import persisted, { prefix } from "./persisted";
 
 export interface AppMode {
@@ -15,10 +16,10 @@ export const appModeSignal = persisted<AppMode>(
 );
 
 export function getMajorVersion(sdkVersion: SdkVersion): MajorVersion {
-  const major = sdkVersion.split(".").shift()!;
+  const major = sdkVersion.split(".").shift();
   if (major === "1") return "v1";
   if (major === "2") return "v2";
-  throw new Error();
+  throw new Error(`Unsupported major version: ${major}`);
 }
 
 export type ModeFnKey = keyof typeof modeFns;
@@ -65,8 +66,8 @@ export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
 export interface StateModule {
   playFnSignal: Signal<PlayFn>;
 }
-export const stateModulePromiseSignal = computed<Promise<StateModule>>(
-  () => modeFns[modeFnSignal.value].stateModule(),
+export const stateModulePromiseSignal = computed<Promise<StateModule>>(() =>
+  modeFns[modeFnSignal.value].stateModule(),
 );
 
 export const sdkVersionSignal = computed(() => appModeSignal.value.sdkVersion);
@@ -86,7 +87,7 @@ export function changeSdkVersion(sdkVersion: SdkVersion) {
 }
 
 export const waitingSignal = signal(false);
-export type PlayFn = () => Promise<any>;
+export type PlayFn = () => Promise<unknown>;
 export const playFnSignal = computed(() => {
   const stateModulePromise = stateModulePromiseSignal.value;
   return async function play() {
@@ -95,14 +96,19 @@ export const playFnSignal = computed(() => {
       waitingSignal.value = true;
       const stateModule = await stateModulePromise;
       const playFn = stateModule.playFnSignal.value;
-      const response: any = await playFn();
-      const success = ("error_code" in response) || ("code" in response);
+      const response: unknown = await playFn();
+      if (response === undefined || response === null) {
+        throw new Error("playFn must return a value");
+      }
+      if (typeof response !== "object") {
+        throw new Error(`Unexpected response: ${response}`);
+      }
+      const success = "error_code" in response || "code" in response;
       playResultSignal.value = { success, response };
     } catch (error) {
       console.error(error);
-      const errorStack = error instanceof Error
-        ? buildErrorStack(error)
-        : String(error);
+      const errorStack =
+        error instanceof Error ? buildErrorStack(error) : String(error);
       playResultSignal.value = { success: false, errorStack };
     } finally {
       waitingSignal.value = false;
@@ -114,12 +120,14 @@ function buildErrorStack(error: Error) {
   const stack = parseErrorStack(error);
   return (
     <>
-      <span>{error.name}: {error.message}</span>
+      <span>
+        {error.name}: {error.message}
+      </span>
       <ul className="ml-12">
         {stack.map((frame) => (
           <li>
-            at {frame.functionName}{" "}
-            ({frame.fileName}:{frame.lineNumber}:{frame.columnNumber})
+            at {frame.functionName} ({frame.fileName}:{frame.lineNumber}:
+            {frame.columnNumber})
           </li>
         ))}
       </ul>

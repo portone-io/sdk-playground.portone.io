@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import Header from "./Header";
 import { waitingSignal } from "./state/app";
 import { pgUiModalOpenSignal } from "./state/v1-load-ui";

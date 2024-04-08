@@ -7,5 +7,5 @@ export function useUrlSearchParams() {
 
 export function useUrlSearchParam(key: string): string[] {
   const params = useUrlSearchParams();
-  return React.useMemo(() => params.getAll(key), [params]);
+  return React.useMemo(() => params.getAll(key), [key, params]);
 }

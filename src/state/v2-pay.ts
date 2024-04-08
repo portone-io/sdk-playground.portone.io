@@ -4,7 +4,7 @@ import {
   createConfigObjectSignal,
   createFieldSignals,
   createJsonSignals,
-  Fields,
+  type Fields,
   resetFieldSignals,
 } from "./fields";
 import { prefix } from "./persisted";
@@ -42,14 +42,14 @@ export const codePreviewSignal = computed<string>(() => {
   const configObject = configObjectSignal.value;
   return [
     `<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>`,
-    ``,
+    "",
     `<button onclick="requestPay()">결제하기</button>`,
-    ``,
-    `<script>`,
-    `function requestPay() {`,
+    "",
+    "<script>",
+    "function requestPay() {",
     `  PortOne.requestPayment(${toJs(configObject, "  ", 1)});`,
-    `}`,
-    `</script>`,
+    "}",
+    "</script>",
   ].join("\n");
 });
 
@@ -133,8 +133,8 @@ export const fields = {
     required: false,
     enabled: true,
     label: "카드 정보",
-    hidden: computed(() =>
-      fieldSignals.payMethod?.valueSignal?.value !== "CARD"
+    hidden: computed(
+      () => fieldSignals.payMethod?.valueSignal?.value !== "CARD",
     ),
     input: {
       type: "object",
@@ -267,8 +267,8 @@ export const fields = {
     required: false,
     enabled: true,
     label: "가상계좌 정보",
-    hidden: computed(() =>
-      fieldSignals.payMethod?.valueSignal?.value !== "VIRTUAL_ACCOUNT"
+    hidden: computed(
+      () => fieldSignals.payMethod?.valueSignal?.value !== "VIRTUAL_ACCOUNT",
     ),
     input: {
       type: "object",
@@ -362,8 +362,8 @@ export const fields = {
     required: false,
     enabled: true,
     label: "계좌이체 정보",
-    hidden: computed(() =>
-      fieldSignals.payMethod?.valueSignal?.value !== "TRANSFER"
+    hidden: computed(
+      () => fieldSignals.payMethod?.valueSignal?.value !== "TRANSFER",
     ),
     input: {
       type: "object",
@@ -404,8 +404,8 @@ export const fields = {
     required: false,
     enabled: true,
     label: "휴대폰 소액결제 정보",
-    hidden: computed(() =>
-      fieldSignals.payMethod?.valueSignal?.value !== "MOBILE"
+    hidden: computed(
+      () => fieldSignals.payMethod?.valueSignal?.value !== "MOBILE",
     ),
     input: {
       type: "object",
@@ -441,8 +441,8 @@ export const fields = {
     required: false,
     enabled: true,
     label: "상품권 정보",
-    hidden: computed(() =>
-      fieldSignals.payMethod?.valueSignal?.value !== "GIFT_CERTIFICATE"
+    hidden: computed(
+      () => fieldSignals.payMethod?.valueSignal?.value !== "GIFT_CERTIFICATE",
     ),
     input: {
       type: "object",
@@ -464,8 +464,8 @@ export const fields = {
     required: false,
     enabled: true,
     label: "간편결제 정보",
-    hidden: computed(() =>
-      fieldSignals.payMethod?.valueSignal?.value !== "EASY_PAY"
+    hidden: computed(
+      () => fieldSignals.payMethod?.valueSignal?.value !== "EASY_PAY",
     ),
     input: {
       type: "object",

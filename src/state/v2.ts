@@ -1,5 +1,5 @@
 import { effect, signal } from "@preact/signals";
-import { SdkV2, SdkV2Version } from "../sdk";
+import type { SdkV2, SdkV2Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
@@ -85,12 +85,5 @@ export const payMethodOptions = [
   "PAYPAL",
   "ALIPAY",
 ];
-export const productTypeOptions = [
-  "REAL",
-  "DIGITAL",
-];
-export const cashReceiptTypeOptions = [
-  "PERSONAL",
-  "CORPORATE",
-  "ANONYMOUS",
-];
+export const productTypeOptions = ["REAL", "DIGITAL"];
+export const cashReceiptTypeOptions = ["PERSONAL", "CORPORATE", "ANONYMOUS"];

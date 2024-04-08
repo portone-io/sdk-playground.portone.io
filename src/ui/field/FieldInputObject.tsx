@@ -1,18 +1,15 @@
-import * as React from "react";
+import type * as React from "react";
 import {
   FieldSignals,
-  ObjectFieldSignal,
-  ObjectInput,
+  type ObjectFieldSignal,
+  type ObjectInput,
 } from "../../state/fields";
 import FieldControl from "./FieldControl";
-import { FieldInputProps } from "./input";
+import type { FieldInputProps } from "./input";
 
 const FieldInputObject: React.FC<
   FieldInputProps<ObjectInput, ObjectFieldSignal>
-> = ({
-  fieldInput,
-  fieldSignal,
-}) => {
+> = ({ fieldInput, fieldSignal }) => {
   const fieldSignals = fieldSignal.valueSignal.value;
   return (
     <div className="flex flex-col gap-2">

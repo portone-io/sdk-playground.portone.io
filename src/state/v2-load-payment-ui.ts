@@ -4,7 +4,7 @@ import {
   createConfigObjectSignal,
   createFieldSignals,
   createJsonSignals,
-  Fields,
+  type Fields,
   resetFieldSignals,
 } from "./fields";
 import persisted, { prefix } from "./persisted";
@@ -28,7 +28,9 @@ export const playFnSignal = computed(() => {
         onPaymentFail: resolve,
       }).catch(reject);
       pgUiModalOpenSignal.value = true;
-    }).finally(() => pgUiModalOpenSignal.value = false);
+    }).finally(() => {
+      pgUiModalOpenSignal.value = false;
+    });
   };
 });
 
@@ -38,14 +40,14 @@ export const codePreviewSignal = computed<string>(() => {
   const uiTypeRepr = JSON.stringify(uiType);
   return [
     `<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>`,
-    ``,
+    "",
     `<div class="portone-ui-container" data-portone-ui-type=${uiTypeRepr}>`,
-    `  <!-- 여기에 PG사 전용 버튼이 그려집니다 -->`,
-    `</div>`,
-    ``,
-    `<script>`,
+    "  <!-- 여기에 PG사 전용 버튼이 그려집니다 -->",
+    "</div>",
+    "",
+    "<script>",
     `PortOne.loadPaymentUI(${toJs(configObject)});`,
-    `</script>`,
+    "</script>",
   ].join("\n");
 });
 

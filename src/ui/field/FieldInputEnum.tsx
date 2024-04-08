@@ -1,6 +1,6 @@
-import * as React from "react";
-import { EnumFieldSignal, EnumInput } from "../../state/fields";
-import { FieldInputProps } from "./input";
+import type * as React from "react";
+import type { EnumFieldSignal, EnumInput } from "../../state/fields";
+import type { FieldInputProps } from "./input";
 
 const FieldInputEnum: React.FC<FieldInputProps<EnumInput, EnumFieldSignal>> = ({
   fieldInput,

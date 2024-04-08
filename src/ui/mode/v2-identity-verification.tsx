@@ -1,5 +1,5 @@
 import { signal, useSignal } from "@preact/signals";
-import * as React from "react";
+import type * as React from "react";
 import { checkoutServerSignal, reset as resetV2 } from "../../state/v2";
 import {
   codePreviewSignal,
@@ -45,8 +45,12 @@ const View: React.FC = () => {
             <JsonEditor
               key={resetCountSignal.value}
               value={jsonTextSignal.value}
-              onChange={(json) => jsonTextSignal.value = json}
-              onReset={() => isJsonOpen.value = true}
+              onChange={(json) => {
+                jsonTextSignal.value = json;
+              }}
+              onReset={() => {
+                isJsonOpen.value = true;
+              }}
             />
             <details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
               <summary className="text-xs text-slate-500 cursor-pointer">

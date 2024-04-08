@@ -1,12 +1,10 @@
-import * as React from "react";
-import { IntegerFieldSignal, IntegerInput } from "../../state/fields";
-import { FieldInputProps } from "./input";
+import type * as React from "react";
+import type { IntegerFieldSignal, IntegerInput } from "../../state/fields";
+import type { FieldInputProps } from "./input";
 
 const FieldInputInteger: React.FC<
   FieldInputProps<IntegerInput, IntegerFieldSignal>
-> = ({
-  fieldSignal,
-}) => {
+> = ({ fieldSignal }) => {
   const { enabledSignal, valueSignal } = fieldSignal;
   return (
     <input

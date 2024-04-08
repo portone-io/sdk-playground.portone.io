@@ -7,9 +7,13 @@ export interface ModalProps {
   description?: React.ReactNode;
   children?: React.ReactNode;
 }
-const Modal: React.FC<ModalProps> = (
-  { open, onClose, title, description, children },
-) => {
+const Modal: React.FC<ModalProps> = ({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+}) => {
   React.useEffect(() => {
     if (open) document.documentElement.classList.add("modal");
     else document.documentElement.classList.remove("modal");
@@ -33,11 +37,10 @@ const Modal: React.FC<ModalProps> = (
       >
         <div className="p-4">
           <div className="flex flex-row items-center text-2xl">
-            <span className="flex-1">
-              {title}
-            </span>
-            <button onClick={onClose} title="close">
+            <span className="flex-1">{title}</span>
+            <button type="button" onClick={onClose} title="close">
               <svg className="w-6 h-6" viewBox="0 0 30 30">
+                <title>close modal</title>
                 <line x1="0" y1="0" x2="30" y2="30" stroke="black" />
                 <line x1="30" y1="0" x2="0" y2="30" stroke="black" />
               </svg>
@@ -47,9 +50,7 @@ const Modal: React.FC<ModalProps> = (
             <span className="text-sm text-slate-500">{description}</span>
           )}
         </div>
-        <div className="relative min-h-0">
-          {children}
-        </div>
+        <div className="relative min-h-0">{children}</div>
       </div>
     </div>
   );
