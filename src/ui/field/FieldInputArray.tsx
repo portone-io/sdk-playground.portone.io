@@ -22,16 +22,22 @@ const FieldInputArray: React.FC<FieldInputProps<ArrayInput, ArrayFieldSignal>> =
 						/>
 						<button
 							type="button"
-							onClick={(e) => {
-								e.preventDefault();
+							onClick={() => {
 								fieldSignal.remove(i);
+								fieldSignal.enabledSignal.value = true;
 							}}
 						>
 							➖
 						</button>
 					</div>
 				))}
-				<button type="button" onClick={() => fieldSignal.append()}>
+				<button
+					type="button"
+					onClick={() => {
+						fieldSignal.append();
+						fieldSignal.enabledSignal.value = true;
+					}}
+				>
 					➕
 				</button>
 			</div>
