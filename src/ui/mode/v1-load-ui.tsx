@@ -68,7 +68,7 @@ const View: React.FC = () => {
 							<ForQa />
 						</details>
 					</details>
-					<Control required label="가맹점 식별코드" code="userCode">
+					<Control required label="고객사 식별코드" code="userCode">
 						<input
 							className="border"
 							type="text"
@@ -80,7 +80,7 @@ const View: React.FC = () => {
 						/>
 					</Control>
 					<Control
-						label="하위가맹점(Tier) 코드"
+						label="하위고객사(Tier) 코드"
 						code="tierCode"
 						enabled={tierCodeEnabledSignal.value}
 						onToggle={(value) => {

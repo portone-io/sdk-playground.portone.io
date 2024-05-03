@@ -69,7 +69,7 @@ export const fields = {
 	},
 	merchant_uid: {
 		required: true,
-		label: "가맹점 고유 요청 번호",
+		label: "고객사 고유 요청 번호",
 		input: {
 			type: "text",
 			default: "",
