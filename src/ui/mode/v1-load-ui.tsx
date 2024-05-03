@@ -80,7 +80,7 @@ const View: React.FC = () => {
 						/>
 					</Control>
 					<Control
-						label="하위고객사(Tier) 코드"
+						label="하위상점(Tier) 코드"
 						code="tierCode"
 						enabled={tierCodeEnabledSignal.value}
 						onToggle={(value) => {
