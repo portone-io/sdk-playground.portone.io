@@ -375,7 +375,7 @@ export function createConfigObjectSignal({
 		input: Input,
 		fieldSignal: FieldSignal,
 	): unknown {
-		return matchFieldSignalType({
+		return matchFieldSignalType<unknown>({
 			input,
 			fieldSignal,
 			object: (input, fieldSignal) =>
@@ -384,11 +384,13 @@ export function createConfigObjectSignal({
 				const key = fieldSignal.activeKeySignal.value;
 				const selectedField = input.fields[key];
 				const selectedFieldSignal = fieldSignal.valueSignal.value[key];
-				return getFieldObject(
-					selectedField,
-					selectedField.input,
-					selectedFieldSignal,
-				);
+				return {
+					[key]: getFieldObject(
+						selectedField,
+						selectedField.input,
+						selectedFieldSignal,
+					),
+				};
 			},
 			array: (input, fieldSignal) =>
 				fieldSignal.valueSignal.value.map((itemSignal: FieldSignal) =>
