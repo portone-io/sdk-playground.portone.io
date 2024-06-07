@@ -53,7 +53,9 @@ async function loadSdkV2(
 	switch (version) {
 		case "2.0.0": {
 			const { default: PortOne, slots } = await import(
-				"https://cdn.portone.io/v2/browser-sdk.esm.js"
+				process.env.LOCAL_SDK === "true"
+					? `/sdk/v2/browser-sdk.esm.js`
+					: "https://cdn.portone.io/v2/browser-sdk.esm.js"
 			);
 			Object.assign(slots, { CHECKOUT_SERVER });
 			return { PortOne, cleanUp: () => {} };

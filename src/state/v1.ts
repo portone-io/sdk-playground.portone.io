@@ -75,7 +75,9 @@ async function loadSdkV1(
 	switch (version) {
 		case "1.3.0": {
 			const { default: IMP, slots } = await import(
-				"https://cdn.iamport.kr/v1/iamport.esm.js"
+				process.env.LOCAL_SDK === "true"
+					? "/sdk/v1/iamport.esm.js"
+					: "https://cdn.iamport.kr/v1/iamport.esm.js"
 			);
 			const cleanUp = IMP.deinit;
 			slots.CORE_SERVER = CORE_SERVER;
