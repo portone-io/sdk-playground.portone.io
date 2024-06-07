@@ -11,7 +11,9 @@ export default defineConfig(({ mode }) => {
 			port: 3000,
 		},
 		define: {
-			"process.env.LOCAL_SDK": JSON.stringify(env.LOCAL_SDK),
+			"process.env.BROWSER_SDK_PREVIEW": JSON.stringify(
+				env.BROWSER_SDK_PREVIEW,
+			),
 		},
 		build: {
 			rollupOptions: {
