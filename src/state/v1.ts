@@ -75,7 +75,7 @@ async function loadSdkV1(
 	switch (version) {
 		case "1.3.0": {
 			const { default: IMP, slots } = await import(
-				process.env.BROWSER_SDK_PREVIEW
+				import.meta.env.VITE_BROWSER_SDK_PREVIEW
 					? "/sdk/v1/iamport.esm.js"
 					: "https://cdn.iamport.kr/v1/iamport.esm.js"
 			);

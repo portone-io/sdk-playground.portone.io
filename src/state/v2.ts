@@ -53,7 +53,7 @@ async function loadSdkV2(
 	switch (version) {
 		case "2.0.0": {
 			const { default: PortOne, slots } = await import(
-				process.env.BROWSER_SDK_PREVIEW
+				import.meta.env.VITE_BROWSER_SDK_PREVIEW
 					? `/sdk/v2/browser-sdk.esm.js`
 					: "https://cdn.portone.io/v2/browser-sdk.esm.js"
 			);
