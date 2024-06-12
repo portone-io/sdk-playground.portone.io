@@ -1,3 +1,5 @@
+import semver from "semver";
+
 export type SdkV1Version = (typeof sdkV1Versions)[number];
 export const sdkV1Versions = [
 	"1.3.0",
@@ -23,6 +25,16 @@ export const sdkV1Versions = [
 	"1.1.0",
 	"1.0.0",
 ] as const;
+
+export const isSupportedVersion = (version: string): boolean => {
+	if (import.meta.env.VITE_SDK_PREVIEW) {
+		return true;
+	}
+	if (semver.prerelease(version)) {
+		return false;
+	}
+	return semver.gte(version, "1.1.8");
+};
 
 export type SdkV2Version = (typeof sdkV2Versions)[number];
 export const sdkV2Versions = ["2.0.0"] as const;
