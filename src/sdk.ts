@@ -1,11 +1,40 @@
+import semver from "semver";
+
 export type SdkV1Version = (typeof sdkV1Versions)[number];
 export const sdkV1Versions = [
 	"1.3.0",
 	"1.2.1",
 	"1.2.0",
+	"1.1.9-rc",
 	"1.1.8",
+	"1.1.8-rc",
 	"1.1.7",
+	"1.1.7-rc20180615",
+	"1.1.7-rc20180406",
+	"1.1.7-rc20180206",
+	"1.1.7-ohouse",
+	"1.1.6",
+	"1.1.6-rc20171101",
+	"1.1.6-rc",
+	"1.1.6-20181005",
+	"1.1.5",
+	"1.1.4",
+	"1.1.3",
+	"1.1.2",
+	"1.1.1",
+	"1.1.0",
+	"1.0.0",
 ] as const;
+
+export const isSupportedVersion = (version: string): boolean => {
+	if (import.meta.env.VITE_SDK_PREVIEW) {
+		return true;
+	}
+	if (semver.prerelease(version)) {
+		return false;
+	}
+	return semver.gte(version, "1.1.8");
+};
 
 export type SdkV2Version = (typeof sdkV2Versions)[number];
 export const sdkV2Versions = ["2.0.0"] as const;

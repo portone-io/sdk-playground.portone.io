@@ -1,7 +1,7 @@
 import { EditorView } from "@codemirror/view";
 import { computed } from "@preact/signals";
 import type * as React from "react";
-import { type SdkVersion, sdkVersions } from "./sdk";
+import { type SdkVersion, isSupportedVersion, sdkVersions } from "./sdk";
 import {
 	appModeSignal,
 	changeSdkVersion,
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
 								changeSdkVersion(e.target.value as SdkVersion);
 							}}
 						>
-							{sdkVersions.map((v) => (
+							{sdkVersions.filter(isSupportedVersion).map((v) => (
 								<option key={v} value={v} selected={v === sdkVersion}>
 									{v}
 								</option>

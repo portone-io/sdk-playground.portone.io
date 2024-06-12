@@ -10,7 +10,7 @@ export function reset() {
 	checkoutServerSignal.value = defaultCheckoutServer;
 }
 
-const defaultCheckoutServer = "https://checkout-service.prod.iamport.co";
+const defaultCheckoutServer = import.meta.env.VITE_CHECKOUT_SERVER_URL;
 export const checkoutServerSignal = persisted(
 	localStorage,
 	`${prefix}.v2.checkoutServer`,
@@ -52,9 +52,9 @@ async function loadSdkV2(
 ): Promise<SdkV2> {
 	switch (version) {
 		case "2.0.0": {
-			const { default: PortOne, slots } = await import(
-				"https://cdn.portone.io/v2/browser-sdk.esm.js"
-			);
+			const { default: PortOne, slots } = import.meta.env.VITE_BROWSER_SDK_V2
+				? await import(/* @vite-ignore */ import.meta.env.VITE_BROWSER_SDK_V2)
+				: await import("https://cdn.portone.io/v2/browser-sdk.esm.js");
 			Object.assign(slots, { CHECKOUT_SERVER });
 			return { PortOne, cleanUp: () => {} };
 		}

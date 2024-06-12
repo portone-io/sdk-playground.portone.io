@@ -5,6 +5,7 @@ import {
 	effect,
 	signal,
 } from "@preact/signals";
+import { P, match } from "ts-pattern";
 import type { SdkV1, SdkV1Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
@@ -21,7 +22,7 @@ export function reset() {
 	checkoutServerSignal.value = defaultCheckoutServer;
 }
 
-const defaultCoreServer = "https://service.iamport.kr";
+const defaultCoreServer = import.meta.env.VITE_CORE_SERVER_URL;
 export const coreServerSignal = persisted(
 	localStorage,
 	`${prefix}.v1.coreServer`,
@@ -29,7 +30,7 @@ export const coreServerSignal = persisted(
 );
 export const coreServerUrlSignal = createUrlSignal(coreServerSignal);
 
-const defaultCheckoutServer = "https://checkout-service.prod.iamport.co";
+const defaultCheckoutServer = import.meta.env.VITE_CHECKOUT_SERVER_URL;
 export const checkoutServerSignal = persisted(
 	localStorage,
 	`${prefix}.v1.checkoutServer`,
@@ -72,37 +73,22 @@ async function loadSdkV1(
 	CORE_SERVER: string,
 	CHECKOUT_SERVER: string,
 ): Promise<SdkV1> {
-	switch (version) {
-		case "1.3.0": {
-			const { default: IMP, slots } = await import(
-				"https://cdn.iamport.kr/v1/iamport.esm.js"
-			);
+	return match(version)
+		.with("1.3.0", async () => {
+			const { default: IMP, slots } = import.meta.env.VITE_BROWSER_SDK_V1
+				? await import(/* @vite-ignore */ import.meta.env.VITE_BROWSER_SDK_V1)
+				: await import("https://cdn.iamport.kr/v1/iamport.esm.js");
 			const cleanUp = IMP.deinit;
 			slots.CORE_SERVER = CORE_SERVER;
 			slots.CHECKOUT_SERVER = CHECKOUT_SERVER;
 			return { IMP, cleanUp };
-		}
-		case "1.2.1": {
-			const { IMP } = await loadLegacySdk("iamport.payment-1.2.1.js");
+		})
+		.with(P._, async () => {
+			const { IMP } = await loadLegacySdk(`iamport.payment-${version}.js`);
 			IMP.slots.CORE_SERVER = CORE_SERVER;
 			return { IMP, cleanUp: () => IMP.style.remove() };
-		}
-		case "1.2.0": {
-			const { IMP } = await loadLegacySdk("iamport.payment-1.2.0.js");
-			IMP.slots.CORE_SERVER = CORE_SERVER;
-			return { IMP, cleanUp: () => IMP.style.remove() };
-		}
-		case "1.1.8": {
-			const { IMP } = await loadLegacySdk("iamport.payment-1.1.8.js");
-			IMP.slots.CORE_SERVER = CORE_SERVER;
-			return { IMP, cleanUp: () => IMP.style.remove() };
-		}
-		case "1.1.7": {
-			const { IMP } = await loadLegacySdk("iamport.payment-1.1.7.js");
-			IMP.slots.CORE_SERVER = CORE_SERVER;
-			return { IMP, cleanUp: () => IMP.style.remove() };
-		}
-	}
+		})
+		.exhaustive();
 }
 
 async function loadLegacySdk(filename: string) {
@@ -111,7 +97,9 @@ async function loadLegacySdk(filename: string) {
 		import("jquery").then((module) => {
 			window.jQuery = module.default;
 		});
-	const response = await fetch(`https://cdn.iamport.kr/js/${filename}`);
+	const response = import.meta.env.VITE_BROWSER_SDK_V1_LEGACY
+		? await fetch(`${import.meta.env.VITE_BROWSER_SDK_V1_LEGACY}/${filename}`)
+		: await fetch(`https://cdn.iamport.kr/js/${filename}`);
 	const script = await response.text();
 	// 1. replace polyfill modules and module assignment to `window.IMP` with `export default` and additional argument `out` added
 	const esmified = script.replace(
