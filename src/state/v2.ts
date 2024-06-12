@@ -10,7 +10,7 @@ export function reset() {
 	checkoutServerSignal.value = defaultCheckoutServer;
 }
 
-const defaultCheckoutServer = "https://checkout-service.prod.iamport.co";
+const defaultCheckoutServer = import.meta.env.VITE_CHECKOUT_SERVER_URL;
 export const checkoutServerSignal = persisted(
 	localStorage,
 	`${prefix}.v2.checkoutServer`,

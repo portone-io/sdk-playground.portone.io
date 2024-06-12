@@ -22,7 +22,7 @@ export function reset() {
 	checkoutServerSignal.value = defaultCheckoutServer;
 }
 
-const defaultCoreServer = "https://service.iamport.kr";
+const defaultCoreServer = import.meta.env.VITE_CORE_SERVER_URL;
 export const coreServerSignal = persisted(
 	localStorage,
 	`${prefix}.v1.coreServer`,
@@ -30,7 +30,7 @@ export const coreServerSignal = persisted(
 );
 export const coreServerUrlSignal = createUrlSignal(coreServerSignal);
 
-const defaultCheckoutServer = "https://checkout-service.prod.iamport.co";
+const defaultCheckoutServer = import.meta.env.VITE_CHECKOUT_SERVER_URL;
 export const checkoutServerSignal = persisted(
 	localStorage,
 	`${prefix}.v1.checkoutServer`,
