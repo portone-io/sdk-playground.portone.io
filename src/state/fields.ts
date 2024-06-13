@@ -320,6 +320,7 @@ export function matchFieldSignalType<T>({
 export interface JsonSignals {
 	jsonTextSignal: Signal<string>;
 	jsonValueSignal: ReadonlySignal<Record<string, unknown>>;
+	isEmptyJsonSignal: ReadonlySignal<boolean>;
 }
 export function createJsonSignals(
 	storage: Storage,
@@ -335,7 +336,12 @@ export function createJsonSignals(
 			return undefined;
 		}
 	});
-	return { jsonTextSignal, jsonValueSignal };
+	const isEmptyJsonSignal = computed(() => {
+		return Boolean(
+			jsonValueSignal.value && Object.keys(jsonValueSignal.value).length,
+		);
+	});
+	return { jsonTextSignal, jsonValueSignal, isEmptyJsonSignal };
 }
 
 interface CreateConfigObjectSignalConfig {

@@ -286,10 +286,8 @@ export const fieldSignals = createFieldSignals(
 	`${prefix}.v1-pay.fields`,
 	fields,
 );
-export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
-	localStorage,
-	`${prefix}.v1-pay.json`,
-);
+export const { jsonTextSignal, jsonValueSignal, isEmptyJsonSignal } =
+	createJsonSignals(localStorage, `${prefix}.v1-pay.json`);
 export const configObjectSignal = createConfigObjectSignal({
 	fields,
 	fieldSignals,

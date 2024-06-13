@@ -5,6 +5,7 @@ import {
 	codePreviewSignal,
 	fieldSignals,
 	fields,
+	isEmptyJsonSignal,
 	jsonTextSignal,
 	jsonValueSignal,
 	reset,
@@ -24,7 +25,7 @@ const resetFn = () => {
 
 const View: React.FC = () => {
 	const parseJsonFailed = jsonValueSignal.value == null;
-	const isJsonOpen = useSignal(false);
+	const isJsonOpen = useSignal(isEmptyJsonSignal.value);
 	return (
 		<>
 			<p className="mb-4 text-xs text-slate-500">
