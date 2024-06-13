@@ -12,7 +12,7 @@ export interface AppMode {
 export const appModeSignal = persisted<AppMode>(
 	localStorage,
 	`${prefix}.appMode`,
-	{ sdkVersion: "1.3.0", fn: "v1-pay" },
+	{ sdkVersion: "2.0.0", fn: "v2-pay" },
 );
 
 export function getMajorVersion(sdkVersion: SdkVersion): MajorVersion {
