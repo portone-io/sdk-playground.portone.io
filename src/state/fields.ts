@@ -364,7 +364,10 @@ export function createConfigObjectSignal({
 			const fieldSignal = fieldSignals[key];
 			const value = getFieldObject(field, field.input, fieldSignal);
 			const enabled = fieldSignal.enabledSignal.value;
-			if (field.required || enabled) {
+			const required = import.meta.env.VITE_SDK_PREVIEW
+				? false
+				: field.required;
+			if (required || enabled) {
 				result[key] = value;
 			}
 		}

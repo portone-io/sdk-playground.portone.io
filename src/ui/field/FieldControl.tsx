@@ -22,12 +22,13 @@ const FieldControl: React.FC<FieldControlProps> = ({
 	const { enabledSignal } = fieldSignal;
 	const FieldInput = fieldInputComponents[field.input.type];
 	const hidden = field.hidden?.value;
+	const required = import.meta.env.VITE_SDK_PREVIEW ? false : field.required;
 	return (
 		!hidden && (
 			<Control
 				label={field.label}
 				code={code}
-				required={field.required}
+				required={required}
 				enabled={enabledSignal.value}
 				onToggle={(value) => {
 					enabledSignal.value = value;
