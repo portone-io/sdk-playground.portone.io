@@ -81,6 +81,8 @@ export interface SdkV2 {
 	PortOne: {
 		requestPayment(config: unknown): Promise<unknown>;
 		requestIdentityVerification(config: unknown): Promise<unknown>;
+		requestIssueBillingKey(config: unknown): Promise<unknown>;
+		requestIssueBillingKeyAndPay(config: unknown): Promise<unknown>;
 		loadPaymentUI(
 			config: unknown,
 			callbacks: Record<string, (value: unknown) => void>,

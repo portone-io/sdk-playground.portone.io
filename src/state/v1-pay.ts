@@ -279,7 +279,7 @@ export const fields = {
 			placeholder: "0000000000",
 		},
 	},
-} satisfies Fields;
+} as const satisfies Fields;
 
 export const fieldSignals = createFieldSignals(
 	localStorage,
