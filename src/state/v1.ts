@@ -6,6 +6,7 @@ import {
 	signal,
 } from "@preact/signals";
 import { P, match } from "ts-pattern";
+import { importStatic } from "../misc/import-static";
 import type { SdkV1, SdkV1Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
@@ -76,7 +77,7 @@ async function loadSdkV1(
 	return match(version)
 		.with("1.3.0", async () => {
 			const { default: IMP, slots } = import.meta.env.VITE_BROWSER_SDK_V1
-				? await import(/* @vite-ignore */ import.meta.env.VITE_BROWSER_SDK_V1)
+				? await importStatic(import.meta.env.VITE_BROWSER_SDK_V1)
 				: await import("https://cdn.iamport.kr/v1/iamport.esm.js");
 			const cleanUp = IMP.deinit;
 			slots.CORE_SERVER = CORE_SERVER;

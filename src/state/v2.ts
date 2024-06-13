@@ -5,6 +5,7 @@ import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
 
 import { Entity } from "https://esm.sh/@portone/browser-sdk/v2?exports=Entity";
+import { importStatic } from "../misc/import-static";
 
 export function reset() {
 	checkoutServerSignal.value = defaultCheckoutServer;
@@ -53,7 +54,7 @@ async function loadSdkV2(
 	switch (version) {
 		case "2.0.0": {
 			const { default: PortOne, slots } = import.meta.env.VITE_BROWSER_SDK_V2
-				? await import(/* @vite-ignore */ import.meta.env.VITE_BROWSER_SDK_V2)
+				? await importStatic(import.meta.env.VITE_BROWSER_SDK_V2)
 				: await import("https://cdn.portone.io/v2/browser-sdk.esm.js");
 			Object.assign(slots, { CHECKOUT_SERVER });
 			return { PortOne, cleanUp: () => {} };
