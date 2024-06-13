@@ -283,10 +283,8 @@ export const fieldSignals = createFieldSignals(
 	`${prefix}.v2-identity-verification.fields`,
 	fields,
 );
-export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
-	localStorage,
-	`${prefix}.v2-identity-verification.json`,
-);
+export const { jsonTextSignal, jsonValueSignal, isEmptyJsonSignal } =
+	createJsonSignals(localStorage, `${prefix}.v2-identity-verification.json`);
 export const configObjectSignal = createConfigObjectSignal({
 	fields,
 	fieldSignals,

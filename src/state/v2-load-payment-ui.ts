@@ -70,10 +70,8 @@ export const fieldSignals = createFieldSignals(
 	`${prefix}.v2-load-payment-ui.fields`,
 	fields,
 );
-export const { jsonTextSignal, jsonValueSignal } = createJsonSignals(
-	localStorage,
-	`${prefix}.v2-load-payment-ui.json`,
-);
+export const { jsonTextSignal, jsonValueSignal, isEmptyJsonSignal } =
+	createJsonSignals(localStorage, `${prefix}.v2-load-payment-ui.json`);
 export const configObjectSignal = createConfigObjectSignal({
 	fields,
 	fieldSignals,
