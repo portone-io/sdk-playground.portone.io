@@ -6,11 +6,11 @@ import {
 	signal,
 } from "@preact/signals";
 import { P, match } from "ts-pattern";
+import { importStatic } from "../misc/import-static";
 import type { SdkV1, SdkV1Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
 import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
-import { importStatic } from "../misc/import-static";
 
 declare global {
 	interface Window {

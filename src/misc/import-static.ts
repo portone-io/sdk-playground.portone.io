@@ -2,7 +2,6 @@
 export function importStatic(modulePath: string) {
 	if (import.meta.env.DEV) {
 		return import(/* @vite-ignore */ `${modulePath}?${Date.now()}`);
-	} else {
-		return import(/* @vite-ignore */ modulePath);
 	}
+	return import(/* @vite-ignore */ modulePath);
 }
