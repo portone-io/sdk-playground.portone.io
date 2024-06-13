@@ -120,7 +120,7 @@ export const playFnSignal = computed(() => {
 			if (typeof response !== "object") {
 				throw new Error(`Unexpected response: ${response}`);
 			}
-			const success = "error_code" in response || "code" in response;
+			const success = !("error_code" in response || "code" in response);
 			playResultSignal.value = { success, response };
 		} catch (error) {
 			console.error(error);
