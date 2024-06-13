@@ -19,6 +19,6 @@
 		"indentStyle": "tab"
 	},
 	"files": {
-		"ignore": ["node_modules", "dist", ".vscode"]
+		"ignore": ["node_modules", "dist", ".vscode", "public/sdk"]
 	}
 }
