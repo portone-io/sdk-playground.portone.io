@@ -26,12 +26,15 @@ const FieldInputUnion: React.FC<FieldInputProps<UnionInput, UnionFieldSignal>> =
 			<div className="flex flex-col gap-2">
 				{Object.entries(fieldInput.fields).map(([key, field]) => {
 					const FieldInput = fieldInputComponents[field.input.type];
+					const required = import.meta.env.VITE_SDK_PREVIEW
+						? false
+						: field.required;
 					return (
 						<Control
 							key={key}
 							code={key}
 							label={field.label}
-							required={field.required}
+							required={required}
 							enabled={fieldSignals[key].enabledSignal.value}
 							onToggle={(value) => {
 								if (value === true) {
