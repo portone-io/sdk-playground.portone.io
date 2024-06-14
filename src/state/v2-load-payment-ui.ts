@@ -63,7 +63,7 @@ export const fields = {
 		},
 	},
 	...v2PayFields,
-} satisfies Fields;
+} as const satisfies Fields;
 
 export const fieldSignals = createFieldSignals(
 	localStorage,

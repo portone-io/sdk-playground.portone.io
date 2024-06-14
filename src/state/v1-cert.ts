@@ -138,7 +138,7 @@ export const fields = {
 			default: false,
 		},
 	},
-} satisfies Fields;
+} as const satisfies Fields;
 
 export const fieldSignals = createFieldSignals(
 	localStorage,
