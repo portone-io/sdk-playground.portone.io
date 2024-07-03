@@ -106,12 +106,12 @@
       🏧 계좌이체:
         payMethod: TRANSFER
         channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
-      📱 휴대폰 소액결제:
-        payMethod: MOBILE
-        channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
       🏦 가상계좌 이체:
         payMethod: VIRTUAL_ACCOUNT
         channelKey: channel-key-e6c31df1-5559-4b4a-9b2c-a35793d14db2
+      📱 휴대폰 소액결제:
+        payMethod: MOBILE
+        channelKey: channel-key-4ca6a942-3ee0-48fb-93ef-f4294b876d28
 - label: KICC
   icon: kicc
   v1-pay:
@@ -488,3 +488,24 @@
         pay_method: phone
       💸 문화상품권:
         pay_method: culturegift
+- label: 한국결제네트웍스
+  icon: kpn
+  v2-pay:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      orderName: 테스트 결제
+      totalAmount: 100
+      currency: KRW
+    case:
+      💳 카드결제:
+        payMethod: CARD
+        channelKey: channel-key-bcbb1622-ff80-49d5-adef-49191fda8ede
+      🏧 계좌이체:
+        payMethod: TRANSFER
+        channelKey: channel-key-bcbb1622-ff80-49d5-adef-49191fda8ede
+      🏦 가상계좌 이체:
+        payMethod: VIRTUAL_ACCOUNT
+        channelKey: channel-key-bcbb1622-ff80-49d5-adef-49191fda8ede
+        virtualAccount:
+          accountExpiry:
+            validHours: 24
