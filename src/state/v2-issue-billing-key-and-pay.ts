@@ -9,7 +9,6 @@ import {
 } from "./fields";
 import { prefix } from "./persisted";
 import { sdkV2Signal } from "./v2";
-import { fields as v2IssueBillingKeyFields } from "./v2-issue-billing-key";
 import { fields as v2PayFields } from "./v2-pay";
 
 export function reset() {
@@ -48,20 +47,22 @@ export const fields = {
 	orderName: v2PayFields.orderName,
 	totalAmount: v2PayFields.totalAmount,
 	currency: v2PayFields.currency,
-	billingKeyMethod: {
-		...v2IssueBillingKeyFields.billingKeyMethod,
+	billingKeyAndPayMethod: {
+		required: true,
+		label: "빌링 키 발급 및 결제 수단",
 		input: {
 			type: "enum",
-			options: ["MOBILE"],
-			default: "MOBILE",
-			placeholder: "MOBILE",
+			options: ["CARD", "MOBILE"],
+			default: "CARD",
+			placeholder: "CARD",
 		},
 	},
 	mobile: {
 		...v2PayFields.mobile,
 		enabled: false,
 		hidden: computed(
-			() => fieldSignals.billingKeyMethod?.valueSignal?.value !== "MOBILE",
+			() =>
+				fieldSignals.billingKeyAndPayMethod?.valueSignal?.value !== "MOBILE",
 		),
 		input: {
 			type: "object",
