@@ -43,6 +43,24 @@ export const codePreviewSignal = computed<string>(() => {
 export const fields = {
 	storeId: v2PayFields.storeId,
 	channelKey: v2PayFields.channelKey,
+	issueName: {
+		required: false,
+		label: "빌링 키 발급 주문 명",
+		input: {
+			type: "text",
+			default: "",
+			placeholder: "빌링 키 발급 주문 명",
+		},
+	},
+	issueId: {
+		required: false,
+		label: "빌링 키 발급 주문 고유번호",
+		input: {
+			type: "text",
+			default: "",
+			placeholder: "빌링 키 발급 주문 고유번호",
+		},
+	},
 	billingKeyMethod: {
 		required: true,
 		label: "빌링 키 발급 수단",
