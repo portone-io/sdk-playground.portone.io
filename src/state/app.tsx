@@ -2,6 +2,7 @@ import { computed, signal } from "@preact/signals";
 import type { Signal } from "@preact/signals";
 import { parse as parseErrorStack } from "error-stack-parser-es";
 import type { ReactNode } from "react";
+import { P, match } from "ts-pattern";
 import type { MajorVersion, SdkVersion } from "../sdk";
 import persisted, { prefix } from "./persisted";
 
@@ -134,7 +135,19 @@ export const playFnSignal = computed(() => {
 			if (typeof response !== "object") {
 				throw new Error(`Unexpected response: ${response}`);
 			}
-			const success = !("error_code" in response || "code" in response);
+			const success = match(response)
+				.with(
+					P.union({ error_code: P.nonNullable }, { code: P.nonNullable }),
+					() => false,
+				)
+				.with(
+					P.intersection(
+						{ code: P.optional(P.nonNullable) },
+						{ error_code: P.optional(P.nonNullable) },
+					),
+					() => true,
+				)
+				.exhaustive();
 			playResultSignal.value = { success, response };
 		} catch (error) {
 			console.error(error);
