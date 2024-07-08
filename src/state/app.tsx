@@ -49,6 +49,10 @@ export const modeFns = {
 		label: "PG 결제 UI",
 		stateModule: () => import("./v2-load-payment-ui"),
 	},
+	"v2-load-billing-key-ui": {
+		label: "PG 정기결제 UI",
+		stateModule: () => import("./v2-load-billing-key-ui"),
+	},
 	"v2-issue-billing-key": {
 		label: "빌링 키 발급",
 		stateModule: () => import("./v2-issue-billing-key"),
@@ -68,6 +72,7 @@ export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
 		"v2-pay",
 		"v2-identity-verification",
 		"v2-load-payment-ui",
+		"v2-load-billing-key-ui",
 		"v2-issue-billing-key",
 		"v2-issue-billing-key-and-pay",
 	],

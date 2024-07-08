@@ -21,6 +21,7 @@ import { accountSignals as v1PayAccountSignals } from "./state/v1-pay";
 import { fieldSignals as v2IdentityVerificationFieldSignals } from "./state/v2-identity-verification";
 import { fieldSignals as v2IssueBillingKeyFieldSignals } from "./state/v2-issue-billing-key";
 import { fieldSignals as v2IssueBillingKeyAndPayFieldSignals } from "./state/v2-issue-billing-key-and-pay";
+import { fieldSignals as v2LoadBillingKeyUiFieldSignals } from "./state/v2-load-billing-key-ui";
 import { fieldSignals as v2LoadPaymentUiFieldSignals } from "./state/v2-load-payment-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
 import JsonEditor from "./ui/JsonEditor";
@@ -34,6 +35,8 @@ export const showTrialSignal = computed(() => {
 	const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
 	const v2LoadPaymentUiStoreId =
 		v2LoadPaymentUiFieldSignals.storeId.valueSignal.value;
+	const v2LoadBillingKeyUiStoreId =
+		v2LoadBillingKeyUiFieldSignals.storeId.valueSignal.value;
 	const v2IdentityVerificationStoreId =
 		v2IdentityVerificationFieldSignals.storeId.valueSignal.value;
 	const v2IssueBillingKeyStoreId =
@@ -47,6 +50,7 @@ export const showTrialSignal = computed(() => {
 		.with("v1-load-ui", () => !v1LoadUiUserCode)
 		.with("v2-pay", () => !v2PayStoreId)
 		.with("v2-load-payment-ui", () => !v2LoadPaymentUiStoreId)
+		.with("v2-load-billing-key-ui", () => !v2LoadBillingKeyUiStoreId)
 		.with("v2-identity-verification", () => !v2IdentityVerificationStoreId)
 		.with("v2-issue-billing-key", () => !v2IssueBillingKeyStoreId)
 		.with("v2-issue-billing-key-and-pay", () => !v2IssueBillingKeyAndPayStoreId)
