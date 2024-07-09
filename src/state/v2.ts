@@ -19,7 +19,7 @@ export const checkoutServerSignal = persisted(
 );
 export const checkoutServerUrlSignal = createUrlSignal(checkoutServerSignal);
 
-export const sdkV2Signal = signal<SdkV2 | undefined>(undefined);
+export const sdkV2Signal = signal<Promise<SdkV2> | undefined>(undefined);
 
 effect(() => {
 	const version = sdkVersionSignal.value;
@@ -31,10 +31,7 @@ effect(() => {
 	let cleaned = false;
 	(async () => {
 		if (getMajorVersion(version) === "v2") {
-			const sdk = await loadSdkV2(
-				version as SdkV2Version,
-				checkoutServerUrl.origin,
-			);
+			const sdk = loadSdkV2(version as SdkV2Version, checkoutServerUrl.origin);
 			if (cleaned) return;
 			sdkV2Signal.value = sdk;
 		} else {
@@ -43,7 +40,7 @@ effect(() => {
 	})();
 	return () => {
 		cleaned = true;
-		sdkV2Signal.value?.cleanUp();
+		sdkV2Signal.value?.then((sdk) => sdk.cleanUp());
 	};
 });
 

@@ -20,17 +20,20 @@ export function reset() {
 export const playFnSignal = computed(() => {
 	const sdkV2 = sdkV2Signal.value;
 	const configObject = configObjectSignal.value;
-	return function loadIssueBillingKeyUI() {
-		if (!sdkV2) return Promise.reject(new Error("sdk not loaded"));
-		return new Promise((resolve, reject) => {
-			sdkV2.PortOne.loadIssueBillingKeyUI(configObject, {
-				onIssueBillingKeySuccess: resolve,
-				onIssueBillingKeyFail: resolve,
-			}).catch(reject);
-			pgUiModalOpenSignal.value = true;
-		}).finally(() => {
+	return async function loadIssueBillingKeyUI() {
+		if (!sdkV2) throw new Error("sdk not loaded");
+		const { PortOne } = await sdkV2;
+		try {
+			return await new Promise((resolve, reject) => {
+				PortOne.loadIssueBillingKeyUI(configObject, {
+					onIssueBillingKeySuccess: resolve,
+					onIssueBillingKeyFail: resolve,
+				}).catch(reject);
+				pgUiModalOpenSignal.value = true;
+			});
+		} finally {
 			pgUiModalOpenSignal.value = false;
-		});
+		}
 	};
 });
 

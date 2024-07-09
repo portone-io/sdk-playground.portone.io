@@ -32,9 +32,10 @@ export function reset() {
 export const playFnSignal = computed(() => {
 	const sdkV2 = sdkV2Signal.value;
 	const configObject = configObjectSignal.value;
-	return function requestPay() {
-		if (!sdkV2) return Promise.reject(new Error("sdk not loaded"));
-		return sdkV2.PortOne.requestPayment(configObject);
+	return async function requestPay() {
+		if (!sdkV2) throw new Error("sdk not loaded");
+		const { PortOne } = await sdkV2;
+		return PortOne.requestPayment(configObject);
 	};
 });
 
