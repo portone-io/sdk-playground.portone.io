@@ -32,12 +32,13 @@ export const playFnSignal = computed(() => {
 	const userCode = accountSignals.userCodeSignal.value;
 	const uiType = uiTypeSignal.value;
 	const configObject = configObjectSignal.value;
-	return function loadUI() {
-		if (!sdkV1) return Promise.reject(new Error("sdk not loaded"));
-		return new Promise((resolve, reject) => {
-			if (!userCode) reject(new Error("userCode is empty"));
-			accountSignals.impInit(sdkV1);
-			sdkV1.IMP.loadUI(uiType, configObject, (response) => {
+	return async function loadUI() {
+		if (!sdkV1) throw new Error("sdk not loaded");
+		if (!userCode) throw new Error("userCode is empty");
+		const { IMP } = await sdkV1;
+		accountSignals.impInit(IMP);
+		return new Promise((resolve) => {
+			IMP.loadUI(uiType, configObject, (response) => {
 				resolve(response);
 				pgUiModalOpenSignal.value = false;
 			});
