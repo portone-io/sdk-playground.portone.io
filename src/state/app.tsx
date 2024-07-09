@@ -145,14 +145,7 @@ export const playFnSignal = computed(() => {
 					P.union({ error_code: P.nonNullable }, { code: P.nonNullable }),
 					() => false,
 				)
-				.with(
-					P.intersection(
-						{ code: P.optional(P.nonNullable) },
-						{ error_code: P.optional(P.nonNullable) },
-					),
-					() => true,
-				)
-				.exhaustive();
+				.otherwise(() => true);
 			playResultSignal.value = { success, response };
 		} catch (error) {
 			console.error(error);
