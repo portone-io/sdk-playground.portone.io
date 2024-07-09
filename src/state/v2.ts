@@ -69,6 +69,9 @@ export const giftCertificateTypeOptions = Object.keys(
 	Entity.GiftCertificateType,
 );
 export const paymentUITypeOptions = Object.keys(Entity.PaymentUIType);
+export const IssueBillingKeyUITypeOptions = Object.keys(
+	Entity.IssueBillingKeyUIType,
+);
 export const easyPayProviderOptions = Object.keys(Entity.EasyPayProvider);
 export const currencyOptions = Object.keys(Entity.Currency);
 export const countryOptions = Object.keys(Entity.Country);

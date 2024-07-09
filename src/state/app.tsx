@@ -2,6 +2,7 @@ import { computed, signal } from "@preact/signals";
 import type { Signal } from "@preact/signals";
 import { parse as parseErrorStack } from "error-stack-parser-es";
 import type { ReactNode } from "react";
+import { P, match } from "ts-pattern";
 import type { MajorVersion, SdkVersion } from "../sdk";
 import persisted, { prefix } from "./persisted";
 
@@ -48,6 +49,10 @@ export const modeFns = {
 		label: "PG 결제 UI",
 		stateModule: () => import("./v2-load-payment-ui"),
 	},
+	"v2-load-billing-key-ui": {
+		label: "PG 정기결제 UI",
+		stateModule: () => import("./v2-load-billing-key-ui"),
+	},
 	"v2-issue-billing-key": {
 		label: "빌링 키 발급",
 		stateModule: () => import("./v2-issue-billing-key"),
@@ -67,6 +72,7 @@ export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
 		"v2-pay",
 		"v2-identity-verification",
 		"v2-load-payment-ui",
+		"v2-load-billing-key-ui",
 		"v2-issue-billing-key",
 		"v2-issue-billing-key-and-pay",
 	],
@@ -134,7 +140,12 @@ export const playFnSignal = computed(() => {
 			if (typeof response !== "object") {
 				throw new Error(`Unexpected response: ${response}`);
 			}
-			const success = !("error_code" in response || "code" in response);
+			const success = match(response)
+				.with(
+					P.union({ error_code: P.nonNullable }, { code: P.nonNullable }),
+					() => false,
+				)
+				.otherwise(() => true);
 			playResultSignal.value = { success, response };
 		} catch (error) {
 			console.error(error);

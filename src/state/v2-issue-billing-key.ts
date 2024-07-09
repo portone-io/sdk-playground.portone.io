@@ -61,6 +61,18 @@ export const fields = {
 			placeholder: "빌링 키 발급 주문 고유번호",
 		},
 	},
+	displayAmount: {
+		required: false,
+		label: "표시용 결제 금액",
+		input: {
+			type: "integer",
+			default: 1000,
+		},
+	},
+	currency: {
+		...v2PayFields.currency,
+		required: false,
+	},
 	billingKeyMethod: {
 		required: true,
 		label: "빌링 키 발급 수단",

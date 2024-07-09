@@ -1,6 +1,7 @@
 import { EditorView } from "@codemirror/view";
 import { computed } from "@preact/signals";
 import type * as React from "react";
+import { match } from "ts-pattern";
 import { type SdkVersion, isSupportedVersion, sdkVersions } from "./sdk";
 import {
 	appModeSignal,
@@ -18,6 +19,9 @@ import { accountSignals as v1CertAccountSignals } from "./state/v1-cert";
 import { accountSignals as v1LoadUiAccountSignals } from "./state/v1-load-ui";
 import { accountSignals as v1PayAccountSignals } from "./state/v1-pay";
 import { fieldSignals as v2IdentityVerificationFieldSignals } from "./state/v2-identity-verification";
+import { fieldSignals as v2IssueBillingKeyFieldSignals } from "./state/v2-issue-billing-key";
+import { fieldSignals as v2IssueBillingKeyAndPayFieldSignals } from "./state/v2-issue-billing-key-and-pay";
+import { fieldSignals as v2LoadBillingKeyUiFieldSignals } from "./state/v2-load-billing-key-ui";
 import { fieldSignals as v2LoadPaymentUiFieldSignals } from "./state/v2-load-payment-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
 import JsonEditor from "./ui/JsonEditor";
@@ -31,22 +35,26 @@ export const showTrialSignal = computed(() => {
 	const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
 	const v2LoadPaymentUiStoreId =
 		v2LoadPaymentUiFieldSignals.storeId.valueSignal.value;
+	const v2LoadBillingKeyUiStoreId =
+		v2LoadBillingKeyUiFieldSignals.storeId.valueSignal.value;
 	const v2IdentityVerificationStoreId =
 		v2IdentityVerificationFieldSignals.storeId.valueSignal.value;
-	switch (modeFn) {
-		case "v1-pay":
-			return !v1PayUserCode;
-		case "v1-cert":
-			return !v1CertUserCode;
-		case "v1-load-ui":
-			return !v1LoadUiUserCode;
-		case "v2-pay":
-			return !v2PayStoreId;
-		case "v2-load-payment-ui":
-			return !v2LoadPaymentUiStoreId;
-		case "v2-identity-verification":
-			return !v2IdentityVerificationStoreId;
-	}
+	const v2IssueBillingKeyStoreId =
+		v2IssueBillingKeyFieldSignals.storeId.valueSignal.value;
+	const v2IssueBillingKeyAndPayStoreId =
+		v2IssueBillingKeyAndPayFieldSignals.storeId.valueSignal.value;
+
+	return match(modeFn)
+		.with("v1-pay", () => !v1PayUserCode)
+		.with("v1-cert", () => !v1CertUserCode)
+		.with("v1-load-ui", () => !v1LoadUiUserCode)
+		.with("v2-pay", () => !v2PayStoreId)
+		.with("v2-load-payment-ui", () => !v2LoadPaymentUiStoreId)
+		.with("v2-load-billing-key-ui", () => !v2LoadBillingKeyUiStoreId)
+		.with("v2-identity-verification", () => !v2IdentityVerificationStoreId)
+		.with("v2-issue-billing-key", () => !v2IssueBillingKeyStoreId)
+		.with("v2-issue-billing-key-and-pay", () => !v2IssueBillingKeyAndPayStoreId)
+		.exhaustive();
 });
 
 const Header: React.FC = () => {

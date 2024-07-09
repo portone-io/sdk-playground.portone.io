@@ -87,6 +87,10 @@ export interface SdkV2 {
 			config: unknown,
 			callbacks: Record<string, (value: unknown) => void>,
 		): Promise<unknown>;
+		loadIssueBillingKeyUI(
+			request: unknown,
+			callbacks: Record<string, (value: unknown) => void>,
+		): Promise<void>;
 	};
 	cleanUp: () => void;
 }
