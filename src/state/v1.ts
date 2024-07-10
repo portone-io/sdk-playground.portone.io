@@ -39,7 +39,7 @@ export const checkoutServerSignal = persisted(
 );
 export const checkoutServerUrlSignal = createUrlSignal(checkoutServerSignal);
 
-export const sdkV1Signal = signal<SdkV1 | undefined>(undefined);
+export const sdkV1Signal = signal<Promise<SdkV1> | undefined>(undefined);
 
 effect(() => {
 	const version = sdkVersionSignal.value;
@@ -52,7 +52,7 @@ effect(() => {
 	let cleaned = false;
 	(async () => {
 		if (getMajorVersion(version) === "v1") {
-			const sdk = await loadSdkV1(
+			const sdk = loadSdkV1(
 				version as SdkV1Version,
 				coreServerUrl.origin,
 				checkoutServerUrl.origin,
@@ -65,7 +65,7 @@ effect(() => {
 	})();
 	return () => {
 		cleaned = true;
-		sdkV1Signal.value?.cleanUp();
+		sdkV1Signal.value?.then((sdk) => sdk.cleanUp());
 	};
 });
 
@@ -141,7 +141,7 @@ export interface AccountSignals {
 	tierCodeEnabledSignal: Signal<boolean>;
 	codePreviewSignal: ReadonlySignal<string>;
 	reset: () => void;
-	impInit: (sdkV1: SdkV1) => void;
+	impInit: (IMP: SdkV1["IMP"]) => void;
 }
 export function createAccountSignals(keyPrefix: string): AccountSignals {
 	const userCodeSignal = persisted(localStorage, `${keyPrefix}.userCode`, "");
@@ -172,12 +172,12 @@ export function createAccountSignals(keyPrefix: string): AccountSignals {
 			tierCodeSignal.value = "";
 			tierCodeEnabledSignal.value = false;
 		},
-		impInit(sdkV1) {
+		impInit(IMP) {
 			const userCode = userCodeSignal.value;
 			const tierCode = tierCodeSignal.value;
 			const tierCodeEnabled = tierCodeEnabledSignal.value;
-			if (tierCodeEnabled && tierCode) sdkV1.IMP.agency(userCode, tierCode);
-			else sdkV1.IMP.init(userCode);
+			if (tierCodeEnabled && tierCode) IMP.agency(userCode, tierCode);
+			else IMP.init(userCode);
 		},
 	};
 }

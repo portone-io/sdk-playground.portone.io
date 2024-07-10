@@ -23,12 +23,13 @@ export const playFnSignal = computed(() => {
 	const sdkV1 = sdkV1Signal.value;
 	const userCode = accountSignals.userCodeSignal.value;
 	const configObject = configObjectSignal.value;
-	return function requestPay() {
-		if (!sdkV1) return Promise.reject(new Error("sdk not loaded"));
-		return new Promise((resolve, reject) => {
-			if (!userCode) reject(new Error("userCode is empty"));
-			accountSignals.impInit(sdkV1);
-			sdkV1.IMP.request_pay(configObject, resolve);
+	return async function requestPay() {
+		if (!sdkV1) throw new Error("sdk not loaded");
+		if (!userCode) throw new Error("userCode is empty");
+		const { IMP } = await sdkV1;
+		accountSignals.impInit(IMP);
+		return new Promise((resolve) => {
+			IMP.request_pay(configObject, resolve);
 		});
 	};
 });
