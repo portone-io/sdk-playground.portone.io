@@ -32,6 +32,11 @@ import {
 	jsonTextSignal as v2IdentityVerificationJsonTextSignal,
 } from "../state/v2-identity-verification";
 import {
+	fieldSignals as v2LoadBillingKeyUiFieldSignals,
+	type fields as v2LoadBillingKeyUiFields,
+	jsonTextSignal as v2LoadBillingKeyUiJsonTextSignal,
+} from "../state/v2-load-billing-key-ui";
+import {
 	fieldSignals as v2LoadPaymentUiFieldSignals,
 	fields as v2LoadPaymentUiFields,
 	jsonTextSignal as v2LoadPaymentUiJsonTextSignal,
@@ -70,6 +75,9 @@ interface TrialDataItem {
 	};
 	"v2-load-payment-ui": {
 		field: Record<keyof typeof v2LoadPaymentUiFields, unknown>;
+	};
+	"v2-load-billing-key-ui": {
+		field: Record<keyof typeof v2LoadBillingKeyUiFields, unknown>;
 	};
 }
 const trialData = _trialData as TrialDataItem[];
@@ -291,6 +299,34 @@ const V2Trials: React.FC = () => {
 									fields,
 									v2LoadPaymentUiFieldSignals,
 									v2LoadPaymentUiJsonTextSignal,
+								);
+							}}
+						>
+							{item.label}
+						</LoadUiPreset>
+					))}
+			</div>
+			<Group>PG 정기결제 UI</Group>
+			<div className="grid sm:grid-cols-2 gap-2">
+				{trialData
+					.filter((item) => "v2-load-billing-key-ui" in item)
+					.map((item) => (
+						<LoadUiPreset
+							key={`${item.label}-${Math.random().toString(36).slice(2)}`}
+							icon={item.icon}
+							handler={() => {
+								trialModalOpenSignal.value = false;
+								appModeSignal.value = {
+									sdkVersion: "2.0.0",
+									fn: "v2-load-billing-key-ui",
+								};
+								const fields = Object.entries(
+									item["v2-load-billing-key-ui"].field,
+								);
+								applyFieldsToSignals(
+									fields,
+									v2LoadBillingKeyUiFieldSignals,
+									v2LoadBillingKeyUiJsonTextSignal,
 								);
 							}}
 						>

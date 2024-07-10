@@ -52,6 +52,24 @@
       orderName: 테스트 결제
       totalAmount: 100
       currency: USD
+- label: 페이팔 RT
+  icon: paypal
+  v1-load-ui:
+    account:
+      userCode: imp14397622
+    uiType: paypal-rt
+    field:
+      pg: paypal_v2.7WBB3CKT63FRG
+      pay_method: paypal
+      customer_uid: test
+      name: 테스트 결제
+      amount: 1
+      buyer_tel: 010-0000-0000
+  v2-load-billing-key-ui:
+    field:
+      uiType: PAYPAL_RT
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-ddfbd2ad-facd-41c6-9969-463ec9d5fd23
 - label: KCP
   icon: kcp
   v1-pay:
