@@ -50,7 +50,7 @@ effect(() => {
 		return;
 	}
 	let cleaned = false;
-	(async (version) => {
+	(async () => {
 		if (getMajorVersion(version) === "v1") {
 			const sdk = loadSdkV1(
 				version as SdkV1Version,
@@ -62,7 +62,7 @@ effect(() => {
 		} else {
 			sdkV1Signal.value = undefined;
 		}
-	})(version);
+	})();
 	return () => {
 		cleaned = true;
 		sdkV1Signal.value?.then((sdk) => sdk.cleanUp());
