@@ -1,15 +1,16 @@
 import type * as React from "react";
 
-export const RequiredIndicator: React.FC<React.HTMLAttributes<HTMLDivElement>> =
-	({ className = "", ...props }) => {
-		return (
-			<div
-				aria-label="필수"
-				className={`w-2 h-2 inline-block bg-orange-700 rounded ${className}`}
-				{...props}
-			/>
-		);
-	};
+export const RequiredIndicator: React.FC<
+	React.HTMLAttributes<HTMLDivElement>
+> = ({ className = "", ...props }) => {
+	return (
+		<div
+			aria-label="필수"
+			className={`w-2 h-2 inline-block bg-orange-700 rounded ${className}`}
+			{...props}
+		/>
+	);
+};
 
 export interface ControlProps extends React.HTMLAttributes<HTMLDivElement> {
 	label: React.ReactNode;

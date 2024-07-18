@@ -167,7 +167,7 @@ function buildErrorStack(error: Error) {
 			</span>
 			<ul className="ml-12">
 				{stack.map((frame) => (
-					<li>
+					<li key={crypto.randomUUID()}>
 						at {frame.functionName} ({frame.fileName}:{frame.lineNumber}:
 						{frame.columnNumber})
 					</li>
