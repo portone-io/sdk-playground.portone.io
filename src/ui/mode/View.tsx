@@ -7,6 +7,7 @@ import {
 } from "@preact/signals";
 import type * as React from "react";
 import { useWindowSize } from "../../misc/utils";
+import { selectedTabSignal } from "../../state/app";
 import type { FieldSignals, Fields } from "../../state/fields";
 import { RequiredIndicator } from "../../ui/Control";
 import HtmlEditor from "../../ui/HtmlEditor";
@@ -42,7 +43,6 @@ export const View = ({
 }: ViewProps) => {
 	const parseJsonFailed = jsonValueSignal.value == null;
 	const isJsonOpen = useSignal(isEmptyJsonSignal.value);
-	const selectedTab = useSignal("parameter");
 	const windowSize = useWindowSize();
 	const hasNarrowWindow = useComputed(
 		() => windowSize.value.width !== undefined && windowSize.value.width < 768,
@@ -102,9 +102,9 @@ export const View = ({
 				{hasNarrowWindow.value === false && parameterEdtior}
 				<Tabs
 					onSelect={(key) => {
-						selectedTab.value = key;
+						selectedTabSignal.value = key;
 					}}
-					selectedTab={selectedTab.value}
+					selectedTab={selectedTabSignal.value}
 					tabs={[
 						{
 							title: "파라미터 입력",

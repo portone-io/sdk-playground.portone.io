@@ -16,6 +16,12 @@ export const appModeSignal = persisted<AppMode>(
 	{ sdkVersion: "2.0.0", fn: "v2-pay" },
 );
 
+export const selectedTabSignal = persisted<string>(
+	localStorage,
+	`${prefix}.selectedTab`,
+	"example",
+);
+
 export function getMajorVersion(sdkVersion: SdkVersion): MajorVersion {
 	const major = sdkVersion.split(".").shift();
 	if (major === "1") return "v1";
