@@ -39,7 +39,7 @@ export default function Tabs<K extends string>({
 						<li
 							key={tab.key}
 							className={clsx(
-								"border-r px-4 py-2 text-sm shrink text-ellipsis overflow-hidden whitespace-nowrap text-slate hover:bg-slate-100",
+								"flex border-r px-4 py-2 text-sm shrink text-ellipsis overflow-hidden whitespace-nowrap text-slate hover:bg-slate-100",
 								{
 									"bg-slate-100 font-bold": isSelected,
 									"cursor-pointer": !isSelected,
