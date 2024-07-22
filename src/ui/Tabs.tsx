@@ -20,7 +20,7 @@ export default function Tabs<K extends string>({
 	onSelect,
 }: TabProps<K>) {
 	return (
-		<div>
+		<div className="grid grid-rows-[auto_1fr] auto-cols-fr">
 			<ul className="flex">
 				{tabs.map((tab) => {
 					if (tab.visible === false) {
@@ -60,8 +60,11 @@ export default function Tabs<K extends string>({
 				}
 
 				const isSelected = tab.key === selectedTab;
+				if (!isSelected) {
+					return;
+				}
 
-				return <div key={tab.key}>{isSelected && tab.children}</div>;
+				return <div key={tab.key}>{tab.children}</div>;
 			})}
 		</div>
 	);
