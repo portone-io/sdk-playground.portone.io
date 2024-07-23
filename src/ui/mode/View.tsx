@@ -84,9 +84,12 @@ export const View = ({
 				{hasNarrowWindow.value === false && parameterEditTab}
 				<Tabs
 					onSelect={(key) => {
-						selectedTabSignal.value = key;
+						selectedTabSignal.value = {
+							...selectedTabSignal.value,
+							right: key,
+						};
 					}}
-					selectedTab={selectedTabSignal.value}
+					selectedTab={selectedTabSignal.value.right}
 					tabs={
 						[
 							{
