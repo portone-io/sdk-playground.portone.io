@@ -2,6 +2,7 @@ import { reset as resetV1 } from "../../state/v1";
 import {
 	accountSignals,
 	codePreviewSignal,
+	configObjectSignal,
 	fieldSignals,
 	fields,
 	isEmptyJsonSignal,
@@ -22,6 +23,7 @@ export default function () {
 			jsonValueSignal={jsonValueSignal}
 			codePreviewSignal={codePreviewSignal}
 			isEmptyJsonSignal={isEmptyJsonSignal}
+			configObjectSignal={configObjectSignal}
 			prependControls={<V1PrependControls accountSignals={accountSignals} />}
 			onReset={() => {
 				reset();

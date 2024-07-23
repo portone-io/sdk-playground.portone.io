@@ -1,6 +1,7 @@
 import { reset as resetV2 } from "../../state/v2";
 import {
 	codePreviewSignal,
+	configObjectSignal,
 	fieldSignals,
 	fields,
 	isEmptyJsonSignal,
@@ -21,6 +22,7 @@ export default function () {
 			jsonValueSignal={jsonValueSignal}
 			codePreviewSignal={codePreviewSignal}
 			isEmptyJsonSignal={isEmptyJsonSignal}
+			configObjectSignal={configObjectSignal}
 			onReset={() => {
 				reset();
 				resetV2();

@@ -1,6 +1,7 @@
-import { computed, signal } from "@preact/signals";
+import { batch, computed, signal } from "@preact/signals";
 import type { ReadonlySignal, Signal } from "@preact/signals";
 import { P, match } from "ts-pattern";
+import { isRecord } from "../misc/utils";
 import persisted from "./persisted";
 
 export interface Fields {
@@ -347,13 +348,13 @@ export function createJsonSignals(
 interface CreateConfigObjectSignalConfig {
 	fields: Fields;
 	fieldSignals: FieldSignals;
-	jsonValueSignal: Signal<Record<string, unknown>>;
+	jsonValueSignal: ReadonlySignal<Record<string, unknown>>;
 }
 export function createConfigObjectSignal({
 	fields,
 	fieldSignals,
 	jsonValueSignal,
-}: CreateConfigObjectSignalConfig) {
+}: CreateConfigObjectSignalConfig): ReadonlySignal<Record<string, unknown>> {
 	return computed(() => ({
 		...getObject(fields, fieldSignals),
 		...jsonValueSignal.value,
@@ -410,5 +411,78 @@ export function createConfigObjectSignal({
 			toggle: (_, fieldSignal) => fieldSignal.valueSignal.value,
 			enum: (_, fieldSignal) => fieldSignal.valueSignal.value,
 		});
+	}
+}
+
+export function updateSignalsFromJson(
+	json: Record<string, unknown>,
+	fieldSignals: FieldSignals,
+	jsonTextSignal: Signal<string>,
+) {
+	batch(() => {
+		const extraFields = updateFields(json, fieldSignals);
+		jsonTextSignal.value = JSON.stringify(extraFields, null, 2);
+	});
+
+	function updateFields(
+		json: Record<string, unknown>,
+		fieldSignals: FieldSignals,
+	): Record<string, unknown> {
+		const extraFields: Record<string, unknown> = {};
+
+		for (const [key, value] of Object.entries(json)) {
+			const fieldSignal: FieldSignal | undefined = fieldSignals[key];
+			extraFields[key] = updateField(value, fieldSignal);
+		}
+
+		return extraFields;
+	}
+	function updateField(value: unknown, fieldSignal?: FieldSignal): unknown {
+		return match([fieldSignal, value])
+			.with([{ type: "object" }, P.when(isRecord)], ([fieldSignal, value]) => {
+				fieldSignal.enabledSignal.value = true;
+				return updateFields(value, fieldSignal.valueSignal.value);
+			})
+			.with([{ type: "union" }, P.when(isRecord)], ([fieldSignal, value]) => {
+				fieldSignal.enabledSignal.value = true;
+				const key = Object.keys(value)[0] ?? "";
+				fieldSignal.activeKeySignal.value = key;
+				return { [key]: updateFields(value, fieldSignal.valueSignal.value) };
+			})
+			.with(
+				[{ type: "array" }, P.when(Array.isArray)],
+				([fieldSignal, value]) => {
+					fieldSignal.enabledSignal.value = true;
+					fieldSignal.resize(value.length);
+					return value.map((item, index) => {
+						const itemSignal = fieldSignal.valueSignal.value[index];
+						return updateField(item, itemSignal);
+					});
+				},
+			)
+			.with(
+				[{ type: "integer" }, P.number],
+				[{ type: "text" }, P.string],
+				[{ type: "toggle" }, P.boolean],
+				[{ type: "enum" }, P.string],
+				([fieldSignal, value]) => {
+					fieldSignal.enabledSignal.value = true;
+					fieldSignal.valueSignal.value = value;
+				},
+			)
+			.with(
+				[{ type: "object" }, P._],
+				[{ type: "union" }, P._],
+				[{ type: "array" }, P._],
+				[{ type: "integer" }, P._],
+				[{ type: "text" }, P._],
+				[{ type: "toggle" }, P._],
+				[{ type: "enum" }, P._],
+				[P.nullish, P._],
+				([_, value]) => {
+					return value;
+				},
+			)
+			.exhaustive();
 	}
 }
