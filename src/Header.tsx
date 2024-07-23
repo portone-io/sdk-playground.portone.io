@@ -125,7 +125,7 @@ const Header: React.FC = () => {
 										className="text-black"
 										value={JSON.stringify(playResult.response, null, 2)}
 										extensions={[EditorView.lineWrapping]}
-										readOnly
+										editable={false}
 									/>
 								)}
 								{playResult.errorStack != null && (

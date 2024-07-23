@@ -106,7 +106,7 @@ const View: React.FC = () => {
 						<div className="flex-1">
 							<HtmlEditor
 								className="h-full"
-								readOnly
+								editable={false}
 								value={codePreviewSignal.value}
 							/>
 						</div>
