@@ -4,16 +4,22 @@ import { type Signal, batch, useSignal } from "@preact/signals";
 import CodeMirror from "@uiw/react-codemirror";
 import { isEqual } from "es-toolkit";
 import { isRecord } from "../../misc/utils";
-import { type FieldSignals, updateSignalsFromJson } from "../../state/fields";
+import {
+	type FieldSignals,
+	type Fields,
+	updateSignalsFromJson,
+} from "../../state/fields";
 
 interface JsonEditTabProps {
 	configObjectSignal: Signal<Record<string, unknown>>;
 	jsonTextSignal: Signal<string>;
+	fields: Fields;
 	fieldSignals: FieldSignals;
 }
 
 export const JsonEditTab = ({
 	configObjectSignal,
+	fields,
 	fieldSignals,
 	jsonTextSignal,
 }: JsonEditTabProps) => {
@@ -45,6 +51,7 @@ export const JsonEditTab = ({
 					if (!isEqual(configObjectSignal.peek(), internalJsonObject.peek())) {
 						updateSignalsFromJson(
 							internalJsonObject.peek(),
+							fields,
 							fieldSignals,
 							jsonTextSignal,
 						);

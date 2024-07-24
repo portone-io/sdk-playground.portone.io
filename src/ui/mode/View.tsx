@@ -77,6 +77,7 @@ export const View = ({
 		children: (
 			<JsonEditTab
 				configObjectSignal={configObjectSignal}
+				fields={fields}
 				fieldSignals={fieldSignals}
 				jsonTextSignal={jsonTextSignal}
 			/>
