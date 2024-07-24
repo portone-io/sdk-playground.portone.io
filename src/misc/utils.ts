@@ -1,33 +1,12 @@
-import {
-	type ReadonlySignal,
-	useSignal,
-	useSignalEffect,
-} from "@preact/signals";
+import { type Signal, useSignal } from "@preact/signals";
+import { useEffect } from "react";
 
-interface Size {
-	width: number | undefined;
-	height: number | undefined;
-}
-
-export function useWindowSize(): ReadonlySignal<Size> {
-	const windowSize = useSignal<Size>({
-		width: undefined,
-		height: undefined,
-	});
-
-	useSignalEffect(() => {
-		function handleResize() {
-			windowSize.value = {
-				width: window.innerWidth,
-				height: window.innerHeight,
-			};
-		}
-		window.addEventListener("resize", handleResize);
-		handleResize();
-		return () => {
-			window.removeEventListener("resize", handleResize);
+export function useMediaQueryMatches(query: string): Signal<boolean> {
+	const matchesSignal = useSignal(window.matchMedia(query).matches);
+	useEffect(() => {
+		window.matchMedia(query).onchange = (e) => {
+			matchesSignal.value = e.matches;
 		};
 	});
-
-	return windowSize;
+	return matchesSignal;
 }

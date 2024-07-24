@@ -5,7 +5,8 @@ import {
 	useComputed,
 } from "@preact/signals";
 import type * as React from "react";
-import { useWindowSize } from "../../misc/utils";
+import { useCallback } from "react";
+import { useMediaQueryMatches } from "../../misc/utils";
 import type { FieldSignals, Fields } from "../../state/fields";
 import { type Tab, selectedTabSignal } from "../../state/view";
 import { RequiredIndicator } from "../../ui/Control";
@@ -38,18 +39,15 @@ export const View = ({
 	prependControls,
 	onReset,
 }: ViewProps) => {
-	const windowSize = useWindowSize();
-	const hasNarrowWindow = useComputed(
-		() => windowSize.value.width !== undefined && windowSize.value.width < 768,
-	);
+	const hasNarrowWindow = useMediaQueryMatches("(max-width: 768px)");
 	const parseJsonFailedSignal = useComputed(
 		() => jsonValueSignal.value == null,
 	);
 	const resetCountSignal = signal(0);
-	const resetFn = () => {
+	const resetFn = useCallback(() => {
 		onReset();
 		++resetCountSignal.value;
-	};
+	}, [onReset, resetCountSignal]);
 
 	const parameterEditTab = (
 		<ParameterEditTab
