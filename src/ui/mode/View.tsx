@@ -3,18 +3,15 @@ import {
 	type Signal,
 	signal,
 	useComputed,
-	useSignal,
 } from "@preact/signals";
 import type * as React from "react";
 import { useWindowSize } from "../../misc/utils";
-import { selectedTabSignal } from "../../state/app";
 import type { FieldSignals, Fields } from "../../state/fields";
+import { type Tab, selectedTabSignal } from "../../state/view";
 import { RequiredIndicator } from "../../ui/Control";
-import HtmlEditor from "../../ui/HtmlEditor";
-import JsonEditor from "../../ui/JsonEditor";
-import Tabs from "../Tabs";
-import FieldControls from "../field/FieldControls";
-import Reset from "./Reset";
+import Tabs, { type TabItem } from "../../ui/Tabs";
+import { CodeExampleTab } from "../tabs/CodeExampleTab";
+import { ParameterEditTab } from "../tabs/ParameterEditTab";
 
 interface ViewProps {
 	forQa: React.ReactNode;
@@ -41,11 +38,12 @@ export const View = ({
 	prependControls,
 	onReset,
 }: ViewProps) => {
-	const parseJsonFailed = jsonValueSignal.value == null;
-	const isJsonOpen = useSignal(isEmptyJsonSignal.value);
 	const windowSize = useWindowSize();
 	const hasNarrowWindow = useComputed(
 		() => windowSize.value.width !== undefined && windowSize.value.width < 768,
+	);
+	const parseJsonFailedSignal = useComputed(
+		() => jsonValueSignal.value == null,
 	);
 	const resetCountSignal = signal(0);
 	const resetFn = () => {
@@ -53,37 +51,21 @@ export const View = ({
 		++resetCountSignal.value;
 	};
 
-	const parameterEdtior = (
-		<div className="flex flex-col gap-2 md:pb-80">
-			<Reset resetFn={resetFn} />
-			<details open={isJsonOpen.value}>
-				<summary
-					className={`text-xs ${
-						parseJsonFailed ? "text-red-700" : "text-slate-500"
-					} cursor-pointer`}
-				>
-					추가 파라미터 (JSON{parseJsonFailed && " 파싱 실패"})
-				</summary>
-				<JsonEditor
-					key={resetCountSignal.value}
-					value={jsonTextSignal.value}
-					onChange={(json) => {
-						jsonTextSignal.value = json;
-					}}
-					onReset={() => {
-						isJsonOpen.value = true;
-					}}
-				/>
-				<details className="open:py-2 opacity-0 hover:opacity-100 open:opacity-100 transition-all delay-100">
-					<summary className="text-xs text-slate-500 cursor-pointer">
-						포트원 내부 QA 전용 설정
-					</summary>
-					{forQa}
-				</details>
-			</details>
-			{prependControls}
-			<FieldControls fields={fields} fieldSignals={fieldSignals} />
-		</div>
+	const parameterEditTab = (
+		<ParameterEditTab
+			fields={fields}
+			fieldSignals={fieldSignals}
+			forQa={forQa}
+			isEmptyJsonSignal={isEmptyJsonSignal}
+			jsonTextSignal={jsonTextSignal}
+			parseJsonFailedSignal={parseJsonFailedSignal}
+			resetCountSignal={resetCountSignal}
+			resetFn={resetFn}
+			prependControls={prependControls}
+		/>
+	);
+	const codeExampleTab = (
+		<CodeExampleTab codePreviewSignal={codePreviewSignal} />
 	);
 	return (
 		<>
@@ -99,38 +81,27 @@ export const View = ({
 				필수입력 표시가 아니어도 입력이 필요할 수 있습니다.
 			</p>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				{hasNarrowWindow.value === false && parameterEdtior}
+				{hasNarrowWindow.value === false && parameterEditTab}
 				<Tabs
 					onSelect={(key) => {
 						selectedTabSignal.value = key;
 					}}
 					selectedTab={selectedTabSignal.value}
-					tabs={[
-						{
-							title: "파라미터 입력",
-							key: "parameter",
-							children: parameterEdtior,
-							visible: hasNarrowWindow.value,
-						},
-						{
-							title: "연동 코드 예시",
-							key: "example",
-							children: (
-								<div
-									className="md:sticky top-4 flex flex-col"
-									style={{ height: "calc(100vh - 2rem)" }}
-								>
-									<div className="flex-1">
-										<HtmlEditor
-											className="h-full"
-											editable={false}
-											value={codePreviewSignal.value}
-										/>
-									</div>
-								</div>
-							),
-						},
-					]}
+					tabs={
+						[
+							{
+								title: "파라미터 입력",
+								key: "parameter",
+								children: parameterEditTab,
+								visible: hasNarrowWindow.value,
+							},
+							{
+								title: "연동 코드 예시",
+								key: "example",
+								children: codeExampleTab,
+							},
+						] satisfies TabItem<Tab>[]
+					}
 				/>
 			</div>
 		</>

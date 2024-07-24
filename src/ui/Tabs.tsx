@@ -1,20 +1,24 @@
 import clsx from "clsx";
 import type React from "react";
 
-interface Tab {
-	key: string;
+export interface TabItem<K extends string> {
+	key: K;
 	title: React.ReactNode;
 	visible?: boolean;
 	children: React.ReactNode;
 }
 
-interface TabProps {
+interface TabProps<K extends string> {
 	selectedTab: string;
-	onSelect: (key: string) => void;
-	tabs: Tab[];
+	onSelect: (key: K) => void;
+	tabs: TabItem<K>[];
 }
 
-export default function Tabs({ tabs, selectedTab, onSelect }: TabProps) {
+export default function Tabs<K extends string>({
+	tabs,
+	selectedTab,
+	onSelect,
+}: TabProps<K>) {
 	return (
 		<div>
 			<ul className="flex">
