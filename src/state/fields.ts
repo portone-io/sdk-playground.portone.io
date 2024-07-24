@@ -430,14 +430,14 @@ export function updateSignalsFromJson(
 	): Record<string, unknown> {
 		const extraFields: Record<string, unknown> = {};
 
-		for (const [key, value] of Object.entries(json)) {
-			const fieldSignal: FieldSignal | undefined = fieldSignals[key];
+		for (const [key, fieldSignal] of Object.entries(fieldSignals)) {
+			const value: unknown = json[key];
 			extraFields[key] = updateField(value, fieldSignal);
 		}
 
 		return extraFields;
 	}
-	function updateField(value: unknown, fieldSignal?: FieldSignal): unknown {
+	function updateField(value: unknown, fieldSignal: FieldSignal): unknown {
 		return match([fieldSignal, value])
 			.with([{ type: "object" }, P.when(isRecord)], ([fieldSignal, value]) => {
 				fieldSignal.enabledSignal.value = true;
@@ -478,8 +478,8 @@ export function updateSignalsFromJson(
 				[{ type: "text" }, P._],
 				[{ type: "toggle" }, P._],
 				[{ type: "enum" }, P._],
-				[P.nullish, P._],
-				([_, value]) => {
+				([fieldSignal, value]) => {
+					fieldSignal.enabledSignal.value = false;
 					return value;
 				},
 			)
