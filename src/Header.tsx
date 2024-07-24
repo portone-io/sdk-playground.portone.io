@@ -29,9 +29,9 @@ import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
 
 export const showTrialSignal = computed(() => {
 	const modeFn = modeFnSignal.value;
-	const v1PayUserCode = v1CertFieldSignals.userCode.valueSignal.value;
-	const v1CertUserCode = v1LoadUiFieldSignals.userCode.valueSignal.value;
-	const v1LoadUiUserCode = v1PayFieldSignals.userCode.valueSignal.value;
+	const v1PayUserCode = v1PayFieldSignals.userCode.valueSignal.value;
+	const v1CertUserCode = v1CertFieldSignals.userCode.valueSignal.value;
+	const v1LoadUiUserCode = v1LoadUiFieldSignals.userCode.valueSignal.value;
 	const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
 	const v2LoadPaymentUiStoreId =
 		v2LoadPaymentUiFieldSignals.storeId.valueSignal.value;
