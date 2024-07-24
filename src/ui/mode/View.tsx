@@ -23,7 +23,6 @@ interface ViewProps {
 	codePreviewSignal: ReadonlySignal<string>;
 	fields: Fields;
 	fieldSignals: FieldSignals;
-	prependControls?: React.ReactNode;
 	hidePaymentNotice?: boolean;
 	configObjectSignal: ReadonlySignal<Record<string, unknown>>;
 	onReset: () => void;
@@ -38,7 +37,6 @@ export const View = ({
 	fields,
 	fieldSignals,
 	hidePaymentNotice,
-	prependControls,
 	configObjectSignal,
 	onReset,
 }: ViewProps) => {
@@ -65,7 +63,6 @@ export const View = ({
 				parseJsonFailedSignal={parseJsonFailedSignal}
 				resetCountSignal={resetCountSignal}
 				resetFn={resetFn}
-				prependControls={prependControls}
 			/>
 		),
 	} satisfies TabItem<Tab>;

@@ -1,10 +1,5 @@
 import { sdkVersionSignal } from "../../state/app";
-import {
-	type AccountSignals,
-	checkoutServerSignal,
-	coreServerSignal,
-} from "../../state/v1";
-import Control from "../Control";
+import { checkoutServerSignal, coreServerSignal } from "../../state/v1";
 
 export const ForQa = () => {
 	const version = sdkVersionSignal.value;
@@ -39,50 +34,5 @@ export const ForQa = () => {
 				</label>
 			)}
 		</div>
-	);
-};
-
-interface V1PrependControlsProps {
-	accountSignals: AccountSignals;
-}
-
-export const V1PrependControls = ({
-	accountSignals,
-}: V1PrependControlsProps) => {
-	const { userCodeSignal, tierCodeSignal, tierCodeEnabledSignal } =
-		accountSignals;
-	return (
-		<>
-			<Control required label="고객사 식별코드" code="userCode">
-				<input
-					className="border"
-					type="text"
-					placeholder="imp00000000"
-					value={userCodeSignal.value}
-					onInput={(e) => {
-						userCodeSignal.value = e.currentTarget.value;
-					}}
-				/>
-			</Control>
-			<Control
-				label="하위상점(Tier) 코드"
-				code="tierCode"
-				enabled={tierCodeEnabledSignal.value}
-				onToggle={(value) => {
-					tierCodeEnabledSignal.value = value;
-				}}
-			>
-				<input
-					className="border"
-					type="text"
-					placeholder="000"
-					value={tierCodeSignal.value}
-					onInput={(e) => {
-						tierCodeEnabledSignal.value = true;
-						tierCodeSignal.value = e.currentTarget.value;
-					}}
-				/>
-			</Control>
-		</>
 	);
 };

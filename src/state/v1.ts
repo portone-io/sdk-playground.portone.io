@@ -9,6 +9,7 @@ import { P, match } from "ts-pattern";
 import { importStatic } from "../misc/import-static";
 import type { SdkV1, SdkV1Version } from "../sdk";
 import { getMajorVersion, sdkVersionSignal } from "./app";
+import type { FieldSignals } from "./fields";
 import persisted, { prefix } from "./persisted";
 import { createUrlSignal } from "./url";
 
@@ -136,25 +137,17 @@ async function loadLegacySdk(filename: string) {
 }
 
 export interface AccountSignals {
-	userCodeSignal: Signal<string>;
-	tierCodeSignal: Signal<string>;
-	tierCodeEnabledSignal: Signal<boolean>;
 	codePreviewSignal: ReadonlySignal<string>;
-	reset: () => void;
 	impInit: (IMP: SdkV1["IMP"]) => void;
 }
-export function createAccountSignals(keyPrefix: string): AccountSignals {
-	const userCodeSignal = persisted(localStorage, `${keyPrefix}.userCode`, "");
-	const tierCodeSignal = persisted(localStorage, `${keyPrefix}.tierCode`, "");
-	const tierCodeEnabledSignal = persisted(
-		localStorage,
-		`${keyPrefix}.tierCode.enabled`,
-		false,
-	);
+export function createAccountSignals(
+	fieldSignals: FieldSignals,
+): AccountSignals {
+	const { userCode: userCodeSignal, tierCode: tierCodeSignal } = fieldSignals;
 	const codePreviewSignal = computed<string>(() => {
-		const userCode = userCodeSignal.value;
-		const tierCode = tierCodeSignal.value;
-		const tierCodeEnabled = tierCodeEnabledSignal.value;
+		const userCode = userCodeSignal.valueSignal.value;
+		const tierCode = tierCodeSignal.valueSignal.value;
+		const tierCodeEnabled = tierCodeSignal.enabledSignal.value;
 		if (tierCodeEnabled && tierCode) {
 			return `IMP.agency(${JSON.stringify(userCode)}, ${JSON.stringify(
 				tierCode,
@@ -163,19 +156,13 @@ export function createAccountSignals(keyPrefix: string): AccountSignals {
 		return `IMP.init(${JSON.stringify(userCode)});`;
 	});
 	return {
-		userCodeSignal,
-		tierCodeSignal,
-		tierCodeEnabledSignal,
 		codePreviewSignal,
-		reset() {
-			userCodeSignal.value = "";
-			tierCodeSignal.value = "";
-			tierCodeEnabledSignal.value = false;
-		},
 		impInit(IMP) {
-			const userCode = userCodeSignal.value;
-			const tierCode = tierCodeSignal.value;
-			const tierCodeEnabled = tierCodeEnabledSignal.value;
+			if (userCodeSignal.type !== "text" || tierCodeSignal.type !== "text")
+				throw new Error("unexpected field type");
+			const userCode = userCodeSignal.valueSignal.peek();
+			const tierCode = tierCodeSignal.valueSignal.peek();
+			const tierCodeEnabled = tierCodeSignal.enabledSignal.peek();
 			if (tierCodeEnabled && tierCode) IMP.agency(userCode, tierCode);
 			else IMP.init(userCode);
 		},

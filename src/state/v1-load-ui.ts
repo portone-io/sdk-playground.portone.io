@@ -12,12 +12,9 @@ import { fields as v1PayFields } from "./v1-pay";
 
 export function reset() {
 	resetFieldSignals(fields, fieldSignals);
-	accountSignals.reset();
 	uiTypeSignal.value = defaultUiType;
 	jsonTextSignal.value = "{}";
 }
-
-export const accountSignals = createAccountSignals(`${prefix}.v1-load-ui`);
 
 const defaultUiType = "";
 export const uiTypeSignal = persisted(
@@ -29,7 +26,7 @@ export const uiTypeSignal = persisted(
 export const pgUiModalOpenSignal = signal(false);
 export const playFnSignal = computed(() => {
 	const sdkV1 = sdkV1Signal.value;
-	const userCode = accountSignals.userCodeSignal.value;
+	const userCode = fieldSignals.userCode.valueSignal.value;
 	const uiType = uiTypeSignal.value;
 	const configObject = configObjectSignal.value;
 	return async function loadUI() {
@@ -52,6 +49,8 @@ export const codePreviewSignal = computed<string>(() => {
 	const uiType = uiTypeSignal.value;
 	const uiTypeRepr = JSON.stringify(uiType);
 	const configObject = configObjectSignal.value;
+	configObject.userCode = undefined;
+	configObject.tierCode = undefined;
 	return [
 		`<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`,
 		"",
@@ -73,6 +72,7 @@ export const fieldSignals = createFieldSignals(
 	`${prefix}.v1-load-ui.fields`,
 	fields,
 );
+export const accountSignals = createAccountSignals(fieldSignals);
 export const { jsonTextSignal, jsonValueSignal, isEmptyJsonSignal } =
 	createJsonSignals(localStorage, `${prefix}.v1-load-ui.json`);
 export const configObjectSignal = createConfigObjectSignal({

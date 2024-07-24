@@ -10,18 +10,16 @@ import {
 import type { Fields } from "./fields";
 import { prefix } from "./persisted";
 import { createAccountSignals, sdkV1Signal } from "./v1";
+import { fields as v1PayFields } from "./v1-pay";
 
 export function reset() {
 	resetFieldSignals(fields, fieldSignals);
-	accountSignals.reset();
 	jsonTextSignal.value = "{}";
 }
 
-export const accountSignals = createAccountSignals(`${prefix}.v1-cert`);
-
 export const playFnSignal = computed(() => {
 	const sdkV1 = sdkV1Signal.value;
-	const userCode = accountSignals.userCodeSignal.value;
+	const userCode = fieldSignals.userCode.valueSignal.value;
 	const configObject = configObjectSignal.value;
 	return async function certification() {
 		if (!sdkV1) throw new Error("sdk not loaded");
@@ -36,6 +34,8 @@ export const codePreviewSignal = computed<string>(() => {
 	const version = sdkVersionSignal.value;
 	const accountCodePreview = accountSignals.codePreviewSignal.value;
 	const configObject = configObjectSignal.value;
+	configObject.userCode = undefined;
+	configObject.tierCode = undefined;
 	return [
 		...(version === "1.3.0"
 			? [`<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`]
@@ -57,6 +57,8 @@ export const codePreviewSignal = computed<string>(() => {
 });
 
 export const fields = {
+	userCode: v1PayFields.userCode,
+	tierCode: v1PayFields.tierCode,
 	pg: {
 		required: true,
 		label: "지원 PG사",
@@ -144,6 +146,7 @@ export const fieldSignals = createFieldSignals(
 	`${prefix}.v1-cert.fields`,
 	fields,
 );
+export const accountSignals = createAccountSignals(fieldSignals);
 export const { jsonTextSignal, jsonValueSignal, isEmptyJsonSignal } =
 	createJsonSignals(localStorage, `${prefix}.v1-cert.json`);
 export const configObjectSignal = createConfigObjectSignal({

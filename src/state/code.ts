@@ -6,6 +6,7 @@ export function toJs(object: object, indent = "  ", level = 0): string {
 	const entries = Object.entries(object);
 	if (entries.length < 1) return "{}";
 	return `{\n${entries
+		.filter(([_, value]) => value !== undefined)
 		.map(([key, value]) => {
 			const k = /^[_$a-z][_$a-z0-9]*$/i.test(key) ? key : JSON.stringify(key);
 			if (value != null && typeof value === "object" && !Array.isArray(value)) {

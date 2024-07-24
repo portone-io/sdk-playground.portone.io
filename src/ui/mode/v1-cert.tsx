@@ -1,6 +1,5 @@
 import { reset as resetV1 } from "../../state/v1";
 import {
-	accountSignals,
 	codePreviewSignal,
 	configObjectSignal,
 	fieldSignals,
@@ -11,7 +10,7 @@ import {
 	reset,
 } from "../../state/v1-cert";
 import { View } from "./View";
-import { ForQa, V1PrependControls } from "./v1";
+import { ForQa } from "./v1";
 
 export default function () {
 	return (
@@ -24,7 +23,6 @@ export default function () {
 			codePreviewSignal={codePreviewSignal}
 			isEmptyJsonSignal={isEmptyJsonSignal}
 			configObjectSignal={configObjectSignal}
-			prependControls={<V1PrependControls accountSignals={accountSignals} />}
 			onReset={() => {
 				reset();
 				resetV1();
