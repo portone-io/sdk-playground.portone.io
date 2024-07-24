@@ -1,4 +1,5 @@
 import { computed } from "@preact/signals";
+import { omit } from "es-toolkit";
 import { sdkVersionSignal } from "./app";
 import { toJs } from "./code";
 import {
@@ -33,9 +34,7 @@ export const playFnSignal = computed(() => {
 export const codePreviewSignal = computed<string>(() => {
 	const version = sdkVersionSignal.value;
 	const accountCodePreview = accountSignals.codePreviewSignal.value;
-	const configObject = configObjectSignal.value;
-	configObject.userCode = undefined;
-	configObject.tierCode = undefined;
+	const configObject = omit(configObjectSignal.value, ["userCode", "tierCode"]);
 	return [
 		...(version === "1.3.0"
 			? [`<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`]

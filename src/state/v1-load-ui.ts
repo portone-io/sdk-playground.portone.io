@@ -1,4 +1,5 @@
 import { computed, signal } from "@preact/signals";
+import { omit } from "es-toolkit";
 import { toJs } from "./code";
 import {
 	createConfigObjectSignal,
@@ -48,9 +49,7 @@ export const codePreviewSignal = computed<string>(() => {
 	const accountCodePreview = accountSignals.codePreviewSignal.value;
 	const uiType = uiTypeSignal.value;
 	const uiTypeRepr = JSON.stringify(uiType);
-	const configObject = configObjectSignal.value;
-	configObject.userCode = undefined;
-	configObject.tierCode = undefined;
+	const configObject = omit(configObjectSignal.value, ["userCode", "tierCode"]);
 	return [
 		`<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`,
 		"",
