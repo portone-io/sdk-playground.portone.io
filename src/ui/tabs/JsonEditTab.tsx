@@ -1,9 +1,8 @@
 import { json, jsonParseLinter } from "@codemirror/lang-json";
 import { linter } from "@codemirror/lint";
-import { type Signal, useSignal } from "@preact/signals";
+import { type Signal, batch, useSignal } from "@preact/signals";
 import CodeMirror from "@uiw/react-codemirror";
 import { isEqual } from "es-toolkit";
-import { useState } from "react";
 import { isRecord } from "../../misc/utils";
 import { type FieldSignals, updateSignalsFromJson } from "../../state/fields";
 
@@ -19,13 +18,13 @@ export const JsonEditTab = ({
 	jsonTextSignal,
 }: JsonEditTabProps) => {
 	const code = useSignal(JSON.stringify(configObjectSignal.peek(), null, 2));
-	const [internalJsonObject, setInternalJsonObject] = useState(
-		configObjectSignal.peek(),
-	);
+	const internalJsonObject = useSignal(configObjectSignal.peek());
 	configObjectSignal.subscribe((newConfigObject) => {
-		if (!isEqual(newConfigObject, internalJsonObject)) {
-			code.value = JSON.stringify(newConfigObject, null, 2);
-			setInternalJsonObject(newConfigObject);
+		if (!isEqual(newConfigObject, internalJsonObject.value)) {
+			batch(() => {
+				code.value = JSON.stringify(newConfigObject, null, 2);
+				internalJsonObject.value = newConfigObject;
+			});
 		}
 	});
 
@@ -36,16 +35,19 @@ export const JsonEditTab = ({
 				value={code.value}
 				extensions={[json(), linter(jsonParseLinter(), { delay: 100 })]}
 				onChange={(text) => {
-					let json = null;
 					try {
-						json = JSON.parse(text);
+						const json = JSON.parse(text);
+						if (!isRecord(json)) {
+							return;
+						}
+						internalJsonObject.value = json;
 					} catch {}
-					if (!isRecord(json)) {
-						return;
-					}
-					setInternalJsonObject(json);
-					if (!isEqual(configObjectSignal.peek(), json)) {
-						updateSignalsFromJson(json, fieldSignals, jsonTextSignal);
+					if (!isEqual(configObjectSignal.peek(), internalJsonObject.peek())) {
+						updateSignalsFromJson(
+							internalJsonObject.peek(),
+							fieldSignals,
+							jsonTextSignal,
+						);
 					}
 				}}
 			/>
