@@ -3,6 +3,7 @@ import persisted, { prefix } from "./persisted";
 const Tab = {
 	parameter: "parameter",
 	example: "example",
+	json: "json",
 } as const;
 export type Tab = (typeof Tab)[keyof typeof Tab];
 export type TabDirection = "left" | "right";

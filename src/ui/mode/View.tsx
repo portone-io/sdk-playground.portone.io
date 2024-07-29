@@ -12,6 +12,7 @@ import { type Tab, selectedTabSignal } from "../../state/view";
 import { RequiredIndicator } from "../../ui/Control";
 import Tabs, { type TabItem } from "../../ui/Tabs";
 import { CodeExampleTab } from "../tabs/CodeExampleTab";
+import { JsonEditTab } from "../tabs/JsonEditTab";
 import { ParameterEditTab } from "../tabs/ParameterEditTab";
 
 interface ViewProps {
@@ -22,8 +23,8 @@ interface ViewProps {
 	codePreviewSignal: ReadonlySignal<string>;
 	fields: Fields;
 	fieldSignals: FieldSignals;
-	prependControls?: React.ReactNode;
 	hidePaymentNotice?: boolean;
+	configObjectSignal: ReadonlySignal<Record<string, unknown>>;
 	onReset: () => void;
 }
 
@@ -36,7 +37,7 @@ export const View = ({
 	fields,
 	fieldSignals,
 	hidePaymentNotice,
-	prependControls,
+	configObjectSignal,
 	onReset,
 }: ViewProps) => {
 	const hasNarrowWindow = useMediaQueryMatches("(max-width: 768px)");
@@ -49,22 +50,39 @@ export const View = ({
 		++resetCountSignal.value;
 	}, [onReset, resetCountSignal]);
 
-	const parameterEditTab = (
-		<ParameterEditTab
-			fields={fields}
-			fieldSignals={fieldSignals}
-			forQa={forQa}
-			isEmptyJsonSignal={isEmptyJsonSignal}
-			jsonTextSignal={jsonTextSignal}
-			parseJsonFailedSignal={parseJsonFailedSignal}
-			resetCountSignal={resetCountSignal}
-			resetFn={resetFn}
-			prependControls={prependControls}
-		/>
-	);
-	const codeExampleTab = (
-		<CodeExampleTab codePreviewSignal={codePreviewSignal} />
-	);
+	const parameterEditTab = {
+		title: "파라미터 입력",
+		key: "parameter",
+		children: (
+			<ParameterEditTab
+				fields={fields}
+				fieldSignals={fieldSignals}
+				forQa={forQa}
+				isEmptyJsonSignal={isEmptyJsonSignal}
+				jsonTextSignal={jsonTextSignal}
+				parseJsonFailedSignal={parseJsonFailedSignal}
+				resetCountSignal={resetCountSignal}
+				resetFn={resetFn}
+			/>
+		),
+	} satisfies TabItem<Tab>;
+	const codeExampleTab = {
+		title: "연동 코드 예시",
+		key: "example",
+		children: <CodeExampleTab codePreviewSignal={codePreviewSignal} />,
+	} satisfies TabItem<Tab>;
+	const jsonEditTab = {
+		title: "JSON 입력",
+		key: "json",
+		children: (
+			<JsonEditTab
+				configObjectSignal={configObjectSignal}
+				fields={fields}
+				fieldSignals={fieldSignals}
+				jsonTextSignal={jsonTextSignal}
+			/>
+		),
+	} satisfies TabItem<Tab>;
 	return (
 		<>
 			<p className="mb-4 text-xs text-slate-500">
@@ -79,7 +97,18 @@ export const View = ({
 				필수입력 표시가 아니어도 입력이 필요할 수 있습니다.
 			</p>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-				{hasNarrowWindow.value === false && parameterEditTab}
+				{hasNarrowWindow.value === false && (
+					<Tabs
+						onSelect={(key) => {
+							selectedTabSignal.value = {
+								...selectedTabSignal.value,
+								left: key,
+							};
+						}}
+						selectedTab={selectedTabSignal.value.left}
+						tabs={[parameterEditTab, jsonEditTab]}
+					/>
+				)}
 				<Tabs
 					onSelect={(key) => {
 						selectedTabSignal.value = {
@@ -88,21 +117,11 @@ export const View = ({
 						};
 					}}
 					selectedTab={selectedTabSignal.value.right}
-					tabs={
-						[
-							{
-								title: "파라미터 입력",
-								key: "parameter",
-								children: parameterEditTab,
-								visible: hasNarrowWindow.value,
-							},
-							{
-								title: "연동 코드 예시",
-								key: "example",
-								children: codeExampleTab,
-							},
-						] satisfies TabItem<Tab>[]
-					}
+					tabs={[
+						{ ...parameterEditTab, visible: hasNarrowWindow.value },
+						{ ...jsonEditTab, visible: hasNarrowWindow.value },
+						codeExampleTab,
+					]}
 				/>
 			</div>
 		</>

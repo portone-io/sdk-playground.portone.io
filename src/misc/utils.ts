@@ -10,3 +10,7 @@ export function useMediaQueryMatches(query: string): Signal<boolean> {
 	});
 	return matchesSignal;
 }
+
+export function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}

@@ -1,6 +1,9 @@
-import { computed, signal } from "@preact/signals";
+import { batch, computed, signal } from "@preact/signals";
 import type { ReadonlySignal, Signal } from "@preact/signals";
+import { compact, omit, union } from "es-toolkit";
+import { defaultsDeep } from "lodash-es";
 import { P, match } from "ts-pattern";
+import { isRecord } from "../misc/utils";
 import persisted from "./persisted";
 
 export interface Fields {
@@ -213,40 +216,40 @@ export function resetFieldSignals(fields: Fields, fieldSignals: FieldSignals) {
 		const field = fields[key as keyof typeof fields];
 		resetFieldSignal(field, field.input, fieldSignal);
 	}
-	function resetFieldSignal(
-		field: Field,
-		input: Input,
-		fieldSignal: FieldSignal,
-	) {
-		fieldSignal.enabledSignal.value = field.enabled ?? false;
-		matchFieldSignalType({
-			input,
-			fieldSignal,
-			object: (input, fieldSignal) => {
-				resetFieldSignals(input.fields, fieldSignal.valueSignal.value);
-			},
-			union: (input, fieldSignal) => {
-				resetFieldSignals(input.fields, fieldSignal.valueSignal.value);
-			},
-			array: (input, fieldSignal) => {
-				for (const itemSignal of fieldSignal.valueSignal.value) {
-					resetFieldSignal(field, input.inputItem, itemSignal);
-				}
-			},
-			integer: (input, fieldSignal) => {
-				fieldSignal.valueSignal.value = input.default;
-			},
-			text: (input, fieldSignal) => {
-				fieldSignal.valueSignal.value = input.default;
-			},
-			toggle: (input, fieldSignal) => {
-				fieldSignal.valueSignal.value = input.default;
-			},
-			enum: (input, fieldSignal) => {
-				fieldSignal.valueSignal.value = input.default;
-			},
-		});
-	}
+}
+function resetFieldSignal(
+	field: Field,
+	input: Input,
+	fieldSignal: FieldSignal,
+) {
+	fieldSignal.enabledSignal.value = field.enabled ?? false;
+	matchFieldSignalType({
+		input,
+		fieldSignal,
+		object: (input, fieldSignal) => {
+			resetFieldSignals(input.fields, fieldSignal.valueSignal.value);
+		},
+		union: (input, fieldSignal) => {
+			resetFieldSignals(input.fields, fieldSignal.valueSignal.value);
+		},
+		array: (input, fieldSignal) => {
+			for (const itemSignal of fieldSignal.valueSignal.value) {
+				resetFieldSignal(field, input.inputItem, itemSignal);
+			}
+		},
+		integer: (input, fieldSignal) => {
+			fieldSignal.valueSignal.value = input.default;
+		},
+		text: (input, fieldSignal) => {
+			fieldSignal.valueSignal.value = input.default;
+		},
+		toggle: (input, fieldSignal) => {
+			fieldSignal.valueSignal.value = input.default;
+		},
+		enum: (input, fieldSignal) => {
+			fieldSignal.valueSignal.value = input.default;
+		},
+	});
 }
 export type MatchFieldSignalTypeHandler<
 	T,
@@ -347,17 +350,16 @@ export function createJsonSignals(
 interface CreateConfigObjectSignalConfig {
 	fields: Fields;
 	fieldSignals: FieldSignals;
-	jsonValueSignal: Signal<Record<string, unknown>>;
+	jsonValueSignal: ReadonlySignal<Record<string, unknown>>;
 }
 export function createConfigObjectSignal({
 	fields,
 	fieldSignals,
 	jsonValueSignal,
-}: CreateConfigObjectSignalConfig) {
-	return computed(() => ({
-		...getObject(fields, fieldSignals),
-		...jsonValueSignal.value,
-	}));
+}: CreateConfigObjectSignalConfig): ReadonlySignal<Record<string, unknown>> {
+	return computed(() =>
+		defaultsDeep({}, jsonValueSignal.value, getObject(fields, fieldSignals)),
+	);
 	function getObject(
 		fields: Fields,
 		fieldSignals: FieldSignals,
@@ -410,5 +412,116 @@ export function createConfigObjectSignal({
 			toggle: (_, fieldSignal) => fieldSignal.valueSignal.value,
 			enum: (_, fieldSignal) => fieldSignal.valueSignal.value,
 		});
+	}
+}
+
+export function updateSignalsFromJson(
+	json: Record<string, unknown>,
+	fields: Fields,
+	fieldSignals: FieldSignals,
+	jsonTextSignal: Signal<string>,
+) {
+	batch(() => {
+		const extraFields = updateFields(json, fields, fieldSignals);
+		jsonTextSignal.value = JSON.stringify(extraFields, null, 2);
+	});
+
+	function updateFields(
+		json: Record<string, unknown>,
+		fields: Fields,
+		fieldSignals: FieldSignals,
+	): Record<string, unknown> {
+		const extraFields: Record<string, unknown> = {};
+
+		const keys = Object.keys(json);
+		for (const key of keys) {
+			const value: unknown = json[key];
+			const field: Field | undefined = fields[key];
+			const fieldSignal: FieldSignal | undefined = fieldSignals[key];
+			if (field && fieldSignal) {
+				extraFields[key] = updateField(value, field, field.input, fieldSignal);
+			} else {
+				extraFields[key] = value;
+			}
+		}
+		resetFieldSignals(omit(fields, keys), omit(fieldSignals, keys));
+
+		return extraFields;
+	}
+	function updateField(
+		value: unknown,
+		field: Field,
+		input: Input,
+		fieldSignal: FieldSignal,
+	): unknown {
+		return match([input, fieldSignal, value])
+			.with(
+				[{ type: "object" }, { type: "object" }, P.when(isRecord)],
+				([input, fieldSignal, value]) => {
+					fieldSignal.enabledSignal.value = true;
+					return updateFields(
+						value,
+						input.fields,
+						fieldSignal.valueSignal.value,
+					);
+				},
+			)
+			.with(
+				[{ type: "union" }, { type: "union" }, P.when(isRecord)],
+				([input, fieldSignal, value]) => {
+					fieldSignal.enabledSignal.value = true;
+					const key = Object.keys(value)[0] ?? "";
+					fieldSignal.activeKeySignal.value = key;
+					return updateFields(
+						value,
+						input.fields,
+						fieldSignal.valueSignal.value,
+					);
+				},
+			)
+			.with(
+				[{ type: "array" }, { type: "array" }, P.when(Array.isArray)],
+				([input, fieldSignal, value]) => {
+					fieldSignal.enabledSignal.value = true;
+					fieldSignal.resize(value.length);
+					const extraArray = compact(
+						value.map((item, index) => {
+							const itemSignal = fieldSignal.valueSignal.value[index];
+							return updateField(item, field, input.inputItem, itemSignal);
+						}),
+					);
+					if (extraArray.length > 0) {
+						fieldSignal.enabledSignal.value = false;
+						return value;
+					}
+				},
+			)
+			.with(
+				[{ type: "integer" }, { type: "integer" }, P.number],
+				[{ type: "text" }, { type: "text" }, P.string],
+				[{ type: "toggle" }, { type: "toggle" }, P.boolean],
+				[{ type: "enum" }, { type: "enum" }, P.string],
+				([_, fieldSignal, value]) => {
+					fieldSignal.enabledSignal.value = true;
+					fieldSignal.valueSignal.value = value;
+				},
+			)
+			.with(
+				[{ type: "object" }, P._, P._],
+				[{ type: "union" }, P._, P._],
+				[{ type: "array" }, P._, P._],
+				[{ type: "integer" }, P._, P._],
+				[{ type: "text" }, P._, P._],
+				[{ type: "toggle" }, P._, P._],
+				[{ type: "enum" }, P._, P._],
+				[P.nullish, P._, P._],
+				([input, fieldSignal, value]) => {
+					if (fieldSignal) {
+						fieldSignal.enabledSignal.value = false;
+					}
+					return value;
+				},
+			)
+			.exhaustive();
 	}
 }

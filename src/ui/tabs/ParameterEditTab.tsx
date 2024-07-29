@@ -1,4 +1,4 @@
-import { type ReadonlySignal, type Signal, useSignal } from "@preact/signals";
+import type { ReadonlySignal, Signal } from "@preact/signals";
 import { useState } from "react";
 import type { FieldSignals, Fields } from "../../state/fields";
 import JsonEditor from "../JsonEditor";
@@ -12,7 +12,6 @@ interface ParameterEditTabProps {
 	resetCountSignal: ReadonlySignal<number>;
 	jsonTextSignal: Signal<string>;
 	forQa: React.ReactNode;
-	prependControls?: React.ReactNode;
 	fields: Fields;
 	fieldSignals: FieldSignals;
 }
@@ -24,7 +23,6 @@ export const ParameterEditTab = ({
 	resetCountSignal,
 	jsonTextSignal,
 	forQa,
-	prependControls,
 	fields,
 	fieldSignals,
 }: ParameterEditTabProps) => {
@@ -57,7 +55,6 @@ export const ParameterEditTab = ({
 					{forQa}
 				</details>
 			</details>
-			{prependControls}
 			<FieldControls fields={fields} fieldSignals={fieldSignals} />
 		</div>
 	);

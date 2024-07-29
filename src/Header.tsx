@@ -15,9 +15,9 @@ import {
 	waitingSignal,
 } from "./state/app";
 import type { ModeFnKey } from "./state/app";
-import { accountSignals as v1CertAccountSignals } from "./state/v1-cert";
-import { accountSignals as v1LoadUiAccountSignals } from "./state/v1-load-ui";
-import { accountSignals as v1PayAccountSignals } from "./state/v1-pay";
+import { fieldSignals as v1CertFieldSignals } from "./state/v1-cert";
+import { fieldSignals as v1LoadUiFieldSignals } from "./state/v1-load-ui";
+import { fieldSignals as v1PayFieldSignals } from "./state/v1-pay";
 import { fieldSignals as v2IdentityVerificationFieldSignals } from "./state/v2-identity-verification";
 import { fieldSignals as v2IssueBillingKeyFieldSignals } from "./state/v2-issue-billing-key";
 import { fieldSignals as v2IssueBillingKeyAndPayFieldSignals } from "./state/v2-issue-billing-key-and-pay";
@@ -29,9 +29,9 @@ import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
 
 export const showTrialSignal = computed(() => {
 	const modeFn = modeFnSignal.value;
-	const v1PayUserCode = v1PayAccountSignals.userCodeSignal.value;
-	const v1CertUserCode = v1CertAccountSignals.userCodeSignal.value;
-	const v1LoadUiUserCode = v1LoadUiAccountSignals.userCodeSignal.value;
+	const v1PayUserCode = v1PayFieldSignals.userCode.valueSignal.value;
+	const v1CertUserCode = v1CertFieldSignals.userCode.valueSignal.value;
+	const v1LoadUiUserCode = v1LoadUiFieldSignals.userCode.valueSignal.value;
 	const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
 	const v2LoadPaymentUiStoreId =
 		v2LoadPaymentUiFieldSignals.storeId.valueSignal.value;

@@ -190,7 +190,7 @@ const V1Trials: React.FC = () => {
 							handler={() => {
 								trialModalOpenSignal.value = false;
 								appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-cert" };
-								v1CertAccountSignals.userCodeSignal.value =
+								v1CertFieldSignals.userCode.valueSignal.value =
 									item["v1-cert"].account.userCode;
 								v1CertFieldSignals.merchant_uid.valueSignal.value =
 									v1CertFields.merchant_uid.input.generate();
@@ -220,7 +220,7 @@ const V1Trials: React.FC = () => {
 									sdkVersion: "1.3.0",
 									fn: "v1-load-ui",
 								};
-								v1LoadUiAccountSignals.userCodeSignal.value =
+								v1LoadUiFieldSignals.userCode.valueSignal.value =
 									item["v1-load-ui"].account.userCode;
 								v1LoadUiUiTypeSignal.value = item["v1-load-ui"].uiType;
 								v1LoadUiFieldSignals.merchant_uid.valueSignal.value =
@@ -252,7 +252,7 @@ const V1Trials: React.FC = () => {
 									handler() {
 										trialModalOpenSignal.value = false;
 										appModeSignal.value = { sdkVersion: "1.3.0", fn: "v1-pay" };
-										v1PayAccountSignals.userCodeSignal.value =
+										v1PayFieldSignals.userCode.valueSignal.value =
 											item["v1-pay"].account.userCode;
 										v1PayFieldSignals.merchant_uid.valueSignal.value =
 											v1PayFields.merchant_uid.input.generate();
