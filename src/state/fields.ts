@@ -1,6 +1,6 @@
 import { batch, computed, signal } from "@preact/signals";
 import type { ReadonlySignal, Signal } from "@preact/signals";
-import { compact, omit, union } from "es-toolkit";
+import { compact, omit } from "es-toolkit";
 import { defaultsDeep } from "lodash-es";
 import { P, match } from "ts-pattern";
 import { isRecord } from "../misc/utils";

@@ -2,6 +2,7 @@ import { computed, signal } from "@preact/signals";
 import { omit } from "es-toolkit";
 import { toJs } from "./code";
 import {
+	type Fields,
 	createConfigObjectSignal,
 	createFieldSignals,
 	createJsonSignals,
@@ -13,22 +14,15 @@ import { fields as v1PayFields } from "./v1-pay";
 
 export function reset() {
 	resetFieldSignals(fields, fieldSignals);
-	uiTypeSignal.value = defaultUiType;
 	jsonTextSignal.value = "{}";
 }
-
-const defaultUiType = "";
-export const uiTypeSignal = persisted(
-	localStorage,
-	`${prefix}.v1-load-ui.uiType`,
-	defaultUiType,
-);
 
 export const pgUiModalOpenSignal = signal(false);
 export const playFnSignal = computed(() => {
 	const sdkV1 = sdkV1Signal.value;
 	const userCode = fieldSignals.userCode.valueSignal.value;
-	const uiType = uiTypeSignal.value;
+	const uiType = fieldSignals.uiType.valueSignal.value;
+	const uiTypeRepr = String(uiType);
 	const configObject = configObjectSignal.value;
 	return async function loadUI() {
 		if (!sdkV1) throw new Error("sdk not loaded");
@@ -36,7 +30,7 @@ export const playFnSignal = computed(() => {
 		const { IMP } = await sdkV1;
 		accountSignals.impInit(IMP);
 		return new Promise((resolve) => {
-			IMP.loadUI(uiType, configObject, (response) => {
+			IMP.loadUI(uiTypeRepr, configObject, (response) => {
 				resolve(response);
 				pgUiModalOpenSignal.value = false;
 			});
@@ -47,9 +41,13 @@ export const playFnSignal = computed(() => {
 
 export const codePreviewSignal = computed<string>(() => {
 	const accountCodePreview = accountSignals.codePreviewSignal.value;
-	const uiType = uiTypeSignal.value;
+	const uiType = fieldSignals.uiType.valueSignal.value;
 	const uiTypeRepr = JSON.stringify(uiType);
-	const configObject = omit(configObjectSignal.value, ["userCode", "tierCode"]);
+	const configObject = omit(configObjectSignal.value, [
+		"userCode",
+		"tierCode",
+		"uiType",
+	]);
 	return [
 		`<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`,
 		"",
@@ -64,7 +62,24 @@ export const codePreviewSignal = computed<string>(() => {
 	].join("\n");
 });
 
-export const fields = v1PayFields;
+export const fields = {
+	uiType: {
+		required: true,
+		label: "UI 타입",
+		input: {
+			type: "enum",
+			options: [
+				"payment-bridge",
+				"paypal-spb",
+				"paypal-rt",
+				"toss-brandpay-widget",
+			],
+			default: "",
+			placeholder: "paypal-spb",
+		},
+	},
+	...v1PayFields,
+} as const satisfies Fields;
 
 export const fieldSignals = createFieldSignals(
 	localStorage,
