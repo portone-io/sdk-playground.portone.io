@@ -18,7 +18,6 @@ import {
 	fieldSignals as v1LoadUiFieldSignals,
 	fields as v1LoadUiFields,
 	jsonTextSignal as v1LoadUiJsonTextSignal,
-	uiTypeSignal as v1LoadUiUiTypeSignal,
 } from "../state/v1-load-ui";
 import {
 	accountSignals as v1PayAccountSignals,
@@ -222,7 +221,8 @@ const V1Trials: React.FC = () => {
 								};
 								v1LoadUiFieldSignals.userCode.valueSignal.value =
 									item["v1-load-ui"].account.userCode;
-								v1LoadUiUiTypeSignal.value = item["v1-load-ui"].uiType;
+								v1LoadUiFieldSignals.uiType.valueSignal.value =
+									item["v1-load-ui"].uiType;
 								v1LoadUiFieldSignals.merchant_uid.valueSignal.value =
 									v1LoadUiFields.merchant_uid.input.generate();
 								const fields = Object.entries(item["v1-load-ui"].field);
