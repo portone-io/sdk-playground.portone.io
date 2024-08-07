@@ -469,14 +469,18 @@ export function updateSignalsFromJson(
 			.with(
 				[{ type: "union" }, { type: "union" }, P.when(isRecord)],
 				([input, fieldSignal, value]) => {
-					fieldSignal.enabledSignal.value = true;
 					const key = Object.keys(value)[0] ?? "";
-					fieldSignal.activeKeySignal.value = key;
-					return updateFields(
-						value,
-						input.fields,
-						fieldSignal.valueSignal.value,
-					);
+					if (input.fields[key]) {
+						fieldSignal.enabledSignal.value = true;
+						fieldSignal.activeKeySignal.value = key;
+						return updateFields(
+							value,
+							input.fields,
+							fieldSignal.valueSignal.value,
+						);
+					}
+					fieldSignal.enabledSignal.value = false;
+					return value;
 				},
 			)
 			.with(
