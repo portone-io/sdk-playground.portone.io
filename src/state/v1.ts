@@ -24,20 +24,22 @@ export function reset() {
 	checkoutServerSignal.value = defaultCheckoutServer;
 }
 
+const isSdkPreview = Boolean(import.meta.env.VITE_SDK_PREVIEW);
+
 const defaultCoreServer = import.meta.env.VITE_CORE_SERVER_URL;
-export const coreServerSignal = persisted(
-	localStorage,
-	`${prefix}.v1.coreServer`,
-	defaultCoreServer,
-);
+export const coreServerSignal = isSdkPreview
+	? signal(defaultCoreServer)
+	: persisted(localStorage, `${prefix}.v1.coreServer`, defaultCoreServer);
 export const coreServerUrlSignal = createUrlSignal(coreServerSignal);
 
 const defaultCheckoutServer = import.meta.env.VITE_CHECKOUT_SERVER_URL;
-export const checkoutServerSignal = persisted(
-	localStorage,
-	`${prefix}.v1.checkoutServer`,
-	defaultCheckoutServer,
-);
+export const checkoutServerSignal = isSdkPreview
+	? signal(defaultCheckoutServer)
+	: persisted(
+			localStorage,
+			`${prefix}.v1.checkoutServer`,
+			defaultCheckoutServer,
+		);
 export const checkoutServerUrlSignal = createUrlSignal(checkoutServerSignal);
 
 export const sdkV1Signal = signal<Promise<SdkV1> | undefined>(undefined);
