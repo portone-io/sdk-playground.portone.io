@@ -8,7 +8,8 @@ import {
 	createJsonSignals,
 	resetFieldSignals,
 } from "./fields";
-import persisted, { prefix } from "./persisted";
+import { prefix } from "./persisted";
+import { pgUiModalOpenSignal, pgUiModalUiTypeSignal } from "./pg-ui-modal";
 import { createAccountSignals, sdkV1Signal } from "./v1";
 import { fields as v1PayFields } from "./v1-pay";
 
@@ -16,8 +17,6 @@ export function reset() {
 	resetFieldSignals(fields, fieldSignals);
 	jsonTextSignal.value = "{}";
 }
-
-export const pgUiModalOpenSignal = signal(false);
 export const playFnSignal = computed(() => {
 	const sdkV1 = sdkV1Signal.value;
 	const userCode = fieldSignals.userCode.valueSignal.value;
@@ -33,8 +32,10 @@ export const playFnSignal = computed(() => {
 			IMP.loadUI(uiTypeRepr, configObject, (response) => {
 				resolve(response);
 				pgUiModalOpenSignal.value = false;
+				pgUiModalUiTypeSignal.value = null;
 			});
 			pgUiModalOpenSignal.value = true;
+			pgUiModalUiTypeSignal.value = uiTypeRepr;
 		});
 	};
 });
@@ -48,13 +49,22 @@ export const codePreviewSignal = computed<string>(() => {
 		"tierCode",
 		"uiType",
 	]);
+	const brandPay = uiType === "toss-brandpay-widget";
 	return [
 		`<script src="https://cdn.iamport.kr/v1/iamport.js"></script>`,
 		"",
 		`<div class="portone-ui-container" data-portone-ui-type=${uiTypeRepr}>`,
 		"  <!-- 여기에 PG사 전용 버튼이 그려집니다 -->",
 		"</div>",
-		"",
+		brandPay
+			? [
+					"",
+					`<div id="portone-toss-brandpay-widget-button">`,
+					"  <!-- 결제하기 버튼 역할을 하는 element -->",
+					"</div>",
+					"",
+				].join("\n")
+			: "",
 		"<script>",
 		accountCodePreview,
 		`IMP.loadUI(${uiTypeRepr}, ${toJs(configObject)});`,

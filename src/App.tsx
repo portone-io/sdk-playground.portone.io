@@ -1,7 +1,11 @@
+import { useComputed } from "@preact/signals";
 import type * as React from "react";
 import Header from "./Header";
-import { waitingSignal } from "./state/app";
-import { pgUiModalOpenSignal } from "./state/v1-load-ui";
+import { appModeSignal, getMajorVersion, waitingSignal } from "./state/app";
+import {
+	pgUiModalOpenSignal,
+	pgUiModalUiTypeSignal,
+} from "./state/pg-ui-modal";
 import Modal from "./ui/Modal";
 import Mode from "./ui/mode/Mode";
 
@@ -18,6 +22,9 @@ export default App;
 
 const PgUiModal = () => {
 	const open = pgUiModalOpenSignal.value;
+	const majorVersion = useComputed(() =>
+		getMajorVersion(appModeSignal.value.sdkVersion),
+	);
 	return (
 		<Modal
 			open={open}
@@ -26,10 +33,21 @@ const PgUiModal = () => {
 			onClose={() => {
 				waitingSignal.value = false;
 				pgUiModalOpenSignal.value = false;
+				pgUiModalUiTypeSignal.value = null;
 			}}
 		>
 			<div className="p-4">
 				<div className="portone-ui-container" />
+				{majorVersion.value === "v1" &&
+					pgUiModalUiTypeSignal.value === "toss-brandpay-widget" && (
+						<button
+							id="portone-toss-brandpay-widget-button"
+							type="button"
+							className="w-full h-12 rounded-lg bg-orange-700 text-white font-bold"
+						>
+							결제하기
+						</button>
+					)}
 			</div>
 		</Modal>
 	);
