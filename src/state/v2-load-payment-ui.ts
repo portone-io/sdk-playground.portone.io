@@ -7,8 +7,8 @@ import {
 	createJsonSignals,
 	resetFieldSignals,
 } from "./fields";
-import persisted, { prefix } from "./persisted";
-import { pgUiModalOpenSignal } from "./v1-load-ui";
+import { prefix } from "./persisted";
+import { pgUiModalOpenSignal, pgUiModalUiTypeSignal } from "./pg-ui-modal";
 import { paymentUITypeOptions, sdkV2Signal } from "./v2";
 import { fields as v2PayFields } from "./v2-pay";
 
@@ -20,6 +20,8 @@ export function reset() {
 export const playFnSignal = computed(() => {
 	const sdkV2 = sdkV2Signal.value;
 	const configObject = configObjectSignal.value;
+	const uiType = fieldSignals.uiType.valueSignal.value;
+	const uiTypeRepr = JSON.stringify(uiType);
 	return async function loadPaymentUI() {
 		if (!sdkV2) throw new Error("sdk not loaded");
 		const { PortOne } = await sdkV2;
@@ -30,9 +32,11 @@ export const playFnSignal = computed(() => {
 					onPaymentFail: resolve,
 				}).catch(reject);
 				pgUiModalOpenSignal.value = true;
+				pgUiModalUiTypeSignal.value = uiTypeRepr;
 			});
 		} finally {
 			pgUiModalOpenSignal.value = false;
+			pgUiModalUiTypeSignal.value = null;
 		}
 	};
 });
