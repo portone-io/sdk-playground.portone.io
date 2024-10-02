@@ -39,7 +39,7 @@ const PgUiModal = () => {
 			<div className="p-4">
 				<div className="portone-ui-container" />
 				{majorVersion.value === "v1" &&
-					pgUiModalUiTypeSignal.value === "toss-brandpay" && (
+					pgUiModalUiTypeSignal.value === "toss-brandpay-widget" && (
 						<button
 							id="portone-toss-brandpay-widget-button"
 							type="button"
