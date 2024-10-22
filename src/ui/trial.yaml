@@ -4,12 +4,12 @@
     account:
       userCode: imp29272276
     field:
-      pg: inicis_unified.INIpayTest
+      channelKey: channel-key-5130c33b-27ed-4b00-b62a-47c0045ceb94
   v1-pay:
     account:
       userCode: imp14397622
     field:
-      pg: html5_inicis.INIpayTest
+      channelKey: channel-key-bf43e218-5567-4875-96da-3270e1fba054
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -39,7 +39,7 @@
       userCode: imp14397622
     uiType: paypal-spb
     field:
-      pg: paypal_v2.7WBB3CKT63FRG
+      channelKey: channel-key-ddfbd2ad-facd-41c6-9969-463ec9d5fd23
       pay_method: paypal
       name: 테스트 결제
       amount: 1
@@ -59,7 +59,7 @@
       userCode: imp14397622
     uiType: paypal-rt
     field:
-      pg: paypal_v2.7WBB3CKT63FRG
+      channelKey: channel-key-ddfbd2ad-facd-41c6-9969-463ec9d5fd23
       pay_method: paypal
       customer_uid: test
       name: 테스트 결제
@@ -76,7 +76,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: kcp.T0000
+      channelKey: channel-key-001cc830-159d-45af-a551-fa834c07f6b9
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -98,7 +98,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: nice.nictest00m
+      channelKey: channel-key-60dbe4cd-a977-4136-9d98-000278c8f1d3
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -136,7 +136,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: kicc.T5102001
+      channelKey: channel-key-5fdb4242-d0d6-4e89-927b-4a647d977d00
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -162,17 +162,17 @@
     case:
       💳 카드결제:
         pay_method: card
-        pg: danal_tpay.9810030929
+        channelKey: channel-key-cbc6731b-4a52-4aaf-bc68-d42d110fda65
       📱 휴대폰 소액결제:
         pay_method: phone
-        pg: danal.A010002002
+        channelKey: channel-key-858e77c7-40a2-4f4b-a88b-eb7f1f9bcbd3
 - label: 헥토파이낸셜
   icon: settle
   v1-pay:
     account:
       userCode: imp14397622
     field:
-      pg: settle.mid_test
+      channelKey: channel-key-67a733ae-750f-43eb-a653-af9fa17d568e
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -192,7 +192,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: smartro.iamport01m
+      channelKey: channel-key-a72e6358-77f7-4098-b8ac-294d9894d14e
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -234,7 +234,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: bluewalnut.imptest01m
+      channelKey: channel-key-c9ffde72-c17f-402e-b44a-976e73fc453a
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -254,7 +254,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: ksnet.2999199999
+      channelKey: channel-key-c468de7d-36e0-4175-a8f9-fc3ab9f09e34
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -296,7 +296,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: tosspayments.iamporttest_3
+      channelKey: channel-key-ebe7daa6-4fe4-41bd-b17d-3495264399b5
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -334,7 +334,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: uplus.tlgdacomxpay
+      channelKey: channel-key-fa1217c8-af52-402a-a364-7921ca2c17d9
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -355,7 +355,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: daou.CTS17362
+      channelKey: channel-key-85771d3b-6ea3-4b00-b648-b764ab8731ef
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -373,7 +373,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: mobilians.170622040674
+      channelKey: channel-key-cc5b359f-b6f8-43cf-a801-b76cd06eb854
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -386,7 +386,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: eximbay.1849705C64
+      channelKey: channel-key-15159ce6-247c-4bc6-820b-64ff9f6dc2f6
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -399,7 +399,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: paymentwall.790d26a46214d76957edaf9aaa7bb6db
+      channelKey: channel-key-519ff8e9-de2f-448e-aa9a-e2fdd53998b1
       name: 테스트 결제
       amount: 1000
       buyer_tel: 010-0000-0000
@@ -413,7 +413,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: kakaopay.TC0ONETIME
+      channelKey: channel-key-01764171-b249-4c16-9d18-e9174fa8e611
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -438,7 +438,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: tosspay.tosstest
+      channelKey: channel-key-01aab9b9-828b-4913-9395-52f922e578f6
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -463,7 +463,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: payco.PARTNERTEST
+      channelKey: channel-key-a0962379-a4eb-41d3-90a8-47198b8af642
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -476,7 +476,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: smilepay.cnstest25m
+      channelKey: channel-key-4c068788-32dd-4487-a833-26a7853d5406
       name: 테스트 결제
       amount: 100
       buyer_tel: 010-0000-0000
@@ -489,7 +489,7 @@
     account:
       userCode: imp14397622
     field:
-      pg: welcome.welcometst
+      channelKey: channel-key-ef2b4903-9fdd-49eb-b26d-eaf950458c41
       name: 테스트 결제
       amount: 1000
       buyer_name: 포트원

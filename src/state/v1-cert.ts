@@ -58,15 +58,7 @@ export const codePreviewSignal = computed<string>(() => {
 export const fields = {
 	userCode: v1PayFields.userCode,
 	tierCode: v1PayFields.tierCode,
-	pg: {
-		required: true,
-		label: "지원 PG사",
-		input: {
-			type: "text",
-			placeholder: "inicis_unified",
-			default: "",
-		},
-	},
+	channelKey: v1PayFields.channelKey,
 	merchant_uid: {
 		required: true,
 		label: "고객사 고유 요청 번호",

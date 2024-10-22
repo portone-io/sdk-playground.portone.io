@@ -11,6 +11,7 @@ import {
 import type { Fields } from "./fields";
 import { prefix } from "./persisted";
 import { createAccountSignals, sdkV1Signal } from "./v1";
+import { fields as v2PayFields } from "./v2-pay";
 
 export function reset() {
 	resetFieldSignals(fields, fieldSignals);
@@ -75,15 +76,7 @@ export const fields = {
 			default: "",
 		},
 	},
-	pg: {
-		required: true,
-		label: "지원 PG사",
-		input: {
-			type: "text",
-			placeholder: "html5_inicis",
-			default: "",
-		},
-	},
+	channelKey: v2PayFields.channelKey,
 	pay_method: {
 		required: true,
 		label: "결제 수단",
