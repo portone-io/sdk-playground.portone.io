@@ -107,7 +107,7 @@ export const fields = {
 			type: "object",
 			fields: {
 				carrier: v2PayFields.mobile.input.fields.carrier,
-				availableMethods: v2PayFields.mobile.input.fields.availableCarriers,
+				availableCarriers: v2PayFields.mobile.input.fields.availableCarriers,
 			},
 		},
 	},
