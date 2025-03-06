@@ -606,6 +606,45 @@ export const fields = {
 			},
 		},
 	},
+	convenienceStore: {
+		required: false,
+		enabled: true,
+		label: "편의점결제 정보",
+		hidden: computed(
+			() => fieldSignals.payMethod?.valueSignal?.value !== "CONVENIENCE_STORE",
+		),
+		input: {
+			type: "object",
+			fields: {
+				paymentDeadline: {
+					required: false,
+					label: "지불기한",
+					input: {
+						type: "union",
+						fields: {
+							validHours: {
+								required: false,
+								label: "지불 가능 유효 시간",
+								input: {
+									type: "integer",
+									default: 1,
+								},
+							},
+							dueDate: {
+								required: false,
+								label: "지불 가능 유효 일시",
+								input: {
+									type: "text",
+									placeholder: "YYYY-MM-DD HH:mm:ss",
+									default: "",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	},
 	customer: {
 		required: false,
 		label: "고객 정보",
