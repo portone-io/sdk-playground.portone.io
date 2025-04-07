@@ -85,6 +85,7 @@ export const payMethodOptions = [
 	"EASY_PAY",
 	"PAYPAL",
 	"ALIPAY",
+	"CONVENIENCE_STORE",
 ];
 export const productTypeOptions = ["REAL", "DIGITAL"];
 export const cashReceiptTypeOptions = ["PERSONAL", "CORPORATE", "ANONYMOUS"];
