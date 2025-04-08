@@ -121,7 +121,7 @@ export const fields = {
 		},
 	},
 	payMethod: {
-		required: true,
+		required: false,
 		label: "결제 수단",
 		input: {
 			type: "enum",
