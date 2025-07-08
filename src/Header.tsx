@@ -17,6 +17,7 @@ import {
 import type { ModeFnKey } from "./state/app";
 import { fieldSignals as v1CertFieldSignals } from "./state/v1-cert";
 import { fieldSignals as v1LoadUiFieldSignals } from "./state/v1-load-ui";
+import { fieldSignals as v1NaverpayZzimFieldSignals } from "./state/v1-naverpay-zzim";
 import { fieldSignals as v1PayFieldSignals } from "./state/v1-pay";
 import { fieldSignals as v2IdentityVerificationFieldSignals } from "./state/v2-identity-verification";
 import { fieldSignals as v2IssueBillingKeyFieldSignals } from "./state/v2-issue-billing-key";
@@ -32,6 +33,8 @@ export const showTrialSignal = computed(() => {
 	const v1PayUserCode = v1PayFieldSignals.userCode.valueSignal.value;
 	const v1CertUserCode = v1CertFieldSignals.userCode.valueSignal.value;
 	const v1LoadUiUserCode = v1LoadUiFieldSignals.userCode.valueSignal.value;
+	const v1NaverpayZzimUserCode =
+		v1NaverpayZzimFieldSignals.userCode.valueSignal.value;
 	const v2PayStoreId = v2PayFieldSignals.storeId.valueSignal.value;
 	const v2LoadPaymentUiStoreId =
 		v2LoadPaymentUiFieldSignals.storeId.valueSignal.value;
@@ -48,6 +51,7 @@ export const showTrialSignal = computed(() => {
 		.with("v1-pay", () => !v1PayUserCode)
 		.with("v1-cert", () => !v1CertUserCode)
 		.with("v1-load-ui", () => !v1LoadUiUserCode)
+		.with("v1-naverpay-zzim", () => !v1NaverpayZzimUserCode)
 		.with("v2-pay", () => !v2PayStoreId)
 		.with("v2-load-payment-ui", () => !v2LoadPaymentUiStoreId)
 		.with("v2-load-billing-key-ui", () => !v2LoadBillingKeyUiStoreId)
