@@ -67,7 +67,8 @@ export interface SdkV1 {
 			paymentRequest: unknown,
 			callback: (response: unknown) => void,
 		): void;
-		// communicate, close, naver_zzim
+		naver_zzim(naverZzimRequest: unknown): void;
+		// communicate, close
 	};
 	cleanUp: () => void;
 }
