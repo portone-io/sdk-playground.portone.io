@@ -49,7 +49,8 @@ export const fields = {
 	totalAmount: v2PayFields.totalAmount,
 	currency: v2PayFields.currency,
 	billingKeyAndPayMethod: {
-		required: true,
+		required: false,
+		enabled: true,
 		label: "빌링 키 발급 및 결제 수단",
 		input: {
 			type: "enum",
