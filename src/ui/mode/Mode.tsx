@@ -2,6 +2,7 @@ import type * as React from "react";
 import { type ModeFnKey, modeFnSignal } from "../../state/app";
 import V1Cert from "./v1-cert";
 import V1LoadUi from "./v1-load-ui";
+import V1NaverpayZzim from "./v1-naverpay-zzim";
 import V1Pay from "./v1-pay";
 import V2IdentityVerification from "./v2-identity-verification";
 import V2IssueBillingKey from "./v2-issue-billing-key";
@@ -14,6 +15,7 @@ const modeViewTable: { [key in ModeFnKey]: React.ReactElement } = {
 	"v1-pay": <V1Pay />,
 	"v1-cert": <V1Cert />,
 	"v1-load-ui": <V1LoadUi />,
+	"v1-naverpay-zzim": <V1NaverpayZzim />,
 	"v2-pay": <V2Pay />,
 	"v2-identity-verification": <V2IdentityVerification />,
 	"v2-load-payment-ui": <V2LoadPaymentUi />,
