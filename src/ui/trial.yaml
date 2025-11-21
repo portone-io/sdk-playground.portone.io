@@ -527,3 +527,16 @@
         virtualAccount:
           accountExpiry:
             validHours: 24
+- label: 갤럭시아
+  icon: galaxia
+  v1-pay:
+    account:
+      userCode: imp14397622
+    field:
+      pg: galaxia.M2103135
+      name: 테스트 결제
+      amount: 100
+      buyer_tel: 010-0000-0000
+    case:
+      💳 카드결제:
+        pay_method: card
