@@ -83,6 +83,15 @@ export const fields = {
 			default: "",
 		},
 	},
+	orderDescription: {
+		required: false,
+		label: "주문 상세 내용",
+		input: {
+			type: "text",
+			placeholder: "라드로 볶은 짜장면에 수제 단무지를 얹어드립니다.",
+			default: "",
+		},
+	},
 	totalAmount: {
 		required: true,
 		label: "금액",
@@ -640,6 +649,29 @@ export const fields = {
 								},
 							},
 						},
+					},
+				},
+			},
+		},
+	},
+	alipayPlus: {
+		required: false,
+		enabled: true,
+		label: "알리페이 플러스 정보",
+		hidden: computed(
+			() => fieldSignals.payMethod?.valueSignal?.value !== "ALIPAY_PLUS",
+		),
+		input: {
+			type: "object",
+			fields: {
+				easyPayProvider: {
+					required: false,
+					label: "간편결제 수단",
+					input: {
+						type: "enum",
+						placeholder: "ALIPAY | ALIPAY_HK | TRUE_MONEY | TOUCH_N_GO | DANA",
+						default: "",
+						options: easyPayProviderOptions,
 					},
 				},
 			},
