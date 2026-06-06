@@ -1,8 +1,8 @@
-import { batch, computed, signal } from "@preact/signals";
 import type { ReadonlySignal, Signal } from "@preact/signals";
+import { batch, computed, signal } from "@preact/signals";
 import { compact, omit } from "es-toolkit";
 import { defaultsDeep } from "lodash-es";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 import { isRecord } from "../misc/utils";
 import persisted from "./persisted";
 
@@ -202,10 +202,14 @@ export function createFieldSignals(
 				};
 			})
 			.with({ type: P.union("integer", "text", "toggle") }, (input) => {
+				const valueSignal = persisted(storage, key, input.default);
+				if (input.type === "text" && input.generate && !valueSignal.value) {
+					valueSignal.value = input.generate();
+				}
 				return {
 					type: input.type,
 					enabledSignal,
-					valueSignal: persisted(storage, key, input.default),
+					valueSignal,
 				} as FieldSignal;
 			})
 			.exhaustive();
@@ -241,7 +245,9 @@ function resetFieldSignal(
 			fieldSignal.valueSignal.value = input.default;
 		},
 		text: (input, fieldSignal) => {
-			fieldSignal.valueSignal.value = input.default;
+			fieldSignal.valueSignal.value = input.generate
+				? input.generate()
+				: input.default;
 		},
 		toggle: (input, fieldSignal) => {
 			fieldSignal.valueSignal.value = input.default;
