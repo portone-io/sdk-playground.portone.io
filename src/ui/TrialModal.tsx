@@ -1,6 +1,6 @@
 import { type Signal, signal } from "@preact/signals";
 import type * as React from "react";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 import { appModeSignal } from "../state/app";
 import {
 	ArrayFieldSignal,
@@ -82,7 +82,7 @@ interface TrialDataItem {
 const trialData = _trialData as TrialDataItem[];
 
 export const trialModalOpenSignal = signal(false);
-export const trialVersionSignal = signal<"v1" | "v2">("v1");
+export const trialVersionSignal = signal<"v1" | "v2">("v2");
 const TrialModal: React.FC = () => {
 	const open = trialModalOpenSignal.value;
 	const trialVersion = trialVersionSignal.value;
@@ -382,8 +382,8 @@ const VersionToggle: React.FC = () => {
 			className="bg-slate-100 border-slate-300 leading-[2] text-[12px] text-slate-500 p-[1px] border inline-flex cursor-pointer select-none rounded-[6px] text-center font-bold"
 			onClick={toggle}
 		>
-			<div className={trialVersion === "v1" ? selected : notSelected}>V1</div>
 			<div className={trialVersion === "v2" ? selected : notSelected}>V2</div>
+			<div className={trialVersion === "v1" ? selected : notSelected}>V1</div>
 		</div>
 	);
 };
