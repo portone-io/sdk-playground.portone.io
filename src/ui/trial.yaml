@@ -2,8 +2,8 @@
   icon: inicis
   v2-issue-billing-key:
     field:
-      storeId: store-b3160f49-6d72-4c82-bc5b-a8b0df5df848
-      channelKey: inibilltst-local-key-001
+      storeId: store-4ff4af41-85e3-4559-8eb8-0d08a2c6ceec
+      channelKey: channel-key-f0c2c3c9-5c36-4643-85b3-27d38e63ca6a
       issueName: 로컬 빌링 발급 테스트
       billingKeyMethod: CARD
       customer:
