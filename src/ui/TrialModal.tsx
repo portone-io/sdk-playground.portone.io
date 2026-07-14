@@ -31,6 +31,11 @@ import {
 	jsonTextSignal as v2IdentityVerificationJsonTextSignal,
 } from "../state/v2-identity-verification";
 import {
+	fieldSignals as v2IssueBillingKeyFieldSignals,
+	type fields as v2IssueBillingKeyFields,
+	jsonTextSignal as v2IssueBillingKeyJsonTextSignal,
+} from "../state/v2-issue-billing-key";
+import {
 	fieldSignals as v2LoadBillingKeyUiFieldSignals,
 	type fields as v2LoadBillingKeyUiFields,
 	jsonTextSignal as v2LoadBillingKeyUiJsonTextSignal,
@@ -77,6 +82,9 @@ interface TrialDataItem {
 	};
 	"v2-load-billing-key-ui": {
 		field: Record<keyof typeof v2LoadBillingKeyUiFields, unknown>;
+	};
+	"v2-issue-billing-key": {
+		field: Record<keyof typeof v2IssueBillingKeyFields, unknown>;
 	};
 }
 const trialData = _trialData as TrialDataItem[];
@@ -332,6 +340,37 @@ const V2Trials: React.FC = () => {
 						>
 							{item.label}
 						</LoadUiPreset>
+					))}
+			</div>
+			<Group>빌링키 발급</Group>
+			<div className="grid sm:grid-cols-2 gap-2">
+				{trialData
+					.filter((item) => "v2-issue-billing-key" in item)
+					.map((item) => (
+						<SingularPreset
+							key={`${item.label}-${Math.random().toString(36).slice(2)}`}
+							icon={item.icon}
+							buttonChildren={<span>🔑 빌링키 발급</span>}
+							handler={() => {
+								trialModalOpenSignal.value = false;
+								appModeSignal.value = {
+									sdkVersion: "2.0.0",
+									fn: "v2-issue-billing-key",
+								};
+								v2IssueBillingKeyFieldSignals.issueId.enabledSignal.value = true;
+							v2IssueBillingKeyFieldSignals.issueId.valueSignal.value = `bk-${Date.now()}`;
+								const fields = Object.entries(
+									item["v2-issue-billing-key"].field,
+								);
+								applyFieldsToSignals(
+									fields,
+									v2IssueBillingKeyFieldSignals,
+									v2IssueBillingKeyJsonTextSignal,
+								);
+							}}
+						>
+							{item.label}
+						</SingularPreset>
 					))}
 			</div>
 			<Group>결제</Group>
