@@ -1,6 +1,6 @@
 import { type Signal, signal } from "@preact/signals";
 import type * as React from "react";
-import { match, P } from "ts-pattern";
+import { P, match } from "ts-pattern";
 import { appModeSignal } from "../state/app";
 import {
 	ArrayFieldSignal,
@@ -358,7 +358,7 @@ const V2Trials: React.FC = () => {
 									fn: "v2-issue-billing-key",
 								};
 								v2IssueBillingKeyFieldSignals.issueId.enabledSignal.value = true;
-							v2IssueBillingKeyFieldSignals.issueId.valueSignal.value = `bk-${Date.now()}`;
+								v2IssueBillingKeyFieldSignals.issueId.valueSignal.value = `bk-${Date.now()}`;
 								const fields = Object.entries(
 									item["v2-issue-billing-key"].field,
 								);
