@@ -92,7 +92,7 @@
         pay_method: phone
       💸 문화상품권:
         pay_method: cultureland
-- label: 나이스페이먼츠
+- label: 나이스정보통신
   icon: nice
   v1-pay:
     account:
