@@ -2,9 +2,9 @@
   icon: inicis
   v2-issue-billing-key:
     field:
-      storeId: store-4ff4af41-85e3-4559-8eb8-0d08a2c6ceec
-      channelKey: channel-key-f0c2c3c9-5c36-4643-85b3-27d38e63ca6a
-      issueName: 로컬 빌링 발급 테스트
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-e01c2ecc-6d29-4e2a-a3aa-a34526d4fb7c
+      issueName: 테스트 빌링키 발급
       billingKeyMethod: CARD
       customer:
         fullName: 포트원테스트
