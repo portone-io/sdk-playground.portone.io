@@ -1,5 +1,15 @@
 - label: 이니시스
   icon: inicis
+  v2-issue-billing-key:
+    field:
+      storeId: store-e4038486-8d83-41a5-acf1-844a009e0d94
+      channelKey: channel-key-e01c2ecc-6d29-4e2a-a3aa-a34526d4fb7c
+      issueName: 테스트 빌링키 발급
+      billingKeyMethod: CARD
+      customer:
+        fullName: 포트원테스트
+        phoneNumber: "01012345678"
+        email: test@example.com
   v1-cert:
     account:
       userCode: imp29272276
