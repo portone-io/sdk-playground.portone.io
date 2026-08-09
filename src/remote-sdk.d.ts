@@ -15,6 +15,7 @@ declare module "https://cdn.iamport.kr/v1/iamport.esm.js" {
 			paymentRequest: unknown,
 			callback: (response: unknown) => void,
 		): void;
+		naver_zzim(naverZzimRequest: unknown): void;
 		deinit(): void;
 	};
 	export const slots: Record<string, string>;
