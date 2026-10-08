@@ -61,6 +61,10 @@ export const modeFns = {
 		label: "빌링 키 발급 및 결제",
 		stateModule: () => import("./v2-issue-billing-key-and-pay"),
 	},
+	"v2-subscription-registration": {
+		label: "구독 결제 등록",
+		stateModule: () => import("./v2-subscription-registration"),
+	},
 } satisfies {
 	[key: string]: {
 		label: string;
@@ -75,6 +79,7 @@ export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
 		"v2-load-billing-key-ui",
 		"v2-issue-billing-key",
 		"v2-issue-billing-key-and-pay",
+		"v2-subscription-registration",
 	],
 	"1.3.0": ["v1-pay", "v1-cert", "v1-load-ui"],
 	"1.2.1": ["v1-pay", "v1-cert"],
