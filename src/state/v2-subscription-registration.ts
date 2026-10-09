@@ -72,6 +72,16 @@ export const fields = {
 			placeholder: "미입력 시 1회차 주문명",
 		},
 	},
+	issueId: {
+		required: false,
+		label: "빌링 키 발급 주문 고유번호",
+		input: {
+			type: "text",
+			default: "",
+			placeholder: "스마트로 V2·나이스페이먼츠 V2·웰컴페이먼츠는 필수",
+			generate: () => `issue${Date.now().toString(36)}`,
+		},
+	},
 	windowType: v2PayFields.windowType,
 	redirectUrl: v2PayFields.redirectUrl,
 	productType: v2PayFields.productType,
