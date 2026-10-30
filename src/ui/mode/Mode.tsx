@@ -9,6 +9,7 @@ import V2IssueBillingKeyAndPay from "./v2-issue-billing-key-and-pay";
 import V2LoadBillingKeyUi from "./v2-load-billing-key-ui";
 import V2LoadPaymentUi from "./v2-load-payment-ui";
 import V2Pay from "./v2-pay";
+import V2SubscriptionRegistration from "./v2-subscription-registration";
 
 const modeViewTable: { [key in ModeFnKey]: React.ReactElement } = {
 	"v1-pay": <V1Pay />,
@@ -20,6 +21,7 @@ const modeViewTable: { [key in ModeFnKey]: React.ReactElement } = {
 	"v2-load-billing-key-ui": <V2LoadBillingKeyUi />,
 	"v2-issue-billing-key": <V2IssueBillingKey />,
 	"v2-issue-billing-key-and-pay": <V2IssueBillingKeyAndPay />,
+	"v2-subscription-registration": <V2SubscriptionRegistration />,
 };
 
 const Mode: React.FC = () => modeViewTable[modeFnSignal.value] || null;
