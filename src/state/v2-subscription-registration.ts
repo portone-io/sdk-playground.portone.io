@@ -53,12 +53,21 @@ export const fields = {
 			placeholder: "사전 등록한 구독의 ID",
 		},
 	},
+	registrationSecret: {
+		required: true,
+		label: "구독 등록 비밀값",
+		input: {
+			type: "text",
+			default: "",
+			placeholder: "사전 등록 응답의 registrationSecret",
+		},
+	},
 	billingKeyMethod: {
 		required: false,
 		label: "빌링 키 발급 수단",
 		input: {
 			type: "enum",
-			options: ["CARD"],
+			options: ["CARD", "PAYPAL"],
 			default: "CARD",
 			placeholder: "CARD",
 		},
