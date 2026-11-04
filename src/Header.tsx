@@ -24,6 +24,7 @@ import { fieldSignals as v2IssueBillingKeyAndPayFieldSignals } from "./state/v2-
 import { fieldSignals as v2LoadBillingKeyUiFieldSignals } from "./state/v2-load-billing-key-ui";
 import { fieldSignals as v2LoadPaymentUiFieldSignals } from "./state/v2-load-payment-ui";
 import { fieldSignals as v2PayFieldSignals } from "./state/v2-pay";
+import { fieldSignals as v2SubscriptionRegistrationFieldSignals } from "./state/v2-subscription-registration";
 import JsonEditor from "./ui/JsonEditor";
 import TrialModal, { trialModalOpenSignal } from "./ui/TrialModal";
 
@@ -43,6 +44,8 @@ export const showTrialSignal = computed(() => {
 		v2IssueBillingKeyFieldSignals.storeId.valueSignal.value;
 	const v2IssueBillingKeyAndPayStoreId =
 		v2IssueBillingKeyAndPayFieldSignals.storeId.valueSignal.value;
+	const v2SubscriptionRegistrationStoreId =
+		v2SubscriptionRegistrationFieldSignals.storeId.valueSignal.value;
 
 	return match(modeFn)
 		.with("v1-pay", () => !v1PayUserCode)
@@ -54,6 +57,10 @@ export const showTrialSignal = computed(() => {
 		.with("v2-identity-verification", () => !v2IdentityVerificationStoreId)
 		.with("v2-issue-billing-key", () => !v2IssueBillingKeyStoreId)
 		.with("v2-issue-billing-key-and-pay", () => !v2IssueBillingKeyAndPayStoreId)
+		.with(
+			"v2-subscription-registration",
+			() => !v2SubscriptionRegistrationStoreId,
+		)
 		.exhaustive();
 });
 

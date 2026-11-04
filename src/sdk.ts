@@ -83,6 +83,7 @@ export interface SdkV2 {
 		requestIdentityVerification(config: unknown): Promise<unknown>;
 		requestIssueBillingKey(config: unknown): Promise<unknown>;
 		requestIssueBillingKeyAndPay(config: unknown): Promise<unknown>;
+		requestSubscriptionRegistration(config: unknown): Promise<unknown>;
 		loadPaymentUI(
 			config: unknown,
 			callbacks: Record<string, (value: unknown) => void>,
