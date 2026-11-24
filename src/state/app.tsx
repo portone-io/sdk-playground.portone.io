@@ -37,6 +37,10 @@ export const modeFns = {
 		label: "PG 제공 UI",
 		stateModule: () => import("./v1-load-ui"),
 	},
+	"v1-naverpay-zzim": {
+		label: "네이버페이 찜",
+		stateModule: () => import("./v1-naverpay-zzim"),
+	},
 	"v2-pay": {
 		label: "결제",
 		stateModule: () => import("./v2-pay"),
@@ -81,7 +85,7 @@ export const modeFnKeysPerVersion: { [key in SdkVersion]: ModeFnKey[] } = {
 		"v2-issue-billing-key-and-pay",
 		"v2-subscription-registration",
 	],
-	"1.3.0": ["v1-pay", "v1-cert", "v1-load-ui"],
+	"1.3.0": ["v1-pay", "v1-cert", "v1-load-ui", "v1-naverpay-zzim"],
 	"1.2.1": ["v1-pay", "v1-cert"],
 	"1.2.0": ["v1-pay", "v1-cert"],
 	"1.1.9-rc": ["v1-pay", "v1-cert"],
