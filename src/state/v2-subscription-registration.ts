@@ -67,9 +67,36 @@ export const fields = {
 		label: "빌링 키 발급 수단",
 		input: {
 			type: "enum",
-			options: ["CARD", "PAYPAL"],
+			options: ["CARD", "PAYPAL", "EASY_PAY"],
 			default: "CARD",
 			placeholder: "CARD",
+		},
+	},
+	easyPay: {
+		...v2PayFields.easyPay,
+		enabled: false,
+		hidden: computed(
+			() => fieldSignals.billingKeyMethod?.valueSignal?.value !== "EASY_PAY",
+		),
+		input: {
+			type: "object",
+			fields: {
+				easyPayProvider: v2PayFields.easyPay.input.fields.easyPayProvider,
+				availablePayMethods: {
+					required: false,
+					label: "노출할 간편결제 결제수단",
+					input: {
+						type: "array",
+						inputItem: {
+							type: "enum",
+							placeholder: "CARD",
+							default: "",
+							options: ["CARD", "CHARGE", "TRANSFER", "MONEY"],
+						},
+						default: [],
+					},
+				},
+			},
 		},
 	},
 	issueName: {
@@ -87,7 +114,8 @@ export const fields = {
 		input: {
 			type: "text",
 			default: "",
-			placeholder: "스마트로 V2·나이스페이먼츠 V2·웰컴페이먼츠는 필수",
+			placeholder:
+				"스마트로 V2·나이스페이먼츠 V2·웰컴페이먼츠, 간편결제는 네이버페이·KG이니시스 V2·KICC V2 필수",
 			generate: () => `issue${Date.now().toString(36)}`,
 		},
 	},
